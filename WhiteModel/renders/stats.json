@@ -1,0 +1,53 @@
+{
+ "faces": 7068,
+ "quads": 6876,
+ "tris": 14568,
+ "height": 1.58,
+ "parts": {
+  "Base_Lower": {
+   "faces": 506,
+   "quads": 504,
+   "tris": 1116
+  },
+  "Base_Upper": {
+   "faces": 1298,
+   "quads": 1296,
+   "tris": 2684
+  },
+  "Post": {
+   "faces": 1090,
+   "quads": 1088,
+   "tris": 2236
+  },
+  "Tray": {
+   "faces": 250,
+   "quads": 232,
+   "tris": 508
+  },
+  "Frame": {
+   "faces": 648,
+   "quads": 648,
+   "tris": 1296
+  },
+  "Glass": {
+   "faces": 104,
+   "quads": 72,
+   "tris": 176
+  },
+  "Roof_Lower": {
+   "faces": 1394,
+   "quads": 1344,
+   "tris": 2924
+  },
+  "Roof_Upper": {
+   "faces": 1514,
+   "quads": 1476,
+   "tris": 3148
+  },
+  "Finial": {
+   "faces": 264,
+   "quads": 216,
+   "tris": 480
+  }
+ }
+}

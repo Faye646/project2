@@ -1,0 +1,5 @@
+# Blender backup files
+*.blend1
+
+# Intermediate passes that watercolor.py paints from; rebuilt by build_wenli_gongdeng.py --watercolor
+WhiteModel/renders/passes/
