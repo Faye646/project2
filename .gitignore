@@ -3,3 +3,6 @@
 
 # Intermediate passes that watercolor.py paints from; rebuilt by build_wenli_gongdeng.py --watercolor
 WhiteModel/renders/passes/
+
+# Private chat logs handed over for summarizing; never publish (repo is public)
+GPT聊天记录/
