@@ -19,7 +19,9 @@ from mathutils import Matrix, Vector
 
 ARGS = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.abspath(ARGS[0]) if ARGS else os.path.join(HERE, 'CookView', 'cook_view_toon.png')
+WC = '--wc' in ARGS   # 水彩 version: painted materials, soft light, cast shadows (EEVEE)
+ARGS = [a for a in ARGS if a != '--wc']
+OUT = os.path.abspath(ARGS[0]) if ARGS else os.path.join(HERE, 'CookView', 'cook_view_wc.png' if WC else 'cook_view_toon.png')
 FOOD = os.path.join(HERE, 'Food')
 random.seed(3)
 
@@ -28,6 +30,7 @@ PALETTE = {
     'Timber':   ('#b8814a', '#8c5e33'),
     'Counter':  ('#d49a5c', '#ad733d'),
     'TrayWood': ('#c78b52', '#9c6535'),
+    'CounterTop': ('#d8995a', '#ad733d'),
     'Brick':    ('#c4bcb0', '#9d948a'),
     'Mortar':   ('#8f877d', '#6f685f'),
     'Iron':     ('#4a4541', '#2e2a27'),
@@ -85,6 +88,47 @@ def toon(name, lit, shade, emissive=False):
     return mat
 
 
+if WC:   # richer, warmer colours like the painted kitchen
+    PALETTE.update({
+        'Plaster': ('#ecd6ae', '#cfae82'), 'Timber': ('#9a5c30', '#6a3a19'), 'Counter': ('#b0672f', '#7d431c'),
+        'TrayWood': ('#a35f2e', '#784018'), 'Floor': ('#a86c3a', '#7c4a22'), 'Brick': ('#cfc8bf', '#a39a90'),
+        'Mortar': ('#9d958b', '#7a736b'), 'Cloth': ('#4a619a', '#35477a'), 'Straw': ('#d6b36c', '#a8864a'),
+    })
+    sys.path.insert(0, HERE)
+    import wc_materials
+    TEXDIR = os.path.join(HERE, 'CookView', 'tex')   # patches cut from 背景.png / 案台 (2).png
+    TEX = {'Plaster': ('plaster', 0.55), 'Floor': ('floor', 0.35), 'Timber': ('post', 1.2), 'Counter': ('wood', 1.1),
+           'TrayWood': ('countertop', 1.4, 1.15, 0.92), 'CounterTop': ('countertop', 0.8, 1.15, 0.92), 'Brick': ('brick', 2.2), 'Mortar': ('brick', 2.2),
+           'Porcelain': ('bluewhite', 6.0), 'BlueGlaze': ('glaze', 6.0), 'Straw': ('basket', 5.0)}
+    _imgs = {}
+
+    def _img(key):
+        if key not in _imgs:
+            _imgs[key] = bpy.data.images.load(os.path.join(TEXDIR, key + '.png'))
+        return _imgs[key]
+
+    def toon(name, lit, shade, emissive=False):
+        t = TEX.get(name)
+        if not t:
+            return wc_materials.painted(name, lit, shade, srgb, emissive)
+        extra = dict(zip(('sat', 'val'), t[2:]))
+        return wc_materials.painted(name, lit, shade, srgb, emissive, tex=_img(t[0]), tex_scale=t[1], **extra)
+
+    def image_card(name, key, x0, x1, y, z0, z1, glow=False):
+        """A flat card carrying a piece of the painting, facing the camera (-y)."""
+        bm = bmesh.new()
+        vs = [bm.verts.new(v) for v in ((x0, y, z0), (x1, y, z0), (x1, y, z1), (x0, y, z1))]
+        f = bm.faces.new(vs)
+        uvl = bm.loops.layers.uv.new()
+        for loop, uv in zip(f.loops, ((0, 0), (1, 0), (1, 1), (0, 1))):
+            loop[uvl].uv = uv
+        me = bpy.data.meshes.new(name)
+        bm.to_mesh(me)
+        bm.free()
+        me.materials.append(wc_materials.painted(name, '#ffffff', '#ffffff', srgb, image=_img(key), glow=glow))
+        ob = bpy.data.objects.new(name, me)
+        scene.collection.objects.link(ob)
+        return ob
 for k, (a, b) in PALETTE.items():
     MATS[k] = toon(k, a, b, k in EMISSIVE)
 food_pal = json.load(open(os.path.join(FOOD, 'palette_food.json'), encoding='utf-8'))['toon']
@@ -162,9 +206,26 @@ for z in (0.1, 0.95, 3.0):                 # sill, dado rail, head beam
 wx0, wx1, wz0, wz1 = -1.2, 0.3, 1.45, 2.55
 for (a0, a1, b0, b1) in ((-6, wx0, 0, 3.4), (wx1, 6, 0, 3.4), (wx0, wx1, 0, wz0), (wx0, wx1, wz1, 3.4)):   # wall around the window
     box(f'Wall{a0}{b0}', a0, a1, WALL_Y, WALL_Y + 0.1, b0, b1, 'Plaster', r=0, outline=0)
-box('Sky', wx0, wx1, WALL_Y + 0.4, WALL_Y + 0.41, wz0, wz1, 'Sky', r=0, outline=0)
-box('Hills', wx0, wx1, WALL_Y + 0.35, WALL_Y + 0.36, wz0, wz0 + 0.45, 'Hill', r=0, outline=0)
-box('Roofs', wx0, wx1, WALL_Y + 0.3, WALL_Y + 0.31, wz0, wz0 + 0.25, 'Roof', r=0, outline=0)
+sky = box('Sky', wx0, wx1, WALL_Y + 0.4, WALL_Y + 0.41, wz0, wz1, 'Sky', r=0, outline=0)
+if WC:   # the view out of the window is the one painted in 背景.png
+    img = bpy.data.images.load(os.path.join(os.path.dirname(HERE), '背景.png'))
+    view_mat = wc_materials.painted('WindowView', '#ffffff', '#ffffff', srgb, image=img)
+    me = sky.data
+    uv = me.uv_layers.new()
+    # crop of the window in the painting, in UV space (x 390–1000, y 130–345 of 1672 × 941, v from the bottom)
+    u0, u1, v0, v1 = 390 / 1672, 1000 / 1672, 1 - 345 / 941, 1 - 130 / 941
+    xs = [v.co.x for v in me.vertices]
+    zs = [v.co.z for v in me.vertices]
+    for poly in me.polygons:
+        for li in poly.loop_indices:
+            co = me.vertices[me.loops[li].vertex_index].co
+            uv.data[li].uv = (u0 + (co.x - min(xs)) / (max(xs) - min(xs)) * (u1 - u0),
+                              v0 + (co.z - min(zs)) / (max(zs) - min(zs)) * (v1 - v0))
+    me.materials[0] = view_mat
+if not WC:
+    box('Hills', wx0, wx1, WALL_Y + 0.35, WALL_Y + 0.36, wz0, wz0 + 0.45, 'Hill', r=0, outline=0)
+if not WC:
+    box('Roofs', wx0, wx1, WALL_Y + 0.3, WALL_Y + 0.31, wz0, wz0 + 0.25, 'Roof', r=0, outline=0)
 for z in (wz0, wz1):
     box(f'WinH{z}', wx0 - 0.08, wx1 + 0.08, WALL_Y - 0.1, WALL_Y, z - 0.05, z + 0.05, 'Timber', r=0.015)
 for x in (wx0, wx0 + (wx1 - wx0) * 0.2, wx1):
@@ -175,7 +236,7 @@ for i in range(4):   # 门帘 with a white flower
     box(f'Curtain{i}', x0, x1, WALL_Y - 0.14, WALL_Y - 0.12, 2.28, 2.75, 'Cloth', r=0.006, outline=0.004)
     blob(f'Flower{i}', ((x0 + x1) / 2, WALL_Y - 0.145, 2.5), 0.05, 'ClothPattern', squash=(1, 0.08, 1), outline=0)
 box('CurtainRod', wx0 - 0.1, wx1 + 0.1, WALL_Y - 0.15, WALL_Y - 0.1, 2.75, 2.8, 'Timber', r=0.01)
-for i in range(6):   # blossom branch outside
+for i in range(0 if WC else 6):   # blossom branch outside
     blob(f'Blossom{i}', (wx1 - 0.25 + 0.08 * math.cos(i * 1.7), WALL_Y + 0.2, wz0 + 0.65 + 0.2 * math.sin(i * 1.3)), 0.07,
          'Leaf' if i % 2 else 'Blossom', squash=(1, 0.05, 1), outline=0)
 # right: two shelves with jars, a woven sieve and a hanging chili string
@@ -185,23 +246,53 @@ for z in (1.35, 2.25):
         mat = ('Porcelain', 'Straw', 'BlueGlaze', 'Porcelain', 'Straw')[(j + int(z)) % 5]
         h = 0.14 + 0.05 * ((j * 7 + int(z * 10)) % 3)
         lathe(f'Jar{z}{j}', [(0.0, 0), (0.07, 0), (0.09, h * 0.4), (0.07, h * 0.9), (0.045, h), (0.0, h)], (x, WALL_Y - 0.19, z + 0.03), mat, n=14)
-lathe('Sieve', [(0.0, 0), (0.28, 0), (0.28, 0.03), (0.0, 0.03)], (2.25, WALL_Y - 0.05, 2.35), 'Straw', n=24,
-      M=Matrix.Rotation(math.pi / 2, 4, 'X'))
-for k in range(5):
-    blob(f'Chili{k}', (2.05, WALL_Y - 0.08, 2.1 - k * 0.1), 0.045, 'Chili', squash=(0.8, 0.8, 1.5))
+if WC:
+    image_card('Sieve', 'sieve', 1.97, 2.53, WALL_Y - 0.03, 2.05, 2.72)
+else:
+    lathe('Sieve', [(0.0, 0), (0.28, 0), (0.28, 0.03), (0.0, 0.03)], (2.25, WALL_Y - 0.05, 2.35), 'Straw', n=24,
+          M=Matrix.Rotation(math.pi / 2, 4, 'X'))
+if WC:
+    image_card('ChiliString', 'chili', 1.88, 2.22, WALL_Y - 0.06, 1.55, 2.12)
+else:
+    for k in range(5):
+        blob(f'Chili{k}', (2.05, WALL_Y - 0.08, 2.1 - k * 0.1), 0.045, 'Chili', squash=(0.8, 0.8, 1.5))
 # left: a small shelf with bowls
 box('ShelfL', -2.95, -2.1, WALL_Y - 0.3, WALL_Y - 0.08, 1.35, 1.41, 'Timber', r=0.01)
 for j in range(3):
     lathe(f'Bowl{j}', [(0.0, 0), (0.06, 0), (0.1, 0.06), (0.0, 0.06)], (-2.7, WALL_Y - 0.19, 1.41 + j * 0.045), 'Porcelain', n=14)
 
+# more of the clutter the painted kitchen has
+if WC:
+    image_card('Scroll', 'scroll', -2.07, -1.7, WALL_Y - 0.03, 1.68, 2.52)
+else:
+  box('ScrollPaper', -2.05, -1.72, WALL_Y - 0.03, WALL_Y - 0.02, 1.75, 2.45, 'ClothPattern', r=0, outline=0.003)
+if not WC:
+  box('ScrollTop', -2.09, -1.68, WALL_Y - 0.05, WALL_Y - 0.02, 2.45, 2.49, 'Timber', r=0.01, outline=0.003)
+if not WC:
+  box('ScrollBottom', -2.09, -1.68, WALL_Y - 0.05, WALL_Y - 0.02, 1.71, 1.75, 'Timber', r=0.01, outline=0.003)
+if not WC:
+  blob('ScrollInk', (-1.885, WALL_Y - 0.035, 2.1), 0.09, 'Timber', squash=(0.6, 0.05, 1.8), outline=0)
+lathe('ChopCup', [(0.0, 0), (0.06, 0), (0.065, 0.16), (0.0, 0.16)], (-2.35, WALL_Y - 0.19, 1.41), 'LightWood', n=12)
+for k in range(5):
+    box(f'Chop{k}', -2.39 + k * 0.018, -2.38 + k * 0.018, WALL_Y - 0.2, WALL_Y - 0.19, 1.45, 1.72, 'Timber', r=0.003, outline=0.002)
+lathe('Ladle', [(0.0, 0), (0.07, 0.01), (0.075, 0.05), (0.0, 0.05)], (0.6, WALL_Y - 0.1, 1.55), 'Iron', n=12,
+      M=Matrix.Rotation(math.pi / 2, 4, 'X'))
+box('LadleHandle', 0.585, 0.615, WALL_Y - 0.12, WALL_Y - 0.09, 1.6, 2.05, 'Timber', r=0.008, outline=0.003)
+for k in range(6):   # firewood beside the stove
+    lathe(f'Wood{k}', [(0.055, -0.22), (0.055, 0.22)], (0, 0, 0), 'LightWood', n=8,
+          M=Matrix.Translation((2.45 + (k % 3) * 0.12 + (k // 3) * 0.06, 0.25, 0.055 + (k // 3) * 0.1)) @ Matrix.Rotation(math.pi / 2, 4, 'X'))
+lathe('Basket', [(0.0, 0), (0.16, 0), (0.2, 0.22), (0.18, 0.22), (0.0, 0.02)], (-3.1, 0.35, 0), 'Straw', n=16)
+for k in range(3):
+    blob(f'BasketVeg{k}', (-3.12 + k * 0.08, 0.35, 0.22), 0.07, 'Greens' if 'Greens' in MATS else 'Leaf')
+
 # ---------------------------------------------------------------- counter (放置区 + 食材与调味)
 CY0, CY1, CZ = 0.0, 0.75, 0.85
 box('CounterBody', -2.75, 0.85, CY0 + 0.05, CY1, 0, CZ - 0.06, 'Counter', r=0.02)
-box('CounterTop', -2.8, 0.9, CY0, CY1, CZ - 0.07, CZ, 'Counter', r=0.02)
+box('CounterTop', -2.8, 0.9, CY0 - 0.02, CY1, CZ - (0.11 if WC else 0.07), CZ, 'CounterTop' if WC else 'Counter', r=0.025)   # a thick top slab
 for i, (x0, x1) in enumerate(((-2.6, -2.0), (-1.9, -1.4), (-1.3, -0.8))):
-    box(f'Door{i}', x0, x1, CY0 + 0.02, CY0 + 0.05, 0.12, CZ - 0.16, 'TrayWood', r=0.01)
-box('Drawer1', -0.65, 0.65, CY0 + 0.02, CY0 + 0.05, 0.45, CZ - 0.16, 'TrayWood', r=0.01)
-box('Drawer2', -0.65, 0.65, CY0 + 0.02, CY0 + 0.05, 0.12, 0.4, 'TrayWood', r=0.01)
+    box(f'Door{i}', x0, x1, CY0 + 0.02, CY0 + 0.05, 0.12, CZ - 0.16, 'Counter', r=0.01)
+box('Drawer1', -0.65, 0.65, CY0 + 0.02, CY0 + 0.05, 0.45, CZ - 0.16, 'Counter', r=0.01)
+box('Drawer2', -0.65, 0.65, CY0 + 0.02, CY0 + 0.05, 0.12, 0.4, 'Counter', r=0.01)
 TRAYS = [(-2.62, -2.07), (-2.0, -1.45), (-1.38, -0.83)]
 for i, (x0, x1) in enumerate(TRAYS):   # 放置区: three small trays
     y0, y1 = 0.18, 0.6
@@ -212,7 +303,10 @@ BX0, BX1, BY0, BY1 = -0.65, 0.78, 0.14, 0.66      # 食材与调味: the big tra
 box('Board', BX0, BX1, BY0, BY1, CZ, CZ + 0.012, 'TrayWood', r=0.006, outline=0.003)
 for (a0, a1, b0, b1) in ((BX0, BX1, BY0, BY0 + 0.03), (BX0, BX1, BY1 - 0.03, BY1), (BX0, BX0 + 0.03, BY0, BY1), (BX1 - 0.03, BX1, BY0, BY1)):
     box(f'BoardRim{a0}{b0}', a0, a1, b0, b1, CZ, CZ + 0.035, 'TrayWood', r=0.01, outline=0.003)
-box('Towel', -2.86, -2.62, -0.02, 0.02, 0.35, CZ - 0.02, 'Cloth', r=0.008)
+if WC:
+    image_card('Towel', 'towel', -2.72, -2.38, -0.035, 0.28, CZ + 0.02)
+else:
+    box('Towel', -2.86, -2.62, -0.02, 0.02, 0.35, CZ - 0.02, 'Cloth', r=0.008)
 
 # ---------------------------------------------------------------- stove (灶台)
 SX0, SX1, SY0, SY1, SZ = 0.95, 2.3, 0.0, 1.0, 0.95
@@ -230,11 +324,14 @@ for r_ in range(rows):   # brick courses on the front and the top ring
             continue   # the fire mouth
         box(f'Brick{r_}{a:.2f}', a + 0.006, b - 0.006, SY0, SY0 + 0.06, z0 + 0.006, z0 + bh - 0.006, 'Brick', r=0.02, outline=0.004)
 box('StoveTop', SX0, SX1, SY0, SY1, SZ - 0.02, SZ + 0.06, 'Brick', r=0.03)
-box('MouthBack', 1.35, 1.9, SY0 + 0.25, SY0 + 0.3, 0.0, 3 * bh, 'Ember', r=0, outline=0)
-for k in range(4):
+if not WC:
+    box('MouthBack', 1.35, 1.9, SY0 + 0.25, SY0 + 0.3, 0.0, 3 * bh, 'Ember', r=0, outline=0)
+for k in range(0 if WC else 4):
     blob(f'Log{k}', (1.45 + k * 0.12, SY0 + 0.15, 0.08), 0.05, 'Ember', squash=(1.6, 0.8, 0.8))
-for k in range(5):
+for k in range(0 if WC else 5):
     blob(f'Flame{k}', (1.42 + k * 0.1, SY0 + 0.14, 0.2 + 0.05 * (k % 2)), 0.08, 'Fire', squash=(0.8, 0.5, 1.8), outline=0)
+if WC:   # the painted arched fire mouth with its fire, set into the brick face
+    image_card('FireMouth', 'firemouth', 1.2, 2.05, -0.004, 0.0, 0.66, glow=True)
 WOK = Vector(((SX0 + SX1) / 2, 0.5, SZ + 0.06))
 lathe('Wok', [(0.0, -0.02), (0.18, 0.0), (0.33, 0.1), (0.36, 0.15), (0.345, 0.155), (0.31, 0.11), (0.16, 0.02), (0.0, 0.0)],
       WOK, 'Iron', n=28, outline=0.005)
@@ -277,7 +374,7 @@ line.use_backface_culling = True
 nt = line.node_tree
 nt.nodes.clear()
 em = nt.nodes.new('ShaderNodeEmission')
-em.inputs['Color'].default_value = (*srgb('#4e321f'), 1)
+em.inputs['Color'].default_value = (*srgb('#6b4630' if WC else '#4e321f'), 1)
 geo = nt.nodes.new('ShaderNodeNewGeometry')
 mix = nt.nodes.new('ShaderNodeMixShader')
 nt.links.new(geo.outputs['Backfacing'], mix.inputs['Fac'])
@@ -297,7 +394,7 @@ for ob, w in OBJS:
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5)
     bm.normal_update()
     for v in bm.verts:
-        v.co += v.normal * w
+        v.co += v.normal * (w * 0.75 if WC else w)
     bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
     bm.to_mesh(me)
     bm.free()
@@ -309,8 +406,29 @@ scene.camera = cam
 cam.data.lens = 30
 cam.location = (-0.3, -4.1, 2.0)
 cam.rotation_euler = (math.radians(80), 0, 0)
+if WC:   # a little from above, like the painting: the counter top and trays read clearly
+    cam.data.lens = 26
+    cam.data.lens = 22
+    cam.location = (-0.35, -2.75, 2.4)
+    cam.rotation_euler = (math.radians(68), 0, 0)
 scene.render.resolution_x, scene.render.resolution_y = 1920, 1080
 scene.view_settings.view_transform = 'Standard'
+if WC:   # sunlight from the upper left, a soft sky fill; EEVEE for Shader-to-RGB
+    sun = bpy.data.objects.new('Sun', bpy.data.lights.new('Sun', 'SUN'))
+    sun.data.energy = 3.2
+    sun.data.angle = 0.12
+    sun.rotation_euler = Vector((0.5, 0.65, -0.6)).normalized().to_track_quat('-Z', 'Y').to_euler()   # from front-left-up
+    scene.collection.objects.link(sun)
+    scene.world = bpy.data.worlds.new('World')
+    scene.world.use_nodes = True
+    scene.world.node_tree.nodes['Background'].inputs['Color'].default_value = (0.35, 0.33, 0.3, 1)
+    scene.render.engine = 'BLENDER_EEVEE'
+    scene.eevee.taa_render_samples = 32
+    scene.render.filepath = OUT
+    bpy.ops.render.render(write_still=True)
+    bpy.ops.wm.save_as_mainfile(filepath=os.path.join(os.path.dirname(OUT), 'cook_view_wc.blend'))
+    print('[cookview] rendered', OUT, flush=True)
+    sys.exit(0)
 scene.render.engine = 'CYCLES'
 scene.cycles.device = 'CPU'
 scene.cycles.samples = 16

@@ -37,6 +37,23 @@ def noise(h, w, scale, seed):
     return np.asarray(im, dtype=np.float32)[scale:scale + h, scale:scale + w] / 255
 
 
+def paper_only(img, bg=(243, 230, 204)):
+    """The light finish for renders that already carry painted materials: pigment pooling at colour
+    edges, a touch of granulation and the paper grain; no wash blur, the lines stay crisp."""
+    im = img.convert('RGBA')
+    base = Image.new('RGBA', im.size, bg + (255,))
+    base.alpha_composite(im)
+    a = np.asarray(base.convert('RGB'), dtype=np.float32) / 255
+    h, w, _ = a.shape
+    soft = blur(a, 5)
+    edge = np.clip(np.abs(a - soft).sum(-1) * 1.6, 0, 1)
+    out = a * (1 - 0.12 * edge[..., None])
+    gran = noise(h, w, 3, 3) * 0.6 + noise(h, w, 20, 4) * 0.4
+    paper = noise(h, w, 2, 7) * 0.5 + noise(h, w, 7, 8) * 0.5
+    out = out * (0.95 + 0.06 * gran[..., None]) * (0.965 + 0.05 * paper[..., None])
+    return Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8))
+
+
 def paint(img, bg=(243, 230, 204), strength=1.0):
     im = img.convert('RGBA')
     base = Image.new('RGBA', im.size, bg + (255,))
@@ -97,5 +114,5 @@ if __name__ == '__main__':
         bg = tuple(int(h_[i:i + 2], 16) for i in (0, 2, 4))
     if '--strength' in args:
         strength = float(args[args.index('--strength') + 1])
-    paint(Image.open(args[0]), bg, strength).save(args[1])
+    (paper_only(Image.open(args[0]), bg) if '--light' in args else paint(Image.open(args[0]), bg, strength)).save(args[1])
     print('wrote', args[1])
