@@ -28,6 +28,9 @@
 - `设计源文件/`：总文档和四份分册的源文本（`*.src.txt`）、生成脚本 `build_docs.py`、经营模拟 `economy_sim.py`。
 - `WhiteModel/`：纹璃宫灯白模，包括生成脚本、`.blend` 和 `.fbx`（高模、约 3000 面、500 面定稿）、预览渲染、水彩脚本和过程图截图脚本。
 - `纹璃宫灯_1_白模.png`、`纹璃宫灯_3_水彩.png`：纹璃宫灯的过程图（Blender 截图）。
+- `WhiteModel/build_level1.py`、`WhiteModel/Level1/`：初始关卡（一级·1 桌）的场景白模。
+- `WhiteModel/build_food.py`、`WhiteModel/Food/`：开局 3 道菜和 7 样食材、调味（面粉、时蔬、猪肉、盐、油、葱、姜）的 3D 白模，三渲二用，每件 ≤500 面。Unity 里放在 `Resources/FoodModels`，一键设置时渲成 `Resources/Food3D` 的立体图给界面用。
+- `Unity/`：手机版 demo 的 Unity 工程（见下面「Unity demo」）。打包结果输出到 `Builds/`，不进仓库。
 
 ## 修改设计文档
 
@@ -71,6 +74,36 @@ blender --factory-startup -p 0 0 2560 1440 --no-window-focus WhiteModel/SM_Wenli
 三渲二那张过程图会在图像编辑器里打开老师给的参考图 `例子尝试.jpg`。参考图不在仓库里，所以上面只拍白模和水彩两张。
 
 建模规范（圆角、全四边面、Weighted Normals、删掉看不见的面等）见总文档第五部分 03 节。
+
+## Unity demo（初始·1桌）
+
+用 Unity 6000.5.3f1（URP）打开 `Unity/`，运行 `Scenes/Level1`。
+
+- 前堂：单指拖动，双指缩放，「全景」复位；「开门营业」后工人按一级①的节奏来，每天最多 12 人，平均 90 秒一组。客人入座点菜，耐心用完会催单，再过 15 秒离店。
+- 点案台进入单独的平面做饭界面：选菜 → 点灶台 → 到点再点一次出炉。出炉判定、自动做计数、评价概率和经验都按总文档第二部分和 JSON 里的 `rules.service`。出炉的菜自动端给点了这道菜的桌；这一步以后改成玩家或小二端菜。
+- 规则代码在 `Assets/Scripts/Core/`（不依赖 Unity，可单测）；界面和场景在 `Assets/Scripts/`。
+- 字体是 Noto Sans SC 的子集（SIL OFL，见 `Assets/Resources/Fonts/`），加了新文字后用 `Unity/Tools/build_font.py` 重新生成。
+
+改了白模以后：
+
+```
+blender -b --factory-startup --python WhiteModel/build_level1.py -- WhiteModel/Level1
+copy WhiteModel\Level1\SM_Level1.fbx Unity\Assets\Art\Models\
+Unity 菜单 BianHe ▸ Setup Level1        # 材质、场景、渲染管线和打包设置
+```
+
+测试与打包（菜单 BianHe 里也有）：
+
+```
+Unity -batchmode -projectPath Unity -runTests -testPlatform EditMode            # 规则单测
+Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildAndroid   # Builds/BianHe_Level1.apk
+Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildWebGL     # Builds/WebGL，手机浏览器（含 iPhone Safari）可玩
+Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildWindows   # Builds/Windows
+Builds/Windows/BianHe.exe -shots <文件夹>                                         # 自动玩一桌客人并截图
+python Unity/Tools/webgl_touch_test.py http://127.0.0.1:8765/ <文件夹>            # 模拟 iPhone 触屏测网页版
+```
+
+iOS 原生包需要 Mac 和 Xcode：在 Unity Hub 给这个版本加装 iOS Build Support，打出 Xcode 工程后在 Mac 上签名安装。iOS 的包名和系统版本已经写在 Setup 里。
 
 ## 资料来源
 

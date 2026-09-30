@@ -1,0 +1,4065 @@
+{
+  "schema_version": "1.3",
+  "status": "prototype_balance",
+  "title": "汴河两岸：23道菜、家宴与经营数值",
+  "companion_doc": "汴河两岸_完整设计文档.pdf",
+  "currency_unit": "1/100 wen",
+  "currency_note": "字段名以 _wen 结尾的是整文；其余金额（base_unit_cost、default_price、budget、fee 等）是 1/100 文",
+  "ingredient_category_note": "ingredients[].category 是坏料、过夜损耗和整筐折扣的分组（程序用，豆腐按肉、干贝海味包按面米干货算）；界面上的分类看 display_category",
+  "ingredients": [
+    {
+      "id": "flour",
+      "name": "面粉",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "grain",
+      "display_category": "面米",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "面米铺",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.03,
+      "bad_rate_premium": 0.01,
+      "overnight_bad_rate": 0,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "rice",
+      "name": "米",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "grain",
+      "display_category": "面米",
+      "min_shop_level": 2,
+      "source": "market",
+      "vendor": "面米铺",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.03,
+      "bad_rate_premium": 0.01,
+      "overnight_bad_rate": 0,
+      "min_xp": 300,
+      "purchase_condition": null
+    },
+    {
+      "id": "pork",
+      "name": "猪肉",
+      "base_unit_cost": 500,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "肉",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "肉铺",
+      "premium_available": true,
+      "premium_unit_cost": 750,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "chicken",
+      "name": "鸡肉",
+      "base_unit_cost": 500,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "禽蛋",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "禽蛋铺",
+      "premium_available": true,
+      "premium_unit_cost": 750,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 150,
+      "purchase_condition": null
+    },
+    {
+      "id": "duck",
+      "name": "鸭",
+      "base_unit_cost": 1200,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "禽蛋",
+      "min_shop_level": 4,
+      "source": "market",
+      "vendor": "禽蛋铺",
+      "premium_available": true,
+      "premium_unit_cost": 1800,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 1200,
+      "purchase_condition": null
+    },
+    {
+      "id": "egg",
+      "name": "鸡蛋",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "禽蛋",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "禽蛋铺",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 150,
+      "purchase_condition": null
+    },
+    {
+      "id": "kidney",
+      "name": "猪腰子",
+      "base_unit_cost": 600,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "肉",
+      "min_shop_level": 3,
+      "source": "market",
+      "vendor": "肉铺",
+      "premium_available": true,
+      "premium_unit_cost": 900,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 650,
+      "purchase_condition": null
+    },
+    {
+      "id": "fish",
+      "name": "普通整鱼",
+      "base_unit_cost": 600,
+      "unit": "份",
+      "category": "fish",
+      "display_category": "水产",
+      "min_shop_level": 2,
+      "source": "market",
+      "vendor": "鱼行",
+      "premium_available": true,
+      "premium_unit_cost": 900,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 300,
+      "purchase_condition": null
+    },
+    {
+      "id": "mandarin_fish",
+      "name": "鳜鱼",
+      "base_unit_cost": 1200,
+      "unit": "份",
+      "category": "fish",
+      "display_category": "水产",
+      "min_shop_level": 4,
+      "source": "market",
+      "vendor": "鱼行",
+      "premium_available": true,
+      "premium_unit_cost": 1800,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 1200,
+      "purchase_condition": null
+    },
+    {
+      "id": "crab",
+      "name": "蟹",
+      "base_unit_cost": 1000,
+      "unit": "份",
+      "category": "fish",
+      "display_category": "水产",
+      "min_shop_level": 5,
+      "source": "market",
+      "vendor": "鱼行",
+      "premium_available": true,
+      "premium_unit_cost": 1500,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 2100,
+      "purchase_condition": null,
+      "available_seasons": [
+        "autumn"
+      ]
+    },
+    {
+      "id": "fish_head",
+      "name": "大鱼头",
+      "base_unit_cost": 700,
+      "unit": "份",
+      "category": "fish",
+      "display_category": "水产",
+      "min_shop_level": 5,
+      "source": "market",
+      "vendor": "鱼行",
+      "premium_available": true,
+      "premium_unit_cost": 1050,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 2100,
+      "purchase_condition": null,
+      "daily_supply": {
+        "min": 0,
+        "max": 4
+      }
+    },
+    {
+      "id": "wing",
+      "name": "鸡翅",
+      "base_unit_cost": 600,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "禽蛋",
+      "min_shop_level": 2,
+      "source": "market",
+      "vendor": "禽蛋铺",
+      "premium_available": true,
+      "premium_unit_cost": 900,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 300,
+      "purchase_condition": null
+    },
+    {
+      "id": "radish",
+      "name": "萝卜",
+      "base_unit_cost": 100,
+      "unit": "份",
+      "category": "vegetable",
+      "display_category": "蔬菜",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "菜贩",
+      "premium_available": true,
+      "premium_unit_cost": 150,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 60,
+      "purchase_condition": null
+    },
+    {
+      "id": "gourd",
+      "name": "瓜菜",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "vegetable",
+      "display_category": "蔬菜",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "菜贩",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 60,
+      "purchase_condition": null
+    },
+    {
+      "id": "greens",
+      "name": "时蔬",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "vegetable",
+      "display_category": "蔬菜",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "菜贩",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "tofu",
+      "name": "豆腐",
+      "base_unit_cost": 300,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "豆制",
+      "min_shop_level": 3,
+      "source": "market",
+      "vendor": "豆腐坊",
+      "premium_available": true,
+      "premium_unit_cost": 450,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 650,
+      "purchase_condition": null
+    },
+    {
+      "id": "bamboo",
+      "name": "笋",
+      "base_unit_cost": 300,
+      "unit": "份",
+      "category": "vegetable",
+      "display_category": "蔬菜",
+      "min_shop_level": 2,
+      "source": "market",
+      "vendor": "菜贩",
+      "premium_available": true,
+      "premium_unit_cost": 450,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 300,
+      "purchase_condition": null
+    },
+    {
+      "id": "perilla",
+      "name": "紫苏",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "vegetable",
+      "display_category": "蔬菜",
+      "min_shop_level": 2,
+      "source": "market",
+      "vendor": "菜贩",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 300,
+      "purchase_condition": null
+    },
+    {
+      "id": "mushroom",
+      "name": "菌菇",
+      "base_unit_cost": 300,
+      "unit": "份",
+      "category": "vegetable",
+      "display_category": "蔬菜",
+      "min_shop_level": 3,
+      "source": "market",
+      "vendor": "菜贩",
+      "premium_available": true,
+      "premium_unit_cost": 450,
+      "bad_rate_normal": 0.2,
+      "bad_rate_premium": 0.06,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 650,
+      "purchase_condition": null
+    },
+    {
+      "id": "skin",
+      "name": "猪肉皮",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "肉",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "肉铺",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 60,
+      "purchase_condition": null
+    },
+    {
+      "id": "stock",
+      "name": "肉汤备料",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "meat",
+      "display_category": "备料",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "肉铺",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.1,
+      "bad_rate_premium": 0.03,
+      "overnight_bad_rate": 0.2,
+      "min_xp": 60,
+      "purchase_condition": null
+    },
+    {
+      "id": "rice_prep",
+      "name": "米料备料",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "grain",
+      "display_category": "备料",
+      "min_shop_level": 3,
+      "source": "market",
+      "vendor": "面米铺",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.03,
+      "bad_rate_premium": 0.01,
+      "overnight_bad_rate": 0,
+      "min_xp": 650,
+      "purchase_condition": null
+    },
+    {
+      "id": "pickle_base",
+      "name": "盐渍辅料包",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "preserved",
+      "display_category": "腌货",
+      "min_shop_level": 3,
+      "source": "market",
+      "vendor": "酱菜干货铺",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 650,
+      "purchase_condition": null
+    },
+    {
+      "id": "sauerkraut",
+      "name": "酸菜",
+      "base_unit_cost": 300,
+      "unit": "份",
+      "category": "preserved",
+      "display_category": "腌货",
+      "min_shop_level": 4,
+      "source": "market",
+      "vendor": "酱菜干货铺",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 1200,
+      "purchase_condition": null
+    },
+    {
+      "id": "pancake",
+      "name": "薄饼备料",
+      "base_unit_cost": 200,
+      "unit": "份",
+      "category": "grain",
+      "display_category": "备料",
+      "min_shop_level": 4,
+      "source": "market",
+      "vendor": "面米铺",
+      "premium_available": true,
+      "premium_unit_cost": 300,
+      "bad_rate_normal": 0.03,
+      "bad_rate_premium": 0.01,
+      "overnight_bad_rate": 0,
+      "min_xp": 1200,
+      "purchase_condition": null
+    },
+    {
+      "id": "seafood",
+      "name": "干贝海味包",
+      "base_unit_cost": 1200,
+      "unit": "份",
+      "category": "grain",
+      "display_category": "干货",
+      "min_shop_level": 5,
+      "source": "market",
+      "vendor": "酱菜干货铺",
+      "premium_available": true,
+      "premium_unit_cost": 1800,
+      "bad_rate_normal": 0.03,
+      "bad_rate_premium": 0.01,
+      "overnight_bad_rate": 0,
+      "min_xp": 2100,
+      "purchase_condition": null
+    },
+    {
+      "id": "tomato",
+      "name": "番茄",
+      "base_unit_cost": 400,
+      "unit": "份",
+      "category": "modern",
+      "display_category": "现代食材",
+      "min_shop_level": 1,
+      "source": "portal",
+      "vendor": "时空门",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 150,
+      "purchase_condition": "portal_first_upgrade"
+    },
+    {
+      "id": "chili",
+      "name": "辣椒",
+      "base_unit_cost": 300,
+      "unit": "份",
+      "category": "modern",
+      "display_category": "现代食材",
+      "min_shop_level": 1,
+      "source": "portal",
+      "vendor": "时空门",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0.3,
+      "min_xp": 150,
+      "purchase_condition": "portal_first_upgrade"
+    },
+    {
+      "id": "potato",
+      "name": "土豆",
+      "base_unit_cost": 300,
+      "unit": "份",
+      "category": "modern",
+      "display_category": "现代食材",
+      "min_shop_level": 1,
+      "source": "portal",
+      "vendor": "时空门",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 150,
+      "purchase_condition": "portal_first_upgrade"
+    },
+    {
+      "id": "cola",
+      "name": "可乐",
+      "base_unit_cost": 400,
+      "unit": "份",
+      "category": "modern",
+      "display_category": "现代食材",
+      "min_shop_level": 2,
+      "source": "portal",
+      "vendor": "时空门",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 300,
+      "purchase_condition": "portal_first_upgrade"
+    },
+    {
+      "id": "starch",
+      "name": "玉米淀粉",
+      "base_unit_cost": 300,
+      "unit": "份",
+      "category": "modern",
+      "display_category": "现代食材",
+      "min_shop_level": 4,
+      "source": "portal",
+      "vendor": "时空门",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 1200,
+      "purchase_condition": "portal_first_upgrade"
+    },
+    {
+      "id": "salt",
+      "name": "盐",
+      "base_unit_cost": 10,
+      "unit": "格",
+      "category": "seasoning",
+      "display_category": "调料",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "面米铺",
+      "pack_units": 100,
+      "pack_price": 1000,
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "oil",
+      "name": "油",
+      "base_unit_cost": 20,
+      "unit": "格",
+      "category": "seasoning",
+      "display_category": "调料",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "面米铺",
+      "pack_units": 100,
+      "pack_price": 2000,
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "ginger",
+      "name": "姜",
+      "base_unit_cost": 10,
+      "unit": "格",
+      "category": "seasoning",
+      "display_category": "调料",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "面米铺",
+      "pack_units": 100,
+      "pack_price": 1000,
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "scallion",
+      "name": "葱",
+      "base_unit_cost": 10,
+      "unit": "格",
+      "category": "seasoning",
+      "display_category": "调料",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "面米铺",
+      "pack_units": 100,
+      "pack_price": 1000,
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "garlic",
+      "name": "蒜",
+      "base_unit_cost": 10,
+      "unit": "格",
+      "category": "seasoning",
+      "display_category": "调料",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "面米铺",
+      "pack_units": 100,
+      "pack_price": 1000,
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "vinegar",
+      "name": "醋",
+      "base_unit_cost": 10,
+      "unit": "格",
+      "category": "seasoning",
+      "display_category": "调料",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "面米铺",
+      "pack_units": 100,
+      "pack_price": 1000,
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "sugar",
+      "name": "糖",
+      "base_unit_cost": 20,
+      "unit": "格",
+      "category": "seasoning",
+      "display_category": "调料",
+      "min_shop_level": 1,
+      "source": "market",
+      "vendor": "面米铺",
+      "pack_units": 100,
+      "pack_price": 2000,
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 0,
+      "purchase_condition": null
+    },
+    {
+      "id": "qingchun",
+      "name": "清醇",
+      "base_unit_cost": 400,
+      "unit": "份",
+      "category": "wine",
+      "display_category": "酒",
+      "min_shop_level": 2,
+      "source": "wine_vendor",
+      "vendor": "酒商",
+      "direct_sale_price": 1000,
+      "historical_note": "出处已核对：张能臣《酒名记》\"钱驸马清醇\"（驸马家的家酒）。游戏里从酒商进货，酒蟹默认用它；酿法不详。",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 300,
+      "purchase_condition": null
+    },
+    {
+      "id": "zhuye",
+      "name": "竹叶清",
+      "base_unit_cost": 500,
+      "unit": "份",
+      "category": "wine",
+      "display_category": "酒",
+      "min_shop_level": 2,
+      "source": "wine_vendor",
+      "vendor": "酒商",
+      "direct_sale_price": 1200,
+      "historical_note": "出处已核对：张能臣《酒名记》\"杭州竹叶清\"，梓州、襄州也有此名；酿法不详。",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 300,
+      "purchase_condition": null
+    },
+    {
+      "id": "baijiu",
+      "name": "白酒（古名）",
+      "base_unit_cost": 400,
+      "unit": "份",
+      "category": "wine",
+      "display_category": "酒",
+      "min_shop_level": 2,
+      "source": "wine_vendor",
+      "vendor": "酒商",
+      "direct_sale_price": 1000,
+      "historical_note": "出处已核对：张能臣《酒名记》\"杭州竹叶清，又碧香，又白酒\"。宋代白酒是米酿的酒，不是今天的蒸馏白酒。",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 300,
+      "purchase_condition": null
+    },
+    {
+      "id": "cuozhushui",
+      "name": "错著水",
+      "base_unit_cost": 600,
+      "unit": "份",
+      "category": "wine",
+      "display_category": "酒",
+      "min_shop_level": 3,
+      "source": "wine_vendor",
+      "vendor": "酒商",
+      "direct_sale_price": 1500,
+      "historical_note": "出处已核对：张能臣《酒名记》河北\"保州巡边银条，又错著水\"\"定州瓜曲，又错著水\"；酿法不详。",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 650,
+      "purchase_condition": null
+    },
+    {
+      "id": "yinping",
+      "name": "银瓶酒",
+      "base_unit_cost": 1200,
+      "unit": "份",
+      "category": "wine",
+      "display_category": "酒",
+      "min_shop_level": 3,
+      "source": "wine_vendor",
+      "vendor": "酒商",
+      "direct_sale_price": 3000,
+      "historical_note": "出处已核对：《东京梦华录》卷二「宣德楼前省府宫宇」遇仙正店\"银瓶酒七十二文一角\"。游戏按杯卖，酒商从正店批来。",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 650,
+      "purchase_condition": null,
+      "daily_supply": {
+        "max": 6
+      }
+    },
+    {
+      "id": "yanggao",
+      "name": "羊羔酒",
+      "base_unit_cost": 1500,
+      "unit": "份",
+      "category": "wine",
+      "display_category": "酒",
+      "min_shop_level": 3,
+      "source": "wine_vendor",
+      "vendor": "酒商",
+      "direct_sale_price": 3800,
+      "historical_note": "出处已核对：《东京梦华录》卷二\"羊羔酒八十一文一角\"；《酒名记》\"姜宅园子正店羊羔\"。游戏按杯卖，酒商从正店批来。",
+      "premium_available": false,
+      "premium_unit_cost": null,
+      "bad_rate_normal": 0,
+      "bad_rate_premium": 0,
+      "overnight_bad_rate": 0,
+      "min_xp": 650,
+      "purchase_condition": null,
+      "daily_supply": {
+        "max": 6
+      }
+    }
+  ],
+  "recipes": [
+    {
+      "id": "D01",
+      "name": "胡饼",
+      "difficulty": 1,
+      "required_stove_tier": 1,
+      "cook_seconds": 3,
+      "yield_plates": 1,
+      "ingredients": {
+        "flour": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 1,
+        "ginger": 0,
+        "scallion": 0,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 230,
+      "default_price": 600,
+      "gross_profit": 370,
+      "unlock": {
+        "cumulative_xp": 0,
+        "required_flags": [],
+        "shop_level": 1
+      },
+      "satiety": 90,
+      "temperature": "hot",
+      "taste_tags": [
+        "mild",
+        "wheat"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "student"
+      ],
+      "is_staple": true,
+      "is_novel_recipe": false,
+      "description": "面粉制饼；制作中的油、盐从共用调味栏配置。",
+      "source_id": "S4",
+      "auto_cook_unlock_cooks": 3,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D02",
+      "name": "菜面",
+      "difficulty": 1,
+      "required_stove_tier": 1,
+      "cook_seconds": 3,
+      "yield_plates": 1,
+      "ingredients": {
+        "flour": 1,
+        "greens": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 1,
+        "ginger": 0,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 440,
+      "default_price": 1000,
+      "gross_profit": 560,
+      "unlock": {
+        "cumulative_xp": 0,
+        "required_flags": [],
+        "shop_level": 1
+      },
+      "satiety": 120,
+      "temperature": "hot",
+      "taste_tags": [
+        "mild",
+        "vegetable"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "family",
+        "student"
+      ],
+      "is_staple": true,
+      "is_novel_recipe": false,
+      "description": "面粉加时蔬，适合低价、清爽的日常订单。",
+      "source_id": "S4",
+      "auto_cook_unlock_cooks": 3,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D03",
+      "name": "馄饨",
+      "difficulty": 1,
+      "required_stove_tier": 1,
+      "cook_seconds": 3,
+      "yield_plates": 1,
+      "ingredients": {
+        "flour": 1,
+        "pork": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 0,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 730,
+      "default_price": 1600,
+      "gross_profit": 870,
+      "unlock": {
+        "cumulative_xp": 0,
+        "required_flags": [],
+        "shop_level": 1
+      },
+      "satiety": 130,
+      "temperature": "hot",
+      "taste_tags": [
+        "mild",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "family",
+        "student"
+      ],
+      "is_staple": true,
+      "is_novel_recipe": false,
+      "description": "面粉与猪肉组合；皮与馅在备料表现中完成。",
+      "source_id": "S4",
+      "auto_cook_unlock_cooks": 3,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D04",
+      "name": "瓜齑萝卜",
+      "difficulty": 1,
+      "required_stove_tier": 1,
+      "cook_seconds": 3,
+      "yield_plates": 1,
+      "ingredients": {
+        "gourd": 1,
+        "radish": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 0,
+        "ginger": 0,
+        "scallion": 0,
+        "garlic": 1,
+        "vinegar": 2,
+        "sugar": 1
+      },
+      "base_cost": 360,
+      "default_price": 800,
+      "gross_profit": 440,
+      "unlock": {
+        "cumulative_xp": 60,
+        "required_flags": [],
+        "shop_level": 1
+      },
+      "satiety": 35,
+      "temperature": "cold",
+      "taste_tags": [
+        "sour",
+        "vegetable"
+      ],
+      "suggested_customer_groups": [
+        "family",
+        "student"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": false,
+      "description": "瓜菜与萝卜组合；按原PDF的小菜合并条目表现。",
+      "source_id": "S4C",
+      "auto_cook_unlock_cooks": 3,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D05",
+      "name": "水晶脍",
+      "difficulty": 1,
+      "required_stove_tier": 1,
+      "cook_seconds": 3,
+      "yield_plates": 1,
+      "ingredients": {
+        "skin": 1,
+        "stock": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 0,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 1,
+        "sugar": 0
+      },
+      "base_cost": 440,
+      "default_price": 1400,
+      "gross_profit": 960,
+      "unlock": {
+        "cumulative_xp": 60,
+        "required_flags": [],
+        "shop_level": 1
+      },
+      "satiety": 70,
+      "temperature": "cold",
+      "taste_tags": [
+        "mild",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "student",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": false,
+      "description": "肉皮与肉汤的游戏化复原组合，不能视为已核实的唯一古方；冷凝属于备料表现。",
+      "source_id": "S2R",
+      "auto_cook_unlock_cooks": 3,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D06",
+      "name": "番茄炒蛋",
+      "difficulty": 1,
+      "required_stove_tier": 1,
+      "cook_seconds": 3,
+      "yield_plates": 1,
+      "ingredients": {
+        "tomato": 1,
+        "egg": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 0,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 1
+      },
+      "base_cost": 680,
+      "default_price": 1800,
+      "gross_profit": 1120,
+      "unlock": {
+        "cumulative_xp": 150,
+        "required_flags": [
+          "portal_first_upgrade"
+        ],
+        "shop_level": 1
+      },
+      "satiety": 100,
+      "temperature": "hot",
+      "taste_tags": [
+        "sweet_sour",
+        "soft"
+      ],
+      "suggested_customer_groups": [
+        "family",
+        "student",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "番茄由时空门带来，鸡蛋在宋代侧采购。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 3,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D07",
+      "name": "宫保鸡丁（简化版）",
+      "difficulty": 1,
+      "required_stove_tier": 1,
+      "cook_seconds": 3,
+      "yield_plates": 1,
+      "ingredients": {
+        "chicken": 1,
+        "chili": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 1,
+        "vinegar": 1,
+        "sugar": 1
+      },
+      "base_cost": 910,
+      "default_price": 2000,
+      "gross_profit": 1090,
+      "unlock": {
+        "cumulative_xp": 150,
+        "required_flags": [
+          "portal_first_upgrade"
+        ],
+        "shop_level": 1
+      },
+      "satiety": 120,
+      "temperature": "hot",
+      "taste_tags": [
+        "spicy",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "鸡肉加辣椒的简化游戏组合，保留后世做法方向，并非完整现实配方。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 3,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D08",
+      "name": "可乐鸡翅",
+      "difficulty": 1,
+      "required_stove_tier": 1,
+      "cook_seconds": 3,
+      "yield_plates": 1,
+      "ingredients": {
+        "wing": 1,
+        "cola": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 1,
+        "ginger": 1,
+        "scallion": 0,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 1040,
+      "default_price": 2200,
+      "gross_profit": 1160,
+      "unlock": {
+        "cumulative_xp": 300,
+        "required_flags": [
+          "first_cola_import"
+        ],
+        "shop_level": 2
+      },
+      "satiety": 110,
+      "temperature": "hot",
+      "taste_tags": [
+        "sweet",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "family",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "鸡翅与现代可乐组合；依新版玩法归入简单菜。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 3,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D09",
+      "name": "插肉面",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 4,
+      "yield_plates": 1,
+      "ingredients": {
+        "flour": 1,
+        "pork": 1,
+        "greens": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 1,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 950,
+      "default_price": 2000,
+      "gross_profit": 1050,
+      "unlock": {
+        "cumulative_xp": 300,
+        "required_flags": [],
+        "shop_level": 2
+      },
+      "satiety": 150,
+      "temperature": "hot",
+      "taste_tags": [
+        "savory",
+        "wheat"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "student"
+      ],
+      "is_staple": true,
+      "is_novel_recipe": false,
+      "description": "面粉、肉与时蔬组合；原PDF中的“肉”绑定为猪肉库存。",
+      "source_id": "S4",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D10",
+      "name": "煎鱼饭",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 5,
+      "yield_plates": 1,
+      "ingredients": {
+        "fish": 1,
+        "rice": 1,
+        "greens": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 1070,
+      "default_price": 2200,
+      "gross_profit": 1130,
+      "unlock": {
+        "cumulative_xp": 300,
+        "required_flags": [],
+        "shop_level": 2
+      },
+      "satiety": 160,
+      "temperature": "hot",
+      "taste_tags": [
+        "savory",
+        "rice"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "student"
+      ],
+      "is_staple": true,
+      "is_novel_recipe": false,
+      "description": "一条鱼对应一份鱼饭，不因配米增加鱼的份数。",
+      "source_id": "S4",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D11",
+      "name": "冷淘",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 4,
+      "yield_plates": 1,
+      "ingredients": {
+        "flour": 1,
+        "gourd": 1,
+        "greens": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 1,
+        "ginger": 0,
+        "scallion": 1,
+        "garlic": 1,
+        "vinegar": 2,
+        "sugar": 0
+      },
+      "base_cost": 670,
+      "default_price": 1600,
+      "gross_profit": 930,
+      "unlock": {
+        "cumulative_xp": 300,
+        "required_flags": [],
+        "shop_level": 2
+      },
+      "satiety": 120,
+      "temperature": "cold",
+      "taste_tags": [
+        "mild",
+        "sour"
+      ],
+      "suggested_customer_groups": [
+        "family",
+        "student"
+      ],
+      "is_staple": true,
+      "is_novel_recipe": false,
+      "description": "面粉、瓜菜、时蔬组成冷面方向；放凉作为备料表现。",
+      "source_id": "S4",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D12",
+      "name": "两熟紫苏鱼",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 6,
+      "yield_plates": 1,
+      "ingredients": {
+        "fish": 1,
+        "perilla": 1,
+        "bamboo": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 1,
+        "sugar": 0
+      },
+      "base_cost": 1180,
+      "default_price": 2800,
+      "gross_profit": 1620,
+      "unlock": {
+        "cumulative_xp": 300,
+        "required_flags": [],
+        "shop_level": 2
+      },
+      "satiety": 120,
+      "temperature": "hot",
+      "taste_tags": [
+        "herbal",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "celebrity",
+        "student"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": false,
+      "description": "普通鱼、紫苏与笋组合；进阶原料开放后制作，具体古方另行考证。",
+      "source_id": "S2",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D13",
+      "name": "土豆炖肉",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 6,
+      "yield_plates": 1,
+      "ingredients": {
+        "potato": 1,
+        "pork": 1,
+        "radish": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 1,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 950,
+      "default_price": 2400,
+      "gross_profit": 1450,
+      "unlock": {
+        "cumulative_xp": 300,
+        "required_flags": [],
+        "shop_level": 2
+      },
+      "satiety": 150,
+      "temperature": "hot",
+      "taste_tags": [
+        "savory",
+        "soft"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "family"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "土豆由门带来，肉与萝卜在宋代侧采购；肉绑定猪肉。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D14",
+      "name": "玉板鲊",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 5,
+      "yield_plates": 1,
+      "ingredients": {
+        "fish": 1,
+        "rice_prep": 1,
+        "pickle_base": 1
+      },
+      "seasonings": {
+        "salt": 0,
+        "oil": 0,
+        "ginger": 1,
+        "scallion": 0,
+        "garlic": 0,
+        "vinegar": 1,
+        "sugar": 0
+      },
+      "base_cost": 1020,
+      "default_price": 2600,
+      "gross_profit": 1580,
+      "unlock": {
+        "cumulative_xp": 650,
+        "required_flags": [],
+        "shop_level": 3
+      },
+      "satiety": 90,
+      "temperature": "cold",
+      "taste_tags": [
+        "sour",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": false,
+      "description": "鱼、米料、盐渍辅料的腌藏备料方向；秒数不代表真实腌制时长。",
+      "source_id": "S4",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D15",
+      "name": "荔枝腰子",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 6,
+      "yield_plates": 1,
+      "ingredients": {
+        "kidney": 1,
+        "bamboo": 1,
+        "greens": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 1,
+        "vinegar": 1,
+        "sugar": 0
+      },
+      "base_cost": 1190,
+      "default_price": 2800,
+      "gross_profit": 1610,
+      "unlock": {
+        "cumulative_xp": 650,
+        "required_flags": [],
+        "shop_level": 3
+      },
+      "satiety": 100,
+      "temperature": "hot",
+      "taste_tags": [
+        "savory",
+        "crisp"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": false,
+      "description": "保留“排蒸荔枝腰子”名称线索；用猪腰、笋与时蔬，不把荔枝列为必需水果。",
+      "source_id": "S2L",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D16",
+      "name": "文思豆腐",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 6,
+      "yield_plates": 1,
+      "ingredients": {
+        "tofu": 1,
+        "bamboo": 1,
+        "mushroom": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 0,
+        "ginger": 0,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 920,
+      "default_price": 2400,
+      "gross_profit": 1480,
+      "unlock": {
+        "cumulative_xp": 650,
+        "required_flags": [],
+        "shop_level": 3
+      },
+      "satiety": 70,
+      "temperature": "hot",
+      "taste_tags": [
+        "mild",
+        "soft"
+      ],
+      "suggested_customer_groups": [
+        "family",
+        "student",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "豆腐、笋与菌菇组合；以细切视觉表现主角厨艺，属于后世菜路线。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D17",
+      "name": "麻婆豆腐（简化版）",
+      "difficulty": 2,
+      "required_stove_tier": 2,
+      "cook_seconds": 5,
+      "yield_plates": 1,
+      "ingredients": {
+        "tofu": 1,
+        "pork": 1,
+        "chili": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 1,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 1180,
+      "default_price": 2400,
+      "gross_profit": 1220,
+      "unlock": {
+        "cumulative_xp": 650,
+        "required_flags": [],
+        "shop_level": 3
+      },
+      "satiety": 120,
+      "temperature": "hot",
+      "taste_tags": [
+        "spicy",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "豆腐、猪肉与门带来的辣椒组合；沿用简化游戏配方，不补成现实完整调味。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 8,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D18",
+      "name": "松鼠鳜鱼",
+      "difficulty": 3,
+      "required_stove_tier": 3,
+      "cook_seconds": 10,
+      "yield_plates": 1,
+      "ingredients": {
+        "mandarin_fish": 1,
+        "flour": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 3,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 3,
+        "sugar": 3
+      },
+      "base_cost": 1580,
+      "default_price": 4800,
+      "gross_profit": 3220,
+      "unlock": {
+        "cumulative_xp": 1200,
+        "required_flags": [],
+        "shop_level": 4
+      },
+      "satiety": 140,
+      "temperature": "hot",
+      "taste_tags": [
+        "sweet_sour",
+        "crisp"
+      ],
+      "suggested_customer_groups": [
+        "family",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "使用宋代侧可采购的鳜鱼和后世做法；基础裹粉用面粉，另有现代淀粉脆皮版。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 12,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D19",
+      "name": "北京烤鸭",
+      "difficulty": 3,
+      "required_stove_tier": 3,
+      "cook_seconds": 12,
+      "yield_plates": 1,
+      "ingredients": {
+        "duck": 1,
+        "pancake": 1,
+        "greens": 1
+      },
+      "seasonings": {
+        "salt": 2,
+        "oil": 2,
+        "ginger": 1,
+        "scallion": 2,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 2
+      },
+      "base_cost": 1730,
+      "default_price": 6800,
+      "gross_profit": 5070,
+      "unlock": {
+        "cumulative_xp": 1200,
+        "required_flags": [],
+        "shop_level": 4
+      },
+      "satiety": 180,
+      "temperature": "hot",
+      "taste_tags": [
+        "savory",
+        "crisp"
+      ],
+      "suggested_customer_groups": [
+        "celebrity"
+      ],
+      "is_staple": true,
+      "is_novel_recipe": true,
+      "description": "鸭、薄饼与配菜组合；配菜绑定时蔬，提前备料，以装盘与火候表现厨艺。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 12,
+      "ordinary_service": "reservable"
+    },
+    {
+      "id": "D20",
+      "name": "酸菜鱼",
+      "difficulty": 3,
+      "required_stove_tier": 3,
+      "cook_seconds": 8,
+      "yield_plates": 1,
+      "ingredients": {
+        "fish": 1,
+        "sauerkraut": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 2,
+        "scallion": 1,
+        "garlic": 1,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 990,
+      "default_price": 4200,
+      "gross_profit": 3210,
+      "unlock": {
+        "cumulative_xp": 1200,
+        "required_flags": [],
+        "shop_level": 4
+      },
+      "satiety": 140,
+      "temperature": "hot",
+      "taste_tags": [
+        "sour",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "普通鱼与酸菜为无辣基础版；辣味版额外加入现代辣椒，分开记录。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 12,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D21",
+      "name": "佛跳墙",
+      "difficulty": 3,
+      "required_stove_tier": 3,
+      "cook_seconds": 12,
+      "yield_plates": 1,
+      "ingredients": {
+        "pork": 1,
+        "chicken": 1,
+        "mushroom": 1,
+        "seafood": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 1,
+        "ginger": 2,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 2560,
+      "default_price": 9600,
+      "gross_profit": 7040,
+      "unlock": {
+        "cumulative_xp": 2100,
+        "required_flags": [],
+        "shop_level": 5
+      },
+      "satiety": 180,
+      "temperature": "hot",
+      "taste_tags": [
+        "savory",
+        "rich"
+      ],
+      "suggested_customer_groups": [
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "肉、禽、菌菇、海味的复合高等菜；本次将未定原料绑定为猪肉、鸡肉、菌菇、干贝海味包各一份。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 12,
+      "ordinary_service": "reservation_only"
+    },
+    {
+      "id": "D22",
+      "name": "剁椒鱼头",
+      "difficulty": 3,
+      "required_stove_tier": 3,
+      "cook_seconds": 9,
+      "yield_plates": 1,
+      "ingredients": {
+        "fish_head": 1,
+        "chili": 1,
+        "greens": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 2,
+        "scallion": 1,
+        "garlic": 2,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 1300,
+      "default_price": 4200,
+      "gross_profit": 2900,
+      "unlock": {
+        "cumulative_xp": 2100,
+        "required_flags": [],
+        "shop_level": 5
+      },
+      "satiety": 120,
+      "temperature": "hot",
+      "taste_tags": [
+        "spicy",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "description": "鱼头、辣椒与配菜组合；大鱼头独立采购，配菜绑定时蔬，不由整鱼免费拆出。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 12,
+      "ordinary_service": "normal"
+    },
+    {
+      "id": "D23",
+      "name": "酒蟹",
+      "difficulty": 3,
+      "required_stove_tier": 3,
+      "cook_seconds": 8,
+      "yield_plates": 1,
+      "ingredients": {
+        "crab": 1,
+        "qingchun": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 0,
+        "ginger": 2,
+        "scallion": 0,
+        "garlic": 0,
+        "vinegar": 1,
+        "sugar": 1
+      },
+      "base_cost": 1460,
+      "default_price": 4800,
+      "gross_profit": 3340,
+      "unlock": {
+        "cumulative_xp": 2100,
+        "required_flags": [],
+        "shop_level": 5
+      },
+      "satiety": 100,
+      "temperature": "cold",
+      "taste_tags": [
+        "wine",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": false,
+      "description": "蟹与酒组合，默认用清醇；前置处理与最终出餐分开，不把秒数当现实制作时长。",
+      "source_id": "S2",
+      "auto_cook_unlock_cooks": 12,
+      "ordinary_service": "normal"
+    }
+  ],
+  "recipe_variants": [
+    {
+      "id": "D18_crisp",
+      "name": "松鼠鳜鱼（淀粉脆皮版）",
+      "difficulty": 3,
+      "required_stove_tier": 3,
+      "cook_seconds": 10,
+      "yield_plates": 1,
+      "ingredients": {
+        "mandarin_fish": 1,
+        "starch": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 3,
+        "ginger": 1,
+        "scallion": 1,
+        "garlic": 0,
+        "vinegar": 3,
+        "sugar": 3
+      },
+      "base_cost": 1680,
+      "default_price": 5000,
+      "gross_profit": 3320,
+      "unlock": {
+        "cumulative_xp": 1200,
+        "required_flags": [],
+        "shop_level": 4
+      },
+      "satiety": 140,
+      "temperature": "hot",
+      "taste_tags": [
+        "sweet_sour",
+        "crisp"
+      ],
+      "suggested_customer_groups": [
+        "family",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "shares_novel_reaction_with_base": true,
+      "description": "使用宋代侧可采购的鳜鱼和后世做法；基础裹粉用面粉，另有现代淀粉脆皮版。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 12,
+      "base_recipe_id": "D18",
+      "counts_toward_unlock_total": false
+    },
+    {
+      "id": "D20_spicy",
+      "name": "酸菜鱼（辣味版）",
+      "difficulty": 3,
+      "required_stove_tier": 3,
+      "cook_seconds": 8,
+      "yield_plates": 1,
+      "ingredients": {
+        "fish": 1,
+        "sauerkraut": 1,
+        "chili": 1
+      },
+      "seasonings": {
+        "salt": 1,
+        "oil": 2,
+        "ginger": 2,
+        "scallion": 1,
+        "garlic": 1,
+        "vinegar": 0,
+        "sugar": 0
+      },
+      "base_cost": 1290,
+      "default_price": 4600,
+      "gross_profit": 3310,
+      "unlock": {
+        "cumulative_xp": 1200,
+        "required_flags": [],
+        "shop_level": 4
+      },
+      "satiety": 140,
+      "temperature": "hot",
+      "taste_tags": [
+        "sour",
+        "spicy",
+        "savory"
+      ],
+      "suggested_customer_groups": [
+        "worker",
+        "celebrity"
+      ],
+      "is_staple": false,
+      "is_novel_recipe": true,
+      "shares_novel_reaction_with_base": true,
+      "description": "普通鱼与酸菜为无辣基础版；辣味版额外加入现代辣椒，分开记录。",
+      "source_id": "M",
+      "auto_cook_unlock_cooks": 12,
+      "base_recipe_id": "D20",
+      "counts_toward_unlock_total": false
+    }
+  ],
+  "customer_profiles": {
+    "worker": {
+      "target_satiety": 120,
+      "prefer": [
+        "hot",
+        "savory",
+        "wheat",
+        "rice"
+      ],
+      "avoid": [
+        "wine"
+      ],
+      "budget_wen": 22
+    },
+    "family": {
+      "target_satiety": 100,
+      "prefer": [
+        "mild",
+        "soft",
+        "sweet",
+        "sweet_sour",
+        "vegetable"
+      ],
+      "avoid": [
+        "spicy",
+        "wine"
+      ],
+      "budget_wen": 20
+    },
+    "child": {
+      "target_satiety": 60,
+      "prefer": [
+        "soft",
+        "sweet",
+        "mild"
+      ],
+      "avoid": [
+        "spicy",
+        "wine"
+      ],
+      "budget_wen": 20
+    },
+    "student": {
+      "target_satiety": 100,
+      "prefer": [
+        "mild",
+        "vegetable",
+        "wheat",
+        "rice"
+      ],
+      "avoid": [
+        "wine"
+      ],
+      "budget_wen": 15
+    },
+    "celebrity": {
+      "target_satiety": 100,
+      "prefer": [],
+      "avoid": [],
+      "budget_wen": null,
+      "note": "名流按per_person的喜好和避开判定口味合适（novel_recipe=后世菜，difficulty_1=简单菜，cold=冷菜，staple=主食栏is_staple）；家宴请帖另加主人要求。人物口味是游戏设定。",
+      "per_person": {
+        "sushi": {
+          "name": "苏轼",
+          "prefer": [
+            "novel_recipe",
+            "savory",
+            "rich"
+          ],
+          "avoid": [],
+          "likes": "店里新上的菜"
+        },
+        "suzhe": {
+          "name": "苏辙",
+          "prefer": [
+            "staple",
+            "savory"
+          ],
+          "avoid": [
+            "wine"
+          ],
+          "likes": "分量足、价钱明白的菜"
+        },
+        "ouyangxiu": {
+          "name": "欧阳修",
+          "prefer": [
+            "wine",
+            "cold",
+            "savory"
+          ],
+          "avoid": [
+            "spicy"
+          ],
+          "likes": "佐酒小菜，配一份酒"
+        },
+        "meiyaochen": {
+          "name": "梅尧臣",
+          "prefer": [
+            "difficulty_1",
+            "mild",
+            "vegetable"
+          ],
+          "avoid": [
+            "rich"
+          ],
+          "likes": "售价不高的家常菜"
+        },
+        "zenggong": {
+          "name": "曾巩",
+          "prefer": [
+            "mild",
+            "savory"
+          ],
+          "avoid": [
+            "spicy"
+          ],
+          "likes": "上次给过好评的那道"
+        },
+        "chenghao": {
+          "name": "程颢",
+          "prefer": [
+            "mild",
+            "vegetable",
+            "soft"
+          ],
+          "avoid": [
+            "spicy",
+            "rich"
+          ],
+          "likes": "清爽的菜"
+        }
+      },
+      "preferences_revealed_after_first_visit": true
+    }
+  },
+  "sources": {
+    "S4": {
+      "title": "《东京梦华录》卷四：食店／会仙酒楼／饼店",
+      "url": "https://zh.wikisource.org/wiki/東京夢華錄/卷四",
+      "note": "原文可见相应菜名或食品类别；本作配方、份量与价格为游戏设计。"
+    },
+    "S4C": {
+      "title": "《东京梦华录》卷四：食店",
+      "url": "https://zh.wikisource.org/wiki/東京夢華錄/卷四",
+      "note": "瓜齑、萝卜合并为一个游戏小菜条目，不声称原文有相同固定合菜配方。"
+    },
+    "S2": {
+      "title": "《东京梦华录》卷二：饮食果子",
+      "url": "https://zh.wikisource.org/wiki/東京夢華錄/卷二",
+      "note": "可见两熟紫苏鱼、酒蟹等名称；具体原料比例与工序不由菜名直接推出。"
+    },
+    "S2L": {
+      "title": "《东京梦华录》卷二：饮食果子",
+      "url": "https://zh.wikisource.org/wiki/東京夢華錄/卷二",
+      "note": "名称线索为排蒸荔枝腰子；本作采用简名和简化原料，并非古方复原。"
+    },
+    "S2R": {
+      "title": "《东京梦华录》卷二：州桥夜市",
+      "url": "https://zh.wikisource.org/wiki/東京夢華錄/卷二",
+      "note": "可见滴酥水晶鲙名称线索；与本作肉皮、肉汤配方的对应仍待核，不宣称唯一古方。"
+    },
+    "M": {
+      "title": "现代／后世做法的游戏改编",
+      "url": null,
+      "note": "沿用旧PDF路线，不宣称该菜是北宋原有菜名或配方；暂不写未经核查的起源年代、名人发明故事。"
+    }
+  },
+  "rules": {
+    "currency": {
+      "units_per_wen": 100,
+      "note": "整数记账单位，仅游戏内部使用，不是宋代真实币制；金额展示两位小数文。"
+    },
+    "recipe_count": 23,
+    "tier_counts": {
+      "simple": 8,
+      "medium": 9,
+      "advanced": 6
+    },
+    "cost_rule": "base_cost=sum(ingredient qty*base unit cost)+sum(seasoning qty*base unit cost); inventory lots retain actual acquisition cost; margin excludes wages/equipment/spoilage.",
+    "flags": {
+      "portal_first_upgrade": "首次进入一级③后的下一个营业日开门前置位：时空门首次升级，番茄炒蛋、宫保鸡丁解锁",
+      "first_cola_import": "二级起第一次选可乐作当天的时空门食材时置位：可乐鸡翅试菜事件，解锁可乐鸡翅",
+      "private_room_built": "付费扩建后的下一个营业日置位：二楼与雅间一开放",
+      "zhengdian_invited": "首次升到五级后的下一个营业日置位：正店邀请，领班开放，可以开始正店比拼"
+    },
+    "procurement": {
+      "premium_multiplier": 1.5,
+      "bulk_discount_thresholds": {
+        "10": 0.9,
+        "20": 0.8
+      },
+      "bulk_applies_to": "同一普通主食材SKU；现代、酒、调料包不享受批量折扣",
+      "bargain_discounts": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "floor_multiplier": 0.7,
+      "bulk_bad_rate_addition": 0.05,
+      "bulk_bad_rate_addition_applies_to": "坏料率大于0的食材（酸菜、盐渍辅料包本来不坏，不加）",
+      "bulk_bad_rate_threshold": 10,
+      "order": "普通集市主料实际单价=ceil(基础价*max(.7,批量系数*成功砍价系数))；优质原料不享批量折扣，砍价后按其优质标价计算。",
+      "spoilage_cost_in_base": false,
+      "inspection": {
+        "manual_by": "player",
+        "manual_timed": false,
+        "manual_miss_rate": 0,
+        "auto_inspection": {
+          "unlock": "waiter_level_3",
+          "toggle": true,
+          "miss_rate": 0.05
+        },
+        "missed_bad_found_at": "take_out",
+        "missed_bad_effect": "该份作废、食材全损，需重做；坏料绝不上桌",
+        "manual_miss_note": "0 指系统不另加随机漏检；玩家没点出来的坏料照样在出炉时被发现、这份作废"
+      },
+      "overnight_rule": "打烊时对剩下的每份独立抽，坏掉的直接扣掉，不用再验"
+    },
+    "portion": {
+      "standard_plate_multiplier": 1,
+      "small_plate_satiety_multiplier": 0.6,
+      "small_plate_ingredient_multiplier": 1,
+      "small_plate_default_price_multiplier": 0.75,
+      "price_rounding": "ceil to whole wen",
+      "ordinary_adequacy_threshold": 0.9,
+      "satiety_formula": "sum(served plate satiety*size_multiplier)/sum(guest target satiety)",
+      "note": "小份仍消耗整套原料，符合原有试味/份量规则；不生成剩余食材或半条鱼。家宴只用标准份。"
+    },
+    "ordinary_recommendation": {
+      "taste_match": "至少命中当前顾客一项偏好（温度也可匹配），且未命中avoid；名流使用个人需求。",
+      "price_rule": "整桌价格<=整桌预算才主动推荐；共享餐按整桌总价；不可按菜贵判断不好吃。",
+      "positive_bonus_percentage_points": 15,
+      "bonus_once": true,
+      "satiety_rule": "口味符合或整桌饱腹>=90%目标，加分只应用一次；禁止重复加30%。",
+      "groups_are_guidance_not_exclusive": true,
+      "stock_check_first": true,
+      "stop_when_portions_insufficient": true
+    },
+    "cooking": {
+      "timer_precision_seconds": 0.001,
+      "display_decimals": 1,
+      "ready_time": "T＝开灶时刻＋基础秒数×(1−仙家密法加速比例)，加速比例在开灶时锁定",
+      "perfect_high_end_seconds": 0.7,
+      "burnt_after_seconds": 3,
+      "quality_intervals": "t<T: under; T<=t<=T+.7: simple/medium perfect, high manual immortal; T+.7<t<=T+3: simple/medium perfect, high good; t>T+3: burnt",
+      "auto_quality": {
+        "1": "perfect",
+        "2": "perfect",
+        "3": "good"
+      },
+      "auto_cook": {
+        "unlock": "per_recipe_after_good_manual_cooks",
+        "count_starts_at": "chapter2_student_table",
+        "count_before_chapter2": false,
+        "cooks_required": {
+          "1": 3,
+          "2": 8,
+          "3": 12
+        },
+        "counts_as_good": {
+          "1": [
+            "perfect"
+          ],
+          "2": [
+            "perfect"
+          ],
+          "3": [
+            "good",
+            "immortal"
+          ]
+        },
+        "variants_share_progress_with_base": true,
+        "enabled_by_default_after_unlock": true,
+        "player_can_disable_per_recipe": true,
+        "player_can_take_over_any_order": true,
+        "requires_free_stove_of_required_tier": true,
+        "max_auto_stoves": 2,
+        "overflow": "超出的单排队，等自动灶空出来，或由玩家亲手接下（按亲手做的规则出品，高等菜可出仙味）",
+        "applies_to": [
+          "普通营业",
+          "名流家宴",
+          "正店比拼"
+        ],
+        "staff_required": false,
+        "note": "从第二关（国子监学生那一桌）开始计数，第一关做的不算；每道菜亲手做好（简单／中等为完美，高等为不错或仙味）累计满次数后自动开启这道菜的自动制作；不需要员工，占灶、遵守出餐时间，品质按auto_quality；同时最多占2口灶（模拟见《经营数值核算》04：五级每分钟亲手做约5盘，催单、离店不增加）。"
+      },
+      "consume": "开始时原子扣除全部原料与调料；缺一项不可开灶；取消、烧糊或坏料作废不返还。",
+      "higher_tier_stove_cooks_lower_tiers": true,
+      "prep": "冷菜腌制、熬冻、冷却和烤鸭长时备料只在备料和动画里表现；冷菜仍在营业时上灶，表中秒数就是出餐时间。"
+    },
+    "portal_normal": {
+      "one_type_per_day": true,
+      "caps": {
+        "1_3": 6,
+        "2": 10,
+        "3": 15,
+        "4": 20,
+        "5": 30
+      },
+      "unlock_requires_flag": "portal_first_upgrade",
+      "modern_wine_option": {
+        "from_level": 4,
+        "bottles": {
+          "maotai": 1,
+          "beer": 3
+        },
+        "purchase_wen": {
+          "maotai_per_bottle": 80,
+          "beer_per_bottle": 20
+        },
+        "counts_as_daily_choice": true,
+        "use": "只用于欧阳修（二）",
+        "ouyangxiu2_visits_the_same_day": true,
+        "ouyangxiu2_requires": "欧阳修（一）已完成且店铺四级；满足时带酒那天必定来访"
+      },
+      "note": "土豆一级③就能带，但土豆炖肉二级才解锁；一级③带土豆只能先存着（土豆过夜不坏，库存上限是当级一天的份数）"
+    },
+    "banquet": {
+      "invitation": {
+        "min_shop_level": 3,
+        "requires_prior_positive_celebrity_visit": true,
+        "prior_visit_can_precede_level3": true,
+        "normal_celebrity_visits_unchanged": true,
+        "daily_chance": 0.2,
+        "cooldown_ordinary_days": 3,
+        "departure_window_days": [
+          1,
+          3
+        ],
+        "accept_same_evening_only": true,
+        "max_active": 1,
+        "expired_after": "收到请帖当晚可接受；接受后D+1至D+3出发，D+3结算后未出发即逾期；拒绝不罚。",
+        "tier_by_current_level": {
+          "3": "小型家宴",
+          "4": "文友雅集",
+          "5": "盛情宴客"
+        },
+        "banquet_day": "不算营业日：第二天的口碑系数沿用上一个营业日的好评率；\"连续3天\"类计数跳过家宴日，不打断。",
+        "host_preferences_on_invitation": "只作提示，不单独计分；计分的是主人要求（10分）",
+        "host_pick": "符合条件（到店给过好评）的名流里随机1位",
+        "skip_infeasible_hosts": true,
+        "skip_note": "系统不会发出做不到的请帖，例如曾巩没有已解锁、买得到的好评菜时跳过他"
+      },
+      "levels": [
+        {
+          "level": 3,
+          "guests": 6,
+          "distinct_recipes": 4,
+          "plates": 12,
+          "batch_plates": [
+            3,
+            6,
+            3
+          ],
+          "stoves": 3,
+          "stove_tier": 2,
+          "batch_target_seconds": [
+            45,
+            55,
+            60
+          ],
+          "tasting_break_seconds": 10,
+          "target_seconds": 180,
+          "hard_seconds": 210,
+          "budget_by_difficulty": {
+            "宽裕": 30000,
+            "适中": 13000,
+            "紧张": 9000
+          },
+          "base_fee": 40000,
+          "bonus": 20000,
+          "xp": 180,
+          "modern_types": 3,
+          "modern_units": 12
+        },
+        {
+          "level": 4,
+          "guests": 8,
+          "distinct_recipes": 5,
+          "plates": 16,
+          "batch_plates": [
+            4,
+            8,
+            4
+          ],
+          "stoves": 4,
+          "stove_tier": 3,
+          "batch_target_seconds": [
+            60,
+            80,
+            80
+          ],
+          "tasting_break_seconds": 10,
+          "target_seconds": 240,
+          "hard_seconds": 270,
+          "budget_by_difficulty": {
+            "宽裕": 50000,
+            "适中": 19000,
+            "紧张": 14000
+          },
+          "base_fee": 70000,
+          "bonus": 35000,
+          "xp": 260,
+          "modern_types": 4,
+          "modern_units": 20
+        },
+        {
+          "level": 5,
+          "guests": 12,
+          "distinct_recipes": 6,
+          "plates": 24,
+          "batch_plates": [
+            6,
+            12,
+            6
+          ],
+          "stoves": 5,
+          "stove_tier": 3,
+          "batch_target_seconds": [
+            75,
+            100,
+            105
+          ],
+          "tasting_break_seconds": 10,
+          "target_seconds": 300,
+          "hard_seconds": 330,
+          "budget_by_difficulty": {
+            "宽裕": 80000,
+            "适中": 30000,
+            "紧张": 22000
+          },
+          "base_fee": 110000,
+          "bonus": 55000,
+          "xp": 360,
+          "modern_types": 5,
+          "modern_units": 30
+        }
+      ],
+      "budget_difficulty": {
+        "draw": "每封请帖随机一档，宽裕、适中、紧张各三分之一，写在请帖上",
+        "weights": {
+          "宽裕": 1,
+          "适中": 1,
+          "紧张": 1
+        },
+        "bonus_mult": {
+          "宽裕": 1.0,
+          "适中": 1.25,
+          "紧张": 1.5
+        },
+        "xp_mult": {
+          "宽裕": 1.0,
+          "适中": 1.0,
+          "紧张": 1.0
+        },
+        "ouyangxiu_wine_allowance_per_drinker": 1200,
+        "calibration": "能拿满菜单分的菜单实际成本（普通档，含验货丢掉的坏料）：紧张≈P25，适中≈P75，宽裕沿用原经费；见《经营数值核算》04（economy_sim.py --banquet-budget）"
+      },
+      "hosts": {
+        "sushi": {
+          "name": "苏轼",
+          "rule": {
+            "type": "novel_recipe_distinct_min",
+            "value": 1
+          },
+          "text": "至少一道后世／现代做法菜；不要求必须用现代进口食材。",
+          "focus_hint_not_scored": "新意与滋味；整桌不要只有猎奇菜"
+        },
+        "suzhe": {
+          "name": "苏辙",
+          "rule": {
+            "type": "consumed_cost_not_above_budget",
+            "basis": "C≤B：C＝已用、坏掉、丢弃和重做的材料实际成本（退回的不算）"
+          },
+          "text": "菜单明码、账目相符，全部采购支出不超过主人经费。",
+          "focus_hint_not_scored": "分量与账目"
+        },
+        "ouyangxiu": {
+          "name": "欧阳修",
+          "rule": {
+            "type": "wine_pairing",
+            "allowed_wine_ids": [
+              "yinping",
+              "yanggao"
+            ],
+            "drinkers": "floor(guests/2)",
+            "units_per_drinker": 1,
+            "min_wine_free_plate_ratio": 0.5,
+            "wine_counts_in_budget_and_consumed_cost": true,
+            "wine_note": "欧阳修要的酒照常采购，算进采购经费和材料成本C；不占菜种、份数、饱腹和现代食材额度。"
+          },
+          "text": "请帖注明半数宾客饮酒，向下取整；每位配银瓶酒或羊羔酒一份，至少半数菜份不含酒。",
+          "focus_hint_not_scored": "酒菜搭配"
+        },
+        "meiyaochen": {
+          "name": "梅尧臣",
+          "rule": {
+            "type": "simple_quality",
+            "min_distinct": 1,
+            "min_quality": "perfect"
+          },
+          "text": "至少一道简单菜，该菜上桌的全部份数达到完美。",
+          "focus_hint_not_scored": "家常菜的功夫；做得稳比食材贵更重要"
+        },
+        "zenggong": {
+          "name": "曾巩",
+          "rule": {
+            "type": "repeat_praised_recipe",
+            "min_quality": "good",
+            "simple_medium_min_quality": "perfect",
+            "designated_recipe": "请帖点名一道他在店里给过好评、已解锁、买得到的菜"
+          },
+          "text": "请帖点名的那道菜（从他在店里给过好评的菜里选），每份不低于不错，简单、中等菜要完美。",
+          "focus_hint_not_scored": "品质稳定"
+        },
+        "chenghao": {
+          "name": "程颢",
+          "rule": {
+            "type": "light_menu",
+            "min_nonspicy_plate_ratio": 0.75,
+            "min_mild_distinct": 1
+          },
+          "text": "至少一道清淡菜（mild），不辣菜份数占75%以上。",
+          "focus_hint_not_scored": "清爽；避免全桌浓重，菜按开席、主菜、收尾的先后上"
+        }
+      },
+      "menu": {
+        "standard_only": true,
+        "distinct_counts_by_base_id": true,
+        "min_staple_plates_ratio": 0.25,
+        "min_taste_tags": 3,
+        "candidate_validation": "出发前必须通过：菜种数、总份数、每批份数正好；最后一批至少一道主食；仅已解锁配方；所有原料已验货为好料；主料、调料、酒、现代食材运输额度足够。采购超出经费时弹确认、由玩家自付（预算项扣分）。失败不允许出发，可修改菜单。",
+        "final_batch": "硬性：至少一道is_staple=true的菜；首批不限冷菜，热菜也可。",
+        "empty_menu_never_generated": true,
+        "scoring_only": [
+          "min_staple_plates_ratio",
+          "min_taste_tags"
+        ]
+      },
+      "modern_quota_scope": "task_only：家宴的现代食材额度只在这次任务里用，不转进餐馆库存；任务结束恢复普通营业一天一种",
+      "staff": {
+        "max_waiters": 1,
+        "auto_cook_requires_mastered_recipe": true,
+        "auto_cook_note": "只有在店里已经做熟、开启了自动做的菜（次数门槛见rules.cooking.auto_cook）才能在家宴上自动做；只解锁、还没做熟的菜要亲手做。",
+        "auto_cook_any_free_stove": false,
+        "auto_cook_max_stoves": 2,
+        "estate_runner_if_no_waiter": true,
+        "serving_capacity_plates": 2,
+        "serving_trip_seconds": 2,
+        "serving_fifo": true,
+        "serve_at_batch_complete": true,
+        "note": "每批完成烹饪后统一传菜：ceil(批次份数/2)×每趟秒数；主家传菜人和1级小二每趟2秒，2级1.8秒，3级1.6秒；传菜不占灶台。家宴模式不允许提前烹饪下一批。做熟的菜在家宴上同样自动做，同时最多占2口灶，其余由玩家亲手做。",
+        "trip_seconds_by_server": {
+          "estate_runner": 2,
+          "waiter_1": 2,
+          "waiter_2": 1.8,
+          "waiter_3": 1.6
+        }
+      },
+      "clock": {
+        "shopping_timed": false,
+        "starts": "玩家点击开席后",
+        "tasting_breaks": 2,
+        "clock_during_tasting": true,
+        "between_batches_cook_disabled": true,
+        "phase_end": "最后一份上桌",
+        "late_seconds": "sum(max(0,实际批次时长-对应目标时长))",
+        "finish_early_allowed": true,
+        "hard_limit_includes_serving_and_breaks": true,
+        "at_exact_hard_limit": "先处理该时刻上桌事件，再处理超时；全部上齐则完成。",
+        "immortal_speed": "沿用人数档位，全部在座宾客计数；三级6人10%、四级8人20%、五级12人30%；仅已获仙家密法才生效；在入灶时锁定。",
+        "tasting_feedback_tiers": {
+          "good": "这批全是完美或仙味",
+          "normal": "有高等菜的“不错”，没有次等或糊",
+          "bad": "有次等或糊",
+          "scored": false
+        },
+        "ordinary_patience_applies": false
+      },
+      "scoring": {
+        "quality_weight": 35,
+        "quality_values": {
+          "immortal": 1,
+          "perfect": 0.95,
+          "good": 0.85,
+          "underdone": 0.35,
+          "burnt": 0
+        },
+        "quality_formula": "35*sum(quality value of required served plates)/required plate count",
+        "menu_weight": 30,
+        "menu_components": [
+          {
+            "id": "host",
+            "weight": 10,
+            "predicate": "host rule satisfied"
+          },
+          {
+            "id": "staple",
+            "weight": 10,
+            "predicate": "staple plates>=ceil(total plates*.25)"
+          },
+          {
+            "id": "variety",
+            "weight": 10,
+            "predicate": "distinct taste tags across menu >=3"
+          }
+        ],
+        "portion_weight": 20,
+        "portion_formula": "20*min(1,total satiety/(guests*100))",
+        "timing_weight": 10,
+        "timing_formula": "10*max(0,1-late_seconds/30)",
+        "budget_weight": 5,
+        "budget_formula": "5*max(0,1-max(0,C-B)/(.2*B))",
+        "rounding": "floor(total score) after caps",
+        "caps": [
+          {
+            "condition": "any invitation requirement unmet",
+            "max_score": 69
+          },
+          {
+            "condition": "any served underdone or burnt plate",
+            "max_score": 49
+          }
+        ],
+        "completion": "所有锁定菜单份数与要求酒份在硬截止前全部上桌才算完成；否则不走评分奖励，按未完成结算。",
+        "random_score": false,
+        "tiers": [
+          {
+            "min": 90,
+            "rating": "十分满意",
+            "fee_multiplier": 1,
+            "bonus_multiplier": 2,
+            "xp_multiplier": 1.25
+          },
+          {
+            "min": 70,
+            "rating": "满意",
+            "fee_multiplier": 1,
+            "bonus_multiplier": 1,
+            "xp_multiplier": 1
+          },
+          {
+            "min": 50,
+            "rating": "尚可",
+            "fee_multiplier": 1,
+            "bonus_multiplier": 0,
+            "xp_multiplier": 0.5
+          },
+          {
+            "min": 0,
+            "rating": "不满意",
+            "fee_multiplier": 0.5,
+            "bonus_multiplier": 0,
+            "xp_multiplier": 0.25
+          }
+        ],
+        "xp_rounding": "floor",
+        "ordinary_guest_xp": false,
+        "budget_note": "C、B 见 ledger；退回的备用料不算超支"
+      },
+      "ledger": {
+        "escrow_is_profit": false,
+        "buy_during_prep_only": true,
+        "unused_good_materials": "采购界面按原实付价退回；全部任务库存隔离，餐馆自带材料按实际库存批次成本计入经费；结算原样退回未用库存并冲销对应报销。",
+        "consumed_cost": "已用、已坏、丢弃、重做的原料调料及酒按实付成本累计为C；未用退回的不计C。",
+        "host_cost_coverage": "正常完成或开席后失败：min(B,C)；玩家自付max(0,C-B)。",
+        "event_net_income": "实际报酬+额外酬谢-max(0,C-B)；普通工资仍另外结算。",
+        "no_inventory_duplication": true
+      },
+      "exceptions": {
+        "expired_or_cancel_before_start": {
+          "fee": 0,
+          "xp": 0,
+          "reputation_penalty": 0,
+          "cost_rule": "未用材料按实付价退回；已坏或主动丢弃造成的损失全由玩家承担，主人预付经费全额归还。",
+          "cooldown_ordinary_days": 3,
+          "same_day_open_if_not_started": true
+        },
+        "ingredients_run_out": {
+          "during_prep": "提示缺料，允许补买或改菜单；出发前备料校验。",
+          "during_banquet": "允许用备用同类材料重做；只在本批第一份入灶前可换未开始的菜，仍需满足菜单菜种/份数且库存足够；不追加跨门采购。",
+          "unrecoverable": "显示无法完成，可主动结束；按开席后未完成结算。"
+        },
+        "quit_after_start": {
+          "fee": 0,
+          "bonus": 0,
+          "xp": 0,
+          "cost_rule": "主人承担min(B,C)，玩家承担超支；无额外罚金，无名流荐誉。",
+          "cooldown_ordinary_days": 3,
+          "day_consumed": true
+        },
+        "hard_timeout": "同开席后未完成；已吃到的菜不产生普通顾客经验。",
+        "technical_disconnect": "自动保存菜单、库存、经费流水、各计时器、已上菜状态；重进恢复，现实离线时间不推进。",
+        "pause": "暂停、帮助菜单、切出应用时冻结游戏计时；主动退出关卡才走退出结算。"
+      },
+      "rewards": {
+        "first_satisfied_achievement": "掌勺入名门",
+        "achievement_requires_rating_min": 70,
+        "reputation_buff_days": 2,
+        "planned_visitors_multiplier": 1.1,
+        "visitors_rounding": "floor",
+        "visitor_cap": "current_stage_cap",
+        "visitor_cap_max": 96,
+        "buff_stacks": false,
+        "gift": "十分满意时20%获得一件未拥有的名流家宴收藏（一套6件，美术上每位主人一件）；至少一份仙味时提升到35%，每场只抽一次。原专属剧情真笔仍需原事件条件，随机礼品不绕过；收藏已齐不补发金钱。",
+        "max_level_xp": "五级后记录终身经验，不新增第六级。",
+        "collectibles_per_host": 1,
+        "collectibles_total": 6
+      }
+    },
+    "seasons": {
+      "days_per_season": 10,
+      "order": [
+        "spring",
+        "summer",
+        "autumn",
+        "winter"
+      ],
+      "day1": "spring",
+      "days_per_year": 40,
+      "recipe_effects": [
+        {
+          "recipe": "D11",
+          "season": "summer",
+          "price_multiplier": 1.2,
+          "order_weight": 2.0,
+          "other_seasons_order_weight": 0.5
+        },
+        {
+          "recipe": "D05",
+          "season": "winter",
+          "price_multiplier": 1.2,
+          "order_weight": 2.0,
+          "other_seasons_order_weight": 0.5
+        }
+      ],
+      "ingredient_availability": {
+        "crab": [
+          "autumn"
+        ]
+      },
+      "note": "冷淘夏季、水晶脍冬季售价＋20%、被点概率加倍，其他季节被点概率减半；蟹只在秋季上市。"
+    },
+    "reservations": {
+      "reservation_only_recipes": [
+        "D21"
+      ],
+      "reservable_recipes": [
+        "D19"
+      ],
+      "offers_by_recipe": {
+        "D21": {
+          "from_level": 5,
+          "per_evening": [
+            1,
+            2
+          ],
+          "optional": true,
+          "reservation_only": true
+        },
+        "D19": {
+          "from_level": 4,
+          "chance_each_evening": 0.5,
+          "count": 1,
+          "optional": true,
+          "reservation_only": false
+        }
+      },
+      "prepare_before_guest_arrives": true,
+      "banquet_exempt": true,
+      "note": "佛跳墙在普通营业里只接预约：五级起每天打烊时出现1–2个第二天的预约，接下就要备料并在客人到店前做好（可提前做好保温）；北京烤鸭四级起每天50%出现一个预约，不强制，平时照常能点；家宴不受此限。",
+      "party_size": [
+        2,
+        4
+      ],
+      "guests": "多是名流或讲究的客人",
+      "arrival_window_seconds": [
+        120,
+        300
+      ],
+      "also_orders": "按人数点主食：2人一道，3–4人两道",
+      "failed": "接了预约却没做出来，这桌按超时离店算（不付钱、0经验）",
+      "portions_per_reservation": 1,
+      "hold_until_arrival": true,
+      "hold_note": "预约的菜可以提前做好保温，客人到了直接上；这是唯一能先做后点的情况",
+      "outside_daily_cap": true,
+      "staples_by_party_size": {
+        "2": 1,
+        "3": 2,
+        "4": 2
+      }
+    },
+    "order_options": {
+      "taste_levels": [
+        "清淡",
+        "常规",
+        "浓味"
+      ],
+      "spice_levels": {
+        "values": [
+          "微辣",
+          "中辣",
+          "重辣"
+        ],
+        "applies_to": "recipes containing chili"
+      },
+      "small_plate": "见rules.portion",
+      "large_plate": {
+        "extra_main_portion": 1,
+        "eligible_main": [
+          "flour",
+          "rice",
+          "pork"
+        ],
+        "price_multiplier": 1.5,
+        "banquet_allowed": false,
+        "satiety_multiplier": 1.5,
+        "review_bonus": "不单独加好评，按分量合适算，和口味加成一起只加一次",
+        "eligible_tiers": [
+          1,
+          2
+        ],
+        "eligible_recipes": [
+          "D01",
+          "D02",
+          "D03",
+          "D09",
+          "D10",
+          "D11",
+          "D13",
+          "D17"
+        ],
+        "extra_pick_order": [
+          "flour",
+          "rice",
+          "pork"
+        ],
+        "note": "只限主料里有面粉、米或猪肉的简单、中等菜；多放的那份按面粉、米、猪肉的顺序取第一样"
+      },
+      "match_bonus_percentage_points": 15,
+      "match_bonus_once": true,
+      "mismatch_penalty_percentage_points": -10,
+      "waiter_auto_pick_accuracy": {
+        "2": 0.7,
+        "3": 0.9
+      },
+      "note": "口味、辣度点单时选，不改用料；加量多放一份主料、售价＋50%；口味或分量合适好评＋15个百分点只加一次，口味不合−10个百分点。",
+      "mismatch_definition": "客人点了某种口味或辣度，做成相反的（如要清淡做成浓味）算口味不合"
+    },
+    "improvement": {
+      "trigger_same_type_complaints": 3,
+      "window_days": 3,
+      "complaint_types": [
+        "太淡",
+        "太重",
+        "太咸",
+        "太酸",
+        "太甜",
+        "太辣",
+        "太贵",
+        "分量不足",
+        "等太久"
+      ],
+      "fix_options": [
+        "seasoning",
+        "portion",
+        "price",
+        "side"
+      ],
+      "effect": "改良后这道菜的差评率减半，减下来的算一般",
+      "bad_rate_multiplier": 0.5,
+      "reduced_goes_to": "normal",
+      "max_per_recipe": 1,
+      "example_name": "菜面·浓汤",
+      "retrial": {
+        "tasting_allowed": true,
+        "novel_recipe_first_portions_reevaluated": 20
+      },
+      "shares_unlock_and_auto_cook_progress": true,
+      "fix_by_complaint": {
+        "太淡": "seasoning",
+        "太重": "seasoning",
+        "太咸": "seasoning",
+        "太酸": "seasoning",
+        "太甜": "seasoning",
+        "太辣": "seasoning",
+        "分量不足": "portion",
+        "太贵": "price",
+        "等太久": "side"
+      },
+      "fix_effects": {
+        "seasoning": "换这道菜的默认口味",
+        "portion": "饱腹×1.2，售价不变，成本+1文",
+        "price": "标准售价×0.9向上取整、至少少1文，菜单售价同步改成新价（参考价随之变）",
+        "side": "附一碟现成的小菜先上（成本+1文），这桌耐心+10秒"
+      },
+      "complaint_type_rules": {
+        "太贵": "售价比参考价高出一成以上",
+        "等太久": "这桌催过单",
+        "分量不足": "整桌饱腹不到目标的90%",
+        "口味不合": "按客人要的口味反推：要清淡做成浓味→太重，要浓味做成清淡→太淡，辣度比要的高→太辣",
+        "其余差评": "按这道菜的口味标签归类：酸→太酸，甜或酸甜→太甜，辣→太辣，咸鲜或浓郁→太咸，清淡→太淡"
+      }
+    },
+    "new_dish_reaction": {
+      "applies_to": "is_novel_recipe",
+      "first_portions": 20,
+      "base": {
+        "welcome": 0.65,
+        "confused": 0.25,
+        "dislike": 0.1
+      },
+      "welcome_modifiers_percentage_points": {
+        "perfect": 5,
+        "immortal": 20,
+        "underdone": -15,
+        "above_reference_price": -10,
+        "tasted": 10,
+        "recommended_to_matching_taste": 5,
+        "recommended_to_avoided_tag": -10
+      },
+      "burnt": "dislike",
+      "min_welcome": 0.51,
+      "tasting": {
+        "free_small_plates": 3,
+        "distinct_customers": true,
+        "charge": 0,
+        "welcome_bonus_percentage_points": 10
+      },
+      "note": "后世菜上架后前20份按新菜反应判定：欢迎算好评、疑惑算一般、不喜欢算差评；20份以后按普通评价表。",
+      "listing_day": "上架＝玩家第一次把这道菜放上当天菜单、客人点得到的那天；只拿来试味、没放上菜单的那天不算",
+      "replaces_ordinary_modifiers": true,
+      "late_shift_still_applies": true,
+      "menu_toggle": "菜谱页可以把已解锁的菜撤下或放上菜单"
+    },
+    "pricing": {
+      "reference_price": "标准售价×时令系数（冷淘夏季、水晶脍冬季×1.2）×份量系数（小份×0.75、加量×1.5）",
+      "overprice_threshold": 0.1,
+      "overprice_review_penalty_percentage_points": -10,
+      "note": "玩家把售价定得比参考价高一成以上时，好评率−10个百分点；时令加价和份量换算不算超价。",
+      "rounding": "所有调价都在乘完以后向上取整到整文；时令和份量叠加时先乘时令再乘份量",
+      "player_can_set_price": true,
+      "standard_price": "菜谱上的default_price，不随玩家调价变化；梅尧臣的\"≤18文\"按它判定"
+    },
+    "economy": {
+      "currency_unit": "1/100 wen",
+      "source": "设计源文件/economy_sim.py，price_sets.calibrated，200 局蒙特卡洛，2026-09-26；复现：PYTHONHASHSEED=0 python 设计源文件/economy_sim.py 汴河两岸_菜品与家宴数据.json --runs 200 --prices calibrated",
+      "business_seconds": 360,
+      "door_wait_seconds": 10,
+      "start_cash": 30000,
+      "reputation_factor": {
+        "formula": "0.6 + 0.4 * previous_day_good_review_rate",
+        "base": 0.6,
+        "slope": 0.4,
+        "day1_previous_rate": 1.0,
+        "planned_visitors": "floor(stage_cap * reputation_factor)"
+      },
+      "stages": [
+        {
+          "stage": "1_1",
+          "name": "一级① 初出茅庐",
+          "xp": 0,
+          "visitor_cap": 12,
+          "arrival_interval_seconds": 90,
+          "table_cap": 1,
+          "stove_cap": 1,
+          "waiter_cap": 1,
+          "inventory_cap": 60,
+          "modern_stock_cap_per_type": null
+        },
+        {
+          "stage": "1_2",
+          "name": "一级②",
+          "xp": 60,
+          "visitor_cap": 18,
+          "arrival_interval_seconds": 60,
+          "table_cap": 2,
+          "stove_cap": 2,
+          "waiter_cap": 1,
+          "inventory_cap": 60,
+          "modern_stock_cap_per_type": null
+        },
+        {
+          "stage": "1_3",
+          "name": "一级③",
+          "xp": 150,
+          "visitor_cap": 24,
+          "arrival_interval_seconds": 45,
+          "table_cap": 3,
+          "stove_cap": 4,
+          "waiter_cap": 1,
+          "inventory_cap": 60,
+          "modern_stock_cap_per_type": 6
+        },
+        {
+          "stage": "2",
+          "name": "二级 市井买卖",
+          "xp": 300,
+          "visitor_cap": 36,
+          "arrival_interval_seconds": 30,
+          "table_cap": 4,
+          "stove_cap": 5,
+          "waiter_cap": 2,
+          "inventory_cap": 100,
+          "modern_stock_cap_per_type": 10
+        },
+        {
+          "stage": "3",
+          "name": "三级 小有名气",
+          "xp": 650,
+          "visitor_cap": 54,
+          "arrival_interval_seconds": 20,
+          "table_cap": 6,
+          "stove_cap": 8,
+          "waiter_cap": 2,
+          "inventory_cap": 180,
+          "modern_stock_cap_per_type": 15
+        },
+        {
+          "stage": "4",
+          "name": "四级 声名鹊起",
+          "xp": 1200,
+          "visitor_cap": 72,
+          "arrival_interval_seconds": 15,
+          "table_cap": 8,
+          "stove_cap": 10,
+          "waiter_cap": 3,
+          "inventory_cap": 240,
+          "modern_stock_cap_per_type": 20
+        },
+        {
+          "stage": "5",
+          "name": "五级 名动一方",
+          "xp": 2100,
+          "visitor_cap": 96,
+          "arrival_interval_seconds": 11,
+          "table_cap": 12,
+          "stove_cap": 12,
+          "waiter_cap": 4,
+          "inventory_cap": 320,
+          "modern_stock_cap_per_type": 30
+        }
+      ],
+      "inventory_cap_note": "主食材合计份数，不含调料、酒、现代食材。原值 40/40/40/80/120/180/240 按 23 道菜用料会在约七成营业日卡住，已改为本表的值。",
+      "tables": {
+        "first_free": 1,
+        "price_by_number": {
+          "2": 6000,
+          "3": 12000,
+          "4": 25000,
+          "7": 25000,
+          "8": 25000,
+          "9": 35000,
+          "10": 35000,
+          "11": 35000,
+          "12": 35000
+        },
+        "ground_floor_max": 4,
+        "tables_7_8_min_stage": "4",
+        "tables_9_12_min_stage": "5",
+        "table_12_is_private_room_2": true,
+        "seats_per_table": 4
+      },
+      "expansion": {
+        "price": 70000,
+        "min_stage": "3",
+        "adds_tables": [
+          5,
+          6
+        ],
+        "table_6_is_private_room_1": true,
+        "opens": "next_day"
+      },
+      "stoves": {
+        "first_free": 1,
+        "price_by_number": {
+          "2": 5000,
+          "3": 8000,
+          "4": 8000,
+          "5": 15000,
+          "6": 15000,
+          "7": 15000,
+          "8": 15000,
+          "9": 25000,
+          "10": 25000,
+          "11": 30000,
+          "12": 30000
+        },
+        "new_stove_tier": 1
+      },
+      "stove_upgrades": {
+        "1_to_2": {
+          "price": 15000,
+          "min_stage": "2"
+        },
+        "2_to_3": {
+          "price": 35000,
+          "min_stage": "4"
+        }
+      },
+      "waiters": {
+        "first_joins_after": "chapter2_complete",
+        "first_starts_work": "第二关完成后的下一个营业日（通常第3天）起全天上工",
+        "first_recruit_fee": 0,
+        "recruit_fee": 6000,
+        "wage_per_month": {
+          "1": 30000,
+          "2": 60000,
+          "3": 90000
+        },
+        "month_days": 10,
+        "month_days_note": "按游戏日算，去名流家宴那天也算一天",
+        "payday": "days 10, 20, 30... after closing",
+        "upgrade": {
+          "2": {
+            "fee": 15000,
+            "requires": "shop level 2 and 5 days employed"
+          },
+          "3": {
+            "fee": 50000,
+            "requires": "shop level 4 and bargaining learned"
+          }
+        },
+        "tables_per_waiter": 3,
+        "level3_auto_inspection_miss_rate": 0.05,
+        "full_staff_wage_share_of_level5_revenue": 0.23,
+        "head_waiter": {
+          "available": "正店阶段（收到正店邀请以后）",
+          "promote_from_level": 3,
+          "fee": 100000,
+          "wage_per_month": 300000,
+          "limit": 1,
+          "note": "占一个小二名额，前堂仍最多4人；满编工钱（4名3级小二，每月3600文）约占五级营业额的20%，不含领班；有领班（领班加3名3级小二）时每月工钱5700文，约占32%",
+          "occupies_waiter_slot": true
+        }
+      },
+      "customer_budgets_wen": {
+        "worker": 22,
+        "family": 20,
+        "child": 20,
+        "student": 15,
+        "celebrity": null
+      },
+      "simulated_pacing": {
+        "note": "中位首日（P10–P90），200 局，PYTHONHASHSEED=0，自动做最多2口灶，3级小二900文；好评率由模型算出约84%",
+        "level2": [
+          6,
+          6,
+          7
+        ],
+        "level3": [
+          9,
+          8,
+          10
+        ],
+        "level4": [
+          12,
+          11,
+          13
+        ],
+        "level5": [
+          15,
+          14,
+          17
+        ],
+        "expansion_day": [
+          14,
+          13,
+          16
+        ],
+        "all_12_tables_and_12_stoves_day": [
+          20,
+          18,
+          21
+        ],
+        "array_order": [
+          "median",
+          "p10",
+          "p90"
+        ]
+      },
+      "facade": {
+        "by_level": {
+          "1": "木板门",
+          "2": "木板门",
+          "3": "欢门",
+          "4": "欢门",
+          "5": "彩楼欢门"
+        },
+        "automatic": true,
+        "cost": 0,
+        "champion_sign": "正店比拼夺冠后另挂冠军招牌",
+        "reference": "《清明上河图》里十千脚店、孙羊正店门前的欢门、彩楼欢门"
+      },
+      "modern_stock_note": "现代食材每种最多存当级时空门一天的份数，免得囤货绕开\"每天只能带一种\""
+    },
+    "service": {
+      "day": {
+        "business_seconds": 360,
+        "after_close": "不再进新客，已点单的照常招待",
+        "early_close_when_out_of_stock": true,
+        "early_close_penalty": null
+      },
+      "customer_types": [
+        {
+          "id": "worker",
+          "name": "普通工人",
+          "from": "1_1",
+          "group_size": [
+            2,
+            4
+          ],
+          "typical": 3,
+          "order": "individual",
+          "budget_wen": 22
+        },
+        {
+          "id": "family",
+          "name": "妇女与儿童",
+          "from": "1_2",
+          "group_size": [
+            1,
+            3
+          ],
+          "order": "shared_when_with_child_or_two_women",
+          "budget_wen": 20,
+          "child_budget_wen": 20
+        },
+        {
+          "id": "student",
+          "name": "国子监学生",
+          "from": "after_chapter2",
+          "group_size": [
+            2,
+            4
+          ],
+          "typical": 4,
+          "order": "shared",
+          "budget_wen": 15
+        },
+        {
+          "id": "celebrity",
+          "name": "名流",
+          "from": "2",
+          "group_size": [
+            2,
+            3
+          ],
+          "companions": [
+            1,
+            2
+          ],
+          "order": "shared",
+          "budget_wen": null,
+          "celebrity_count": 1,
+          "note": "名流1人，另有同行1–2人；和预约客一样不占当日来客上限"
+        }
+      ],
+      "shared_order_plates_ratio": 0.75,
+      "shared_order_plates_rounding": "max(1, floor(0.75×人数+0.5))：1人1份、2人2份、3人2份、4人3份；凑不够九成饱腹时可以多点一份；名流一桌比同样人数多点一份",
+      "picky_customers": {
+        "from_stage": "3",
+        "share": 0.2,
+        "budget_multiplier": 2,
+        "orders_more_medium_high_and_wine": true
+      },
+      "patience": {
+        "starts": "点完单",
+        "base_seconds_by_hardest_dish": {
+          "1": 25,
+          "2": 35,
+          "3": 45
+        },
+        "per_extra_guest_seconds": 5,
+        "on_timeout": "催单，这桌评价降一档",
+        "leave_after_extra_seconds": 15,
+        "on_leave": "整桌离店：不付钱（已经上了的菜也不收），用掉的食材不退，每人0经验",
+        "waiter_explaining_does_not_reset": true,
+        "explain_wait_bonus_seconds": 10,
+        "explain_wait_uses_per_table": 1,
+        "add_on_order": "用餐中可以加点：加的菜另开一单，耐心从加点时按这道菜重新算，算进这桌的分量和账单",
+        "example": "三位工人点简单菜：25+5×2=35秒",
+        "explain_wait_by": [
+          "player",
+          "waiter"
+        ]
+      },
+      "takeout": "用餐中加点一份带走，照价收钱，不算进这桌的饱腹",
+      "remake_on_mismatch": "口味不合时可以给这位客人重做一份：再扣一份料、不另收钱，这位客人按重做的那份评价",
+      "seating": {
+        "quiet_seats": "一楼靠里的两张桌和雅间",
+        "auto_seat": "进门自动排座，学生和名流先排清静的",
+        "manual": "玩家可以拖动调整，有了领班由领班排",
+        "effect": "只影响相关台词和程颢事件，不改普通评价概率"
+      },
+      "dining_seconds_by_hardest_dish": {
+        "1": 30,
+        "2": 40,
+        "3": 50
+      },
+      "door_wait_seconds": 10,
+      "door_leave_effect": "不计经验，也不算差评",
+      "review_probabilities": {
+        "immortal": {
+          "good": 1.0,
+          "normal": 0.0,
+          "bad": 0.0
+        },
+        "perfect": {
+          "good": 0.7,
+          "normal": 0.25,
+          "bad": 0.05
+        },
+        "good": {
+          "good": 0.6,
+          "normal": 0.35,
+          "bad": 0.05
+        },
+        "underdone": {
+          "good": 0.2,
+          "normal": 0.4,
+          "bad": 0.4
+        },
+        "burnt": {
+          "good": 0.0,
+          "normal": 0.2,
+          "bad": 0.8
+        }
+      },
+      "review_modifiers_percentage_points": {
+        "taste_or_portion_match": 15,
+        "taste_mismatch": -10,
+        "premium_all_main_ingredients": 10,
+        "above_reference_price": -10,
+        "after_suzhe_event_bad_reviews": -5,
+        "after_meiyaochen_event_standard_price_le_18_wen": 5,
+        "chenghao_revisit_in_private_room": 20
+      },
+      "review_resolution": {
+        "per_guest": "每位客人各抽一次，按分到的那盘菜；各点各的按自己那盘，整桌合点时每人从这桌的菜里随机分到一盘",
+        "good_bonus_taken_from": [
+          "normal",
+          "bad"
+        ],
+        "reductions_go_to": "normal",
+        "clamp": [
+          0,
+          1
+        ],
+        "late_shift": "结果下移一档：好评→一般，一般→差评，差评不变",
+        "premium_requires_all_main_ingredients_premium": true,
+        "novel_reaction_replaces_ordinary_modifiers": true,
+        "late_shift_applies_during_novel_reaction": true,
+        "premium_ignores_single_grade_ingredients": true,
+        "premium_note": "只看有优质档（premium_available=true）的主料；只有一档的主料（现代食材、腌货等）不影响",
+        "match_bonus_once": true,
+        "late_after_patience": "down_one_tier",
+        "after_suzhe_event_bad_reviews_applies_to": "all_guests"
+      },
+      "xp_per_customer": {
+        "good": 6,
+        "normal": 4,
+        "bad_paid": 2,
+        "left_or_ran_away": 0,
+        "note": "按实际结账的人数算，不按盘数；例：8好评+2一般+2差评=60经验"
+      },
+      "bargain": {
+        "once_per_vendor_per_day": true,
+        "options": [
+          {
+            "line": "让一点吧",
+            "discount": 0.05,
+            "success": 0.9
+          },
+          {
+            "line": "再便宜些",
+            "discount": 0.1,
+            "success": 0.6
+          },
+          {
+            "line": "就这个价",
+            "discount": 0.2,
+            "success": 0.3
+          }
+        ],
+        "on_fail": "按原价成交，这个商贩当天不再讲价",
+        "stack_with_bulk": "multiply",
+        "floor": 0.7,
+        "waiter_learns": "小二2级后跟玩家出门，玩家当面砍价成功3次后学会，之后可以独自采购并自动砍价",
+        "waiter_line": "再便宜些",
+        "waiter_success": {
+          "2": 0.6,
+          "3": 0.75
+        },
+        "scope": "按商贩：砍价成功后，这个商贩当天卖的东西都按砍后的价（整筐折扣另乘）；现代食材在现代那边买，不砍价"
+      },
+      "runaway": {
+        "from_stage": "2",
+        "daily": {
+          "2": {
+            "chance": 0.4,
+            "max": 1
+          },
+          "3": {
+            "chance": 0.4,
+            "max": 1
+          },
+          "4": {
+            "chance": 0.5,
+            "max": 2,
+            "pair_share": 0.3
+          },
+          "5": {
+            "chance": 0.5,
+            "max": 2,
+            "pair_share": 0.3
+          }
+        },
+        "assign_window_seconds": 5,
+        "assigned_in_time": "追回",
+        "not_assigned_or_no_free_waiter": "逃单成功",
+        "caught": "照价收钱，这位客人按差评结账（2经验）",
+        "escaped": "这单没有收入，食材不退，0经验",
+        "one_runner_per_waiter": true,
+        "waiter_unavailable_while_chasing": true,
+        "auto_chase_after_catches": 3,
+        "contest_day": "约3分40秒固定两人同时逃单，不另抽随机跑单"
+      },
+      "immortal_boost": {
+        "unlock": "仙人事件完成（升二级后1–3个营业日内必来，没做好下一天再来）",
+        "by_guests_present": [
+          {
+            "min": 1,
+            "max": 3,
+            "cut": 0.05
+          },
+          {
+            "min": 4,
+            "max": 7,
+            "cut": 0.1
+          },
+          {
+            "min": 8,
+            "max": 11,
+            "cut": 0.2
+          },
+          {
+            "min": 12,
+            "max": 15,
+            "cut": 0.3
+          },
+          {
+            "min": 16,
+            "max": 23,
+            "cut": 0.4
+          },
+          {
+            "min": 24,
+            "max": null,
+            "cut": 0.5
+          }
+        ],
+        "counts": "开灶时已入座的客人（点单、等菜、用餐都算，门口等位的不算）",
+        "locked_at_stove_start": true,
+        "no_guests": "不生效",
+        "display_decimals": 1,
+        "event_pass": "玩家亲手做出完美菜（高等菜为不错以上）即完成；没做好次日再来"
+      },
+      "waiter_levels": {
+        "1": {
+          "does": "迎客、记单、传菜、收桌；被指派时追跑单",
+          "tables_covered": 3,
+          "over_capacity": "桌数超过小二人数×3时动作按比例变慢（1人照看4张桌慢三分之一）"
+        },
+        "2": {
+          "adds": "比较供应商（采购页显示普通、优质、整筐三种买法的实际每份成本和坏料风险）、推荐做法与菜品、按客人偏好选口味和份量（准确约七成）、跟玩家出门采购并学砍价",
+          "serve_speed_bonus": 0.1
+        },
+        "3": {
+          "adds": "推荐准确约九成、独立采购砍价更易成、可以开自动验货（漏检5%）",
+          "serve_speed_bonus": 0.2
+        },
+        "head_waiter": {
+          "available": "正店阶段（收到正店邀请以后）",
+          "limit": 1,
+          "does": "统管前堂：排座位、控节奏、安排雅间",
+          "occupies_waiter_slot": true,
+          "wage": "见rules.economy.waiters.head_waiter.wage_per_month（每月3000文，工钱档位里最高的一档）"
+        }
+      },
+      "wage_arrears": "钱不够时记为欠薪：欠薪的小二当月不长本事（不学砍价），补发后恢复",
+      "celebrity_visits": {
+        "from_stage": "2",
+        "requires_student_good_reviews": 20,
+        "daily_chance": 0.25,
+        "max_per_day": 1,
+        "daily_chance_after_zenggong_event": 0.3,
+        "ouyangxiu2": "带现代酒的那天必定来访，不占25%",
+        "conditions_checked": "每天开门前按前一天为止的情况检查，满足的进入当天抽取；程颢改为营业中第一次同时有3桌在用餐时抽一次（25%）；欧阳修（二）看当天的时空门选择；曾巩回访和欧阳修（二）撞在同一天时，曾巩顺延到下一个营业日",
+        "meiyaochen": {
+          "standard_price_max_wen": 18,
+          "price_basis": "recipe default_price（不随玩家调价）",
+          "good_bonus_pp": 5
+        },
+        "chenghao_revisit": {
+          "after": "建好雅间",
+          "times": 1,
+          "joins_daily_draw": true,
+          "seated_in_private_room": true,
+          "good_bonus_pp": 20
+        },
+        "per_person": {
+          "sushi": {
+            "requires": [
+              "店里有上架不满3天的新菜"
+            ],
+            "reward": "苏轼题写的短句（收藏品）；成就“未来的名篇”"
+          },
+          "suzhe": {
+            "requires": [
+              "小二已升到2级"
+            ],
+            "reward": "小二习得“先说明菜品与价格”：之后所有客人差评−5个百分点"
+          },
+          "ouyangxiu1": {
+            "requires": [
+              "苏轼事件完成",
+              "连续3天好评率≥70%（家宴日跳过）",
+              "库存有银瓶酒或羊羔酒"
+            ],
+            "reward": "欧阳修的夸赞；成就“醉翁亭记”（只在成就界面弹出）"
+          },
+          "ouyangxiu2": {
+            "requires": [
+              "欧阳修（一）完成",
+              "店铺四级",
+              "当天时空门带来茅台或啤酒"
+            ],
+            "guaranteed": "满足条件的那天必定来访，不占25%",
+            "reward": "欧阳修亲笔酒评（收藏品）；雅间客人点酒概率+10个百分点；成就“醉翁亭记怎么×2了？”"
+          },
+          "meiyaochen": {
+            "requires": [
+              "有一道标准售价≤18文的家常菜，连续3天完美率≥80%（家宴日跳过）"
+            ],
+            "reward": "梅尧臣题写的短句；“家常菜”经营评价：标准售价≤18文的菜好评+5个百分点"
+          },
+          "zenggong": {
+            "requires": [
+              "首次来访给了好评"
+            ],
+            "guaranteed": "首次好评后3–5天内必定再来一次，点同一道菜",
+            "reward": "两次招待都稳定（第二次同样给好评）：曾巩题字；名流出现概率25%→30%"
+          },
+          "chenghao": {
+            "requires": [
+              "店内同时≥3桌用餐",
+              "还没建雅间"
+            ],
+            "check": "营业中第一次同时有3桌在用餐时抽一次（25%）",
+            "reward": "“不同客人需要不同座位”的线索；建好雅间后回访一次，安排进雅间，这桌好评+20个百分点"
+          }
+        },
+        "completion": {
+          "default": "这位名流结账时给好评即完成，自动做的菜也算",
+          "suzhe": "点单时说清菜品、做法和价格，账目对得上",
+          "ouyangxiu1": "端上银瓶酒或羊羔酒并如实介绍",
+          "ouyangxiu2": "端上当天带来的现代酒并如实介绍",
+          "meiyaochen": "他点的那道菜完美（高等菜不错以上）",
+          "zenggong": "第二次点的那道菜完美（高等菜不错以上）",
+          "chenghao": "坐到清静的座位",
+          "retry": "没完成的，条件仍满足时以后还会再来",
+          "after_completion": "完成过的名流以后照常来店吃饭，不再重复事件"
+        }
+      },
+      "regulars": {
+        "definition": "给了好评、明确说愿意再来的客人，或差评后被玩家问清并记下偏好的客人（回访五），记进熟客簿",
+        "max_events_per_day": 1,
+        "inside_daily_cap": true,
+        "preferences_remembered": true,
+        "events": {
+          "1": {
+            "trigger": "第一关的工人说过愿意再来",
+            "window_business_days": [
+              1,
+              1
+            ],
+            "note": "通常第2天，第二关之后，带两位同伴来"
+          },
+          "2": {
+            "trigger": "一级②起，一位妇人第一次来就给了好评",
+            "window_business_days": [
+              2,
+              4
+            ]
+          },
+          "3": {
+            "trigger": "带孩子的一桌点了小份、分量合适、孩子给了好评",
+            "window_business_days": [
+              2,
+              4
+            ]
+          },
+          "4": {
+            "trigger": "第二关的学生说过要带同窗来",
+            "window_business_days": [
+              2,
+              4
+            ]
+          },
+          "5": {
+            "trigger": "客人说\"这个味道不行\"，玩家问清并记下偏好",
+            "window_business_days": [
+              2,
+              4
+            ]
+          }
+        }
+      },
+      "daily_goals": {
+        "examples": [
+          "今天好评率≥70%",
+          "卖出5份新菜"
+        ],
+        "reward": "20文或一份当季食材",
+        "xp": 0
+      },
+      "chapter_retry": "第一关、第二关没完成（比如客人嫌贵走了）时，下一组客人进门重新开始这一关；第二关的下一组换成国子监学生。这两关是教学关，分支里的结账评价按剧本给",
+      "calendar": {
+        "days_per_month": 10,
+        "days_per_season": 10,
+        "days_per_year": 40,
+        "season_order": [
+          "spring",
+          "summer",
+          "autumn",
+          "winter"
+        ],
+        "start": "嘉祐元年春",
+        "payday": "第10、20、30……天打烊时发工钱，提前3天提醒"
+      },
+      "stoves": {
+        "tiers": {
+          "1": "只做简单菜",
+          "2": "简单和中等菜",
+          "3": "全部"
+        },
+        "one_dish_per_stove": true
+      },
+      "private_rooms": {
+        "priority": "名流、宴席和预约菜优先安排进雅间",
+        "ouyangxiu2_wine_bonus_percentage_points": 10,
+        "note": "欧阳修（二）后雅间客人点酒概率＋10个百分点"
+      },
+      "planned_visitors": "floor(当日上限×口碑系数)；第1天口碑系数按1；口碑系数<1时到店间隔除以口碑系数。名流一桌和预约客不占当日上限，熟客回访占；正店比拼那天所有客人都算在96人里",
+      "wine_order_probability": {
+        "ordinary": 0.0,
+        "picky": 0.3,
+        "celebrity": 0.7,
+        "private_room_bonus_pp": 10,
+        "after_ouyangxiu2_private_room_bonus_pp": 10,
+        "max_per_guest": 1,
+        "private_room_bonus_applies_if_base_gt_0": true,
+        "celebrity_table_all_members": true,
+        "note": "名流一桌每人都按名流的70%算；雅间加成只加在基础概率大于0的客人身上（普通客人坐雅间也不点）"
+      },
+      "return_gift": {
+        "trigger": "普通客人吃到仙味",
+        "chance": 0.05,
+        "gift": "一份当季食材或20文"
+      }
+    },
+    "contest": {
+      "invite": "首次升到五级后的下一个营业日（flags.zhengdian_invited）",
+      "business_seconds": 360,
+      "visitor_cap": 96,
+      "all_guests_in_cap": true,
+      "emperor": {
+        "every_match": true,
+        "arrive_seconds": [
+          180,
+          240
+        ],
+        "prompt": "特殊顾客",
+        "reveal": "settlement",
+        "orders": "一道当天能做的高等菜（佛跳墙除外）＋一份主食；做不了高等菜时改点中等菜",
+        "party": "皇帝＋随从1人（随从不点菜、不计人数和评价）",
+        "seat_reserved": true
+      },
+      "celebrities": {
+        "first": {
+          "chance": 1.0,
+          "arrive_seconds": [
+            90,
+            150
+          ]
+        },
+        "second": {
+          "chance": 0.6,
+          "arrive_seconds": [
+            255,
+            315
+          ]
+        },
+        "outside_daily_draw": true
+      },
+      "fixed_events_seconds": {
+        "rush": 100,
+        "double_runaway": 220,
+        "taste_change": 300
+      },
+      "min_gap_seconds": 15,
+      "special_scores": {
+        "emperor": [
+          {
+            "case": "主厨亲手做高等菜，出炉为仙味",
+            "points": 80
+          },
+          {
+            "case": "主厨亲手做中等菜，出炉为完美（只在改点中等菜时）",
+            "points": 35
+          },
+          {
+            "case": "其他出品（完美或不错，含自动做的），且顾客满意（好评或一般）",
+            "points": 20
+          }
+        ],
+        "celebrity_each": [
+          {
+            "case": "主厨亲手做高等菜，出炉为仙味",
+            "points": 30
+          },
+          {
+            "case": "主厨亲手做合口味的完美菜",
+            "points": 20
+          },
+          {
+            "case": "其他出品（完美或不错，含自动做的），且顾客满意",
+            "points": 10
+          }
+        ],
+        "max_total": 140,
+        "tier_by": "皇帝按他点的那道主菜（配的主食不算）；名流按这桌端上的菜里最高的一档",
+        "none_for": "没上菜、逃单、差评，或端上的是次等菜、糊菜"
+      },
+      "score_formula": {
+        "review": "400*(6G+4N+2B)/(6P) if P>0 else 0",
+        "served": "min(180, 180*P/96)",
+        "on_time": "180*T/P if P>0 else 0",
+        "profit": "100*min(1, max(0,毛收益)/1500文)",
+        "rounding": "各项四舍五入到整数，0.5进1",
+        "gross_profit": "本局菜和酒的售出收入 − 实际耗用的食材、调料和酒的成本；工钱不扣"
+      },
+      "tie_break": [
+        "顾客评价分",
+        "准时上菜分",
+        "已付款人数",
+        "仍相同则并列第一，玩家也算夺冠"
+      ],
+      "rivals_fixed_first_match": [
+        {
+          "name": "河畔正店",
+          "total": 733
+        },
+        {
+          "name": "州桥正店",
+          "total": 788
+        },
+        {
+          "name": "丰乐楼一组",
+          "total": 838
+        }
+      ],
+      "win": "成就“七十二正店之首”＋冠军招牌装饰；店铺等级不变；没夺冠可以之后再战",
+      "story_ending": "夺冠就是主线的结局（试玩版和完整版都在这里收尾）；结算后播放结局，之后可以继续自由经营，冠军招牌一直挂着",
+      "simulated_win_rate": {
+        "fast_player": 0.81,
+        "slow_player": 0.63,
+        "without_emperor_immortal": 0.03,
+        "method": "五级买满后的营业日套用比拼公式，另扣两人逃单被追回、三人没准时；见《经营数值核算》04（economy_sim.py --contest）"
+      },
+      "emperor_memento": "玩家亲手端上仙味时，第一次得一件纪念物，只给一次",
+      "trial_8_weeks": {
+        "invite": "升到三级后的第二天（完整版在五级）",
+        "content": "只有一级、二级的内容：简单菜8道、中等菜5道，没有高等菜和名流",
+        "emperor": "点一道中等菜，配一份主食；亲手做出完美35分，否则20分",
+        "celebrities": false,
+        "score_changes": {
+          "served": "180*P/54",
+          "profit": "100*min(1, max(0,毛收益)/850文)"
+        },
+        "rivals": [
+          {
+            "name": "河畔正店",
+            "total": 585,
+            "parts": [
+              335,
+              110,
+              105,
+              35,
+              0
+            ]
+          },
+          {
+            "name": "州桥正店",
+            "total": 630,
+            "parts": [
+              345,
+              120,
+              125,
+              40,
+              0
+            ]
+          },
+          {
+            "name": "丰乐楼一组",
+            "total": 685,
+            "parts": [
+              360,
+              130,
+              150,
+              45,
+              0
+            ]
+          }
+        ],
+        "simulated_win_rate": {
+          "fast_player": 0.8,
+          "slow_player": 0.68
+        },
+        "ending": "夺冠就是试玩版的结局"
+      }
+    },
+    "map": {
+      "image": "维基共享资源 File:Alongtheriver QingMing.jpg（张择端《清明上河图》全卷，标为公有领域）",
+      "size_px": [
+        38414,
+        1800
+      ],
+      "tiles": {
+        "size_px": 2048,
+        "count": 19,
+        "compressed_mb_each": 2,
+        "visible_at_once": [
+          2,
+          3
+        ]
+      },
+      "overlays": "五处可点击地点、集市、码头、饭馆标记做成叠加层，能单独显示、隐藏和高亮",
+      "museum_shares_image": true,
+      "shop_location": "游戏设定，不对应画中某家店",
+      "license_note": "课程项目可以用；商用前先确认图像来源的授权，或向博物馆申请授权图"
+    },
+    "achievements": [
+      {
+        "name": "有点生",
+        "condition": "第一次做出次等菜"
+      },
+      {
+        "name": "糊啦！",
+        "condition": "第一次做出糊菜"
+      },
+      {
+        "name": "小摊全都会",
+        "condition": "解锁全部8道简单菜（变体不算）"
+      },
+      {
+        "name": "家常菜馆有名气！",
+        "condition": "解锁全部9道中等菜"
+      },
+      {
+        "name": "我就说我是大厨吧！",
+        "condition": "解锁全部6道高等菜"
+      },
+      {
+        "name": "仙家密法",
+        "condition": "完成仙人事件"
+      },
+      {
+        "name": "未来的名篇",
+        "condition": "完成苏轼事件"
+      },
+      {
+        "name": "醉翁亭记",
+        "condition": "完成欧阳修（一）；系统成就，人物不提"
+      },
+      {
+        "name": "醉翁亭记怎么×2了？",
+        "condition": "完成欧阳修（二）；附系统备注\"这回的酒，确实不在原来的记里。\""
+      },
+      {
+        "name": "掌勺入名门",
+        "condition": "第一次名流家宴获得满意及以上（评分≥70）"
+      },
+      {
+        "name": "七十二正店之首",
+        "condition": "正店比拼夺得第一（并列第一也算）；同时解锁冠军招牌装饰"
+      }
+    ]
+  },
+  "feasible_menu_examples": [
+    {
+      "level": 3,
+      "batches": [
+        [
+          [
+            "D04",
+            3
+          ]
+        ],
+        [
+          [
+            "D06",
+            3
+          ],
+          [
+            "D13",
+            3
+          ]
+        ],
+        [
+          [
+            "D10",
+            3
+          ]
+        ]
+      ],
+      "base_cost": 9180,
+      "satiety": 1335,
+      "modern_units": {
+        "tomato": 3,
+        "potato": 3
+      },
+      "three_stove_auto_estimate_seconds": [
+        9,
+        22,
+        11
+      ],
+      "total_seconds_with_breaks": 62,
+      "note": "理论估计按三口灶并行、所选菜均已做熟并自动制作，每轮留2秒操作余量，不是引擎试玩；未含坏料重做。"
+    },
+    {
+      "level": 4,
+      "batches": [
+        [
+          [
+            "D04",
+            4
+          ]
+        ],
+        [
+          [
+            "D18",
+            2
+          ],
+          [
+            "D16",
+            3
+          ],
+          [
+            "D19",
+            3
+          ]
+        ],
+        [
+          [
+            "D10",
+            4
+          ]
+        ]
+      ],
+      "base_cost": 16830,
+      "satiety": 1810,
+      "modern_units": {},
+      "three_stove_auto_estimate_seconds": [
+        14,
+        50,
+        18
+      ],
+      "total_seconds_with_breaks": 102,
+      "note": "理论估计按三口灶并行、所选菜均已做熟并自动制作，每轮留2秒操作余量，不是引擎试玩；未含坏料重做。"
+    },
+    {
+      "level": 5,
+      "batches": [
+        [
+          [
+            "D04",
+            3
+          ],
+          [
+            "D05",
+            3
+          ]
+        ],
+        [
+          [
+            "D18",
+            6
+          ],
+          [
+            "D21",
+            6
+          ]
+        ],
+        [
+          [
+            "D02",
+            3
+          ],
+          [
+            "D10",
+            3
+          ]
+        ]
+      ],
+      "base_cost": 31770,
+      "satiety": 3075,
+      "modern_units": {},
+      "three_stove_auto_estimate_seconds": [
+        16,
+        68,
+        20
+      ],
+      "total_seconds_with_breaks": 124,
+      "note": "理论估计按三口灶并行、所选菜均已做熟并自动制作，每轮留2秒操作余量，不是引擎试玩；未含坏料重做。"
+    }
+  ],
+  "change_log": [
+    {
+      "version": "1.1",
+      "date": "2026-09-26",
+      "changes": [
+        "删掉学徒：apprentice_demonstrations改名auto_cook_unlock_cooks；新增rules.cooking.auto_cook"
+      ]
+    },
+    {
+      "version": "1.2",
+      "date": "2026-09-26",
+      "changes": [
+        "删掉羊肉；新增economy、service、pricing、reservations等规则；家宴改为首次满意以上解锁成就"
+      ]
+    },
+    {
+      "version": "1.3",
+      "date": "2026-09-26",
+      "changes": [
+        "改名：banquet.rewards.first_completed_achievement→first_satisfied_achievement；banquet.staff.auto_cook_requires_unlocked_recipe→auto_cook_requires_mastered_recipe；review_modifiers的premium_ingredients→premium_all_main_ingredients、after_meiyaochen_event_dishes_le_18_wen→after_meiyaochen_event_standard_price_le_18_wen",
+        "名流荐誉的来客上限改为当前等级上限（最高96）；家宴收藏恢复为\"一件未拥有的\"",
+        "新增：service.review_resolution、regulars、daily_goals、chapter_retry；patience的说明等待+10秒和用餐中加点；预约的保温、烤鸭预约频率；加量适用的菜；改良版的改法对应；领班占小二名额；小二第3天起上工",
+        "第三轮审核后：名流各自的条件和奖励（service.celebrity_visits.per_person）、rules.flags、rules.contest、rules.achievements；苏辙口味改为staple；苏辙要求和预算分按C；改良版的效果、改法、差评类型判定；预约按菜分开（offers_by_recipe）；改名：invitation.offer_days→departure_window_days、cooking.stove_inheritance→higher_tier_stove_cooks_lower_tiers、portion.small_plate_multiplier→small_plate_satiety_multiplier、portal_normal.caps的1_stage3→1_3；mismatch_penalty改为−10；食材加display_category；删掉重复的领班工钱和讲究客人参数",
+        "第三轮审核后（续）：仙家密法按开灶时已入座的人数；上架＝玩家放上菜单的那天，菜谱页可撤下菜单；打包、口味不合重做、座位规则；名流完成判定、欧阳修（二）当天检查和撞日顺延；家宴品尝反馈分档、不用普通耐心；预约按人数配主食；比拼\"其他出品\"限完美或不错，名流按这桌最高一档"
+      ]
+    },
+    {
+      "version": "1.3",
+      "date": "2026-09-26",
+      "changes": [
+        "用户第三次拍板：自动做同时最多占2口灶（cooking.auto_cook.max_auto_stoves、banquet.staff.auto_cook_max_stoves）；3级小二工钱900文；门面升级（economy.facade）；卷轴地图用《清明上河图》原作图像（rules.map）；正店比拼夺冠即主线结局（contest.story_ending）；simulated_pacing按新数值重算"
+      ]
+    },
+    {
+      "version": "1.3",
+      "date": "2026-09-27",
+      "changes": [
+        "家宴经费改为三档随机（banquet.levels[].budget → budget_by_difficulty；banquet.budget_difficulty）；满意酬谢按档×1／1.25／1.5；欧阳修另给酒钱",
+        "八周试玩版的缩小版比拼（contest.trial_8_weeks）"
+      ]
+    }
+  ]
+}

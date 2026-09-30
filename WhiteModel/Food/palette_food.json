@@ -1,0 +1,114 @@
+{
+ "toon": {
+  "Celadon": {
+   "lit": "#bcd5c1",
+   "shade": "#93b39e",
+   "emission": 0.0
+  },
+  "Broth": {
+   "lit": "#ecd997",
+   "shade": "#cdb66c",
+   "emission": 0.0
+  },
+  "Noodle": {
+   "lit": "#f7eed6",
+   "shade": "#dfcfa3",
+   "emission": 0.0
+  },
+  "Greens": {
+   "lit": "#a6cf73",
+   "shade": "#77a24a",
+   "emission": 0.0
+  },
+  "Scallion": {
+   "lit": "#7fb54e",
+   "shade": "#5a8a33",
+   "emission": 0.0
+  },
+  "Bread": {
+   "lit": "#f0d49a",
+   "shade": "#d2a764",
+   "emission": 0.0
+  },
+  "Char": {
+   "lit": "#c07a3a",
+   "shade": "#95562a",
+   "emission": 0.0
+  },
+  "WontonSkin": {
+   "lit": "#f6ecd3",
+   "shade": "#dccaa0",
+   "emission": 0.0
+  },
+  "Meat": {
+   "lit": "#e3aaa0",
+   "shade": "#c3847a",
+   "emission": 0.0
+  },
+  "Burlap": {
+   "lit": "#e6d2a6",
+   "shade": "#c5aa7b",
+   "emission": 0.0
+  },
+  "Flour": {
+   "lit": "#fbf7ee",
+   "shade": "#e3dccd",
+   "emission": 0.0
+  },
+  "LightWood": {
+   "lit": "#e2b37c",
+   "shade": "#bf8a52",
+   "emission": 0.0
+  },
+  "Stem": {
+   "lit": "#eef0d2",
+   "shade": "#cdd3a4",
+   "emission": 0.0
+  },
+  "Fat": {
+   "lit": "#f7e2d8",
+   "shade": "#dcbcae",
+   "emission": 0.0
+  },
+  "Salt": {
+   "lit": "#fdfbf6",
+   "shade": "#e4e0d6",
+   "emission": 0.0
+  },
+  "Jar": {
+   "lit": "#efe9d4",
+   "shade": "#cfc6a8",
+   "emission": 0.0
+  },
+  "Clay": {
+   "lit": "#e4ab5d",
+   "shade": "#c0843b",
+   "emission": 0.0
+  },
+  "Oil": {
+   "lit": "#f5c93f",
+   "shade": "#d9a520",
+   "emission": 0.0
+  },
+  "ScallionWhite": {
+   "lit": "#f6f4e6",
+   "shade": "#d9d6bf",
+   "emission": 0.0
+  },
+  "Twine": {
+   "lit": "#dcc07a",
+   "shade": "#b89a55",
+   "emission": 0.0
+  },
+  "Ginger": {
+   "lit": "#e6c48c",
+   "shade": "#c49b5f",
+   "emission": 0.0
+  },
+  "GingerFlesh": {
+   "lit": "#f7e49c",
+   "shade": "#dcc36c",
+   "emission": 0.0
+  }
+ }
+}

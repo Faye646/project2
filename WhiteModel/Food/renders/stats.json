@@ -1,0 +1,54 @@
+{
+ "D01": {
+  "faces": 492,
+  "tris": 768
+ },
+ "D02": {
+  "faces": 408,
+  "tris": 696
+ },
+ "D03": {
+  "faces": 500,
+  "tris": 752
+ },
+ "D01_wok": {
+  "faces": 396,
+  "tris": 600
+ },
+ "D02_wok": {
+  "faces": 296,
+  "tris": 486
+ },
+ "D03_wok": {
+  "faces": 388,
+  "tris": 542
+ },
+ "flour": {
+  "faces": 190,
+  "tris": 344
+ },
+ "greens": {
+  "faces": 220,
+  "tris": 370
+ },
+ "pork": {
+  "faces": 228,
+  "tris": 368
+ },
+ "salt": {
+  "faces": 186,
+  "tris": 332
+ },
+ "oil": {
+  "faces": 184,
+  "tris": 332
+ },
+ "scallion": {
+  "faces": 284,
+  "tris": 488
+ },
+ "ginger": {
+  "faces": 226,
+  "tris": 344
+ }
+}

@@ -1,0 +1,141 @@
+{
+ "faces": 20213,
+ "tris": 37094,
+ "parts": {
+  "K_Plinth": {
+   "faces": 784,
+   "quads": 576,
+   "tris": 1360
+  },
+  "K_Floor": {
+   "faces": 1674,
+   "quads": 1674,
+   "tris": 3348
+  },
+  "K_Walls": {
+   "faces": 1552,
+   "quads": 1224,
+   "tris": 2796
+  },
+  "K_ZaoTai": {
+   "faces": 446,
+   "quads": 408,
+   "tris": 876
+  },
+  "K_ChaiDui": {
+   "faces": 251,
+   "quads": 229,
+   "tris": 570
+  },
+  "K_Crates": {
+   "faces": 280,
+   "quads": 207,
+   "tris": 496
+  },
+  "K_Counter": {
+   "faces": 902,
+   "quads": 659,
+   "tris": 1640
+  },
+  "K_ShuiChi": {
+   "faces": 186,
+   "quads": 177,
+   "tris": 372
+  },
+  "K_WanGui": {
+   "faces": 1293,
+   "quads": 1211,
+   "tris": 2614
+  },
+  "K_AnTai": {
+   "faces": 832,
+   "quads": 610,
+   "tris": 1496
+  },
+  "K_Guizi": {
+   "faces": 353,
+   "quads": 255,
+   "tris": 622
+  },
+  "K_ShuiGang": {
+   "faces": 184,
+   "quads": 182,
+   "tris": 388
+  },
+  "K_Sieve": {
+   "faces": 107,
+   "quads": 96,
+   "tris": 230
+  },
+  "C_Plinth": {
+   "faces": 316,
+   "quads": 252,
+   "tris": 568
+  },
+  "C_Floor": {
+   "faces": 216,
+   "quads": 216,
+   "tris": 432
+  },
+  "C_Walls": {
+   "faces": 1925,
+   "quads": 1433,
+   "tris": 3378
+  },
+  "D_Plinth": {
+   "faces": 894,
+   "quads": 702,
+   "tris": 1596
+  },
+  "D_Floor": {
+   "faces": 549,
+   "quads": 549,
+   "tris": 1098
+  },
+  "D_Walls": {
+   "faces": 3876,
+   "quads": 2928,
+   "tris": 6864
+  },
+  "D_Railings": {
+   "faces": 1324,
+   "quads": 980,
+   "tris": 2304
+  },
+  "D_Path": {
+   "faces": 156,
+   "quads": 108,
+   "tris": 264
+  },
+  "D_Table_1": {
+   "faces": 650,
+   "quads": 472,
+   "tris": 1136
+  },
+  "D_Stool_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Cabinet": {
+   "faces": 111,
+   "quads": 87,
+   "tris": 198
+  }
+ }
+}

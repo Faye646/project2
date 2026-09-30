@@ -6,3 +6,18 @@ WhiteModel/renders/passes/
 
 # Private chat logs handed over for summarizing; never publish (repo is public)
 GPT聊天记录/
+
+# Unity (project2 demo at Unity/): generated caches and builds
+Unity/Library/
+Unity/Temp/
+Unity/Logs/
+Unity/UserSettings/
+Unity/obj/
+Unity/*.csproj
+Unity/*.sln
+Unity/create.log
+Builds/
+Unity/.utmp/
+Unity/Data/
+Unity/build/
+__pycache__/
