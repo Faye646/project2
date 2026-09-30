@@ -1,0 +1,634 @@
+{
+ "board": [
+  {
+   "id": "flour",
+   "pos": [
+    -0.38,
+    0.862,
+    0.56
+   ],
+   "scale": 1.5,
+   "rot": 0.2
+  },
+  {
+   "id": "greens",
+   "pos": [
+    0.09,
+    0.862,
+    0.56
+   ],
+   "scale": 2.0,
+   "rot": 0.2
+  },
+  {
+   "id": "pork",
+   "pos": [
+    0.56,
+    0.862,
+    0.56
+   ],
+   "scale": 2.0,
+   "rot": 0.2
+  },
+  {
+   "id": "salt",
+   "pos": [
+    -0.45,
+    0.862,
+    0.24
+   ],
+   "scale": 1.9800000000000002,
+   "rot": 0.3
+  },
+  {
+   "id": "oil",
+   "pos": [
+    -0.1,
+    0.862,
+    0.24
+   ],
+   "scale": 1.8,
+   "rot": 0.3
+  },
+  {
+   "id": "scallion",
+   "pos": [
+    0.25,
+    0.862,
+    0.24
+   ],
+   "scale": 1.53,
+   "rot": 0.3
+  },
+  {
+   "id": "ginger",
+   "pos": [
+    0.6,
+    0.862,
+    0.24
+   ],
+   "scale": 1.8,
+   "rot": 0.3
+  }
+ ],
+ "trays": [
+  {
+   "id": "D02",
+   "pos": [
+    -2.345,
+    0.862,
+    0.38
+   ],
+   "scale": 2.0,
+   "rot": 0.0
+  },
+  {
+   "id": "D02",
+   "pos": [
+    -1.725,
+    0.862,
+    0.38
+   ],
+   "scale": 2.0,
+   "rot": 0.0
+  },
+  {
+   "id": "D02",
+   "pos": [
+    -1.105,
+    0.862,
+    0.38
+   ],
+   "scale": 2.0,
+   "rot": 0.0
+  }
+ ],
+ "wok": {
+  "id": "D01_wok",
+  "pos": [
+   1.625,
+   1.05,
+   0.5
+  ],
+  "scale": 2.4,
+  "rot": 0.0
+ },
+ "fire": [
+  1.625,
+  0.33,
+  -0.004
+ ],
+ "camera": {
+  "pos": [
+   -0.35,
+   2.4,
+   -2.75
+  ],
+  "forward": [
+   0.0,
+   -0.3746,
+   0.9272
+  ],
+  "up": [
+   0.0,
+   0.9272,
+   0.3746
+  ],
+  "focal": 22.0,
+  "sensor": 36.0
+ },
+ "cards": {
+  "Card_ChiliString": "chili",
+  "Card_FireMouth": "firemouth",
+  "Card_Scroll": "scroll",
+  "Card_Sieve": "sieve",
+  "Card_Towel": "towel",
+  "Card_WindowView": "windowview"
+ },
+ "materials": {
+  "C_Blossom": {
+   "lit": "#fbf6ea",
+   "shade": "#e3dccb",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_BlueGlaze": {
+   "lit": "#5a7bb0",
+   "shade": "#46629a",
+   "tex": "glaze",
+   "scale": 6.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Bread": {
+   "lit": "#f0d49a",
+   "shade": "#d2a764",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Brick": {
+   "lit": "#cfc8bf",
+   "shade": "#a39a90",
+   "tex": "brick",
+   "scale": 2.2,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Broth": {
+   "lit": "#ecd997",
+   "shade": "#cdb66c",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Burlap": {
+   "lit": "#e6d2a6",
+   "shade": "#c5aa7b",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Celadon": {
+   "lit": "#bcd5c1",
+   "shade": "#93b39e",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Char": {
+   "lit": "#c07a3a",
+   "shade": "#95562a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Chili": {
+   "lit": "#d24a34",
+   "shade": "#a33427",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Clay": {
+   "lit": "#e4ab5d",
+   "shade": "#c0843b",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Cloth": {
+   "lit": "#4a619a",
+   "shade": "#35477a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "cloth",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_ClothPattern": {
+   "lit": "#dfe4ee",
+   "shade": "#b9c2d4",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "cloth",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Counter": {
+   "lit": "#b0672f",
+   "shade": "#7d431c",
+   "tex": "wood",
+   "scale": 1.1,
+   "sat": 1.05,
+   "val": 1.0,
+   "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_CounterTop": {
+   "lit": "#d8995a",
+   "shade": "#ad733d",
+   "tex": "countertop",
+   "scale": 0.8,
+   "sat": 1.15,
+   "val": 0.92,
+   "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Ember": {
+   "lit": "#6b3a22",
+   "shade": "#4a2616",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "iron",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Fat": {
+   "lit": "#f7e2d8",
+   "shade": "#dcbcae",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Fire": {
+   "lit": "#ffc15a",
+   "shade": "#ff8f2a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": true
+  },
+  "C_Floor": {
+   "lit": "#a86c3a",
+   "shade": "#7c4a22",
+   "tex": "floor",
+   "scale": 0.35,
+   "sat": 0.95,
+   "val": 0.92,
+   "kind": "wood",
+   "dappled": true,
+   "emissive": false
+  },
+  "C_Flour": {
+   "lit": "#fbf7ee",
+   "shade": "#e3dccd",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Ginger": {
+   "lit": "#e6c48c",
+   "shade": "#c49b5f",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_GingerFlesh": {
+   "lit": "#f7e49c",
+   "shade": "#dcc36c",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Greens": {
+   "lit": "#a6cf73",
+   "shade": "#77a24a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Hill": {
+   "lit": "#a3bda8",
+   "shade": "#a3bda8",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": true
+  },
+  "C_Iron": {
+   "lit": "#4a4541",
+   "shade": "#2e2a27",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "iron",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Jar": {
+   "lit": "#efe9d4",
+   "shade": "#cfc6a8",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Leaf": {
+   "lit": "#a2c17a",
+   "shade": "#789a55",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_LightWood": {
+   "lit": "#e2b37c",
+   "shade": "#bf8a52",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Meat": {
+   "lit": "#e3aaa0",
+   "shade": "#c3847a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Mortar": {
+   "lit": "#9d958b",
+   "shade": "#7a736b",
+   "tex": "brick",
+   "scale": 2.2,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Noodle": {
+   "lit": "#f7eed6",
+   "shade": "#dfcfa3",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Oil": {
+   "lit": "#f5c93f",
+   "shade": "#d9a520",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Plaster": {
+   "lit": "#ecd6ae",
+   "shade": "#cfae82",
+   "tex": "plaster",
+   "scale": 0.55,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "plaster",
+   "dappled": true,
+   "emissive": false
+  },
+  "C_Porcelain": {
+   "lit": "#eef1f2",
+   "shade": "#c7d0d6",
+   "tex": "bluewhite",
+   "scale": 6.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Roof": {
+   "lit": "#7a8595",
+   "shade": "#7a8595",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": true
+  },
+  "C_Salt": {
+   "lit": "#fdfbf6",
+   "shade": "#e4e0d6",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Scallion": {
+   "lit": "#7fb54e",
+   "shade": "#5a8a33",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_ScallionWhite": {
+   "lit": "#f6f4e6",
+   "shade": "#d9d6bf",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Sky": {
+   "lit": "#c7e4f0",
+   "shade": "#c7e4f0",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": true
+  },
+  "C_Stem": {
+   "lit": "#eef0d2",
+   "shade": "#cdd3a4",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Straw": {
+   "lit": "#d6b36c",
+   "shade": "#a8864a",
+   "tex": "basket",
+   "scale": 5.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Timber": {
+   "lit": "#9a5c30",
+   "shade": "#6a3a19",
+   "tex": "post",
+   "scale": 1.2,
+   "sat": 1.05,
+   "val": 0.98,
+   "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_TrayWood": {
+   "lit": "#a35f2e",
+   "shade": "#784018",
+   "tex": "countertop",
+   "scale": 1.4,
+   "sat": 1.15,
+   "val": 0.92,
+   "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Twine": {
+   "lit": "#dcc07a",
+   "shade": "#b89a55",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_WontonSkin": {
+   "lit": "#f6ecd3",
+   "shade": "#dccaa0",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  }
+ }
+}

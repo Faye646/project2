@@ -80,7 +80,8 @@ blender --factory-startup -p 0 0 2560 1440 --no-window-focus WhiteModel/SM_Wenli
 用 Unity 6000.5.3f1（URP）打开 `Unity/`，运行 `Scenes/Level1`。
 
 - 前堂：单指拖动，双指缩放，「全景」复位；「开门营业」后工人按一级①的节奏来，每天最多 12 人，平均 90 秒一组。客人入座点菜，耐心用完会催单，再过 15 秒离店。
-- 点案台进入单独的平面做饭界面：选菜 → 点灶台 → 到点再点一次出炉。出炉判定、自动做计数、评价概率和经验都按总文档第二部分和 JSON 里的 `rules.service`。出炉的菜自动端给点了这道菜的桌；这一步以后改成玩家或小二端菜。
+- 画风（老师认可）：3D 模型 + 从手绘图截取的贴图 + 水彩式分层光影（`Assets/Art/Shaders/WatercolorLit.shader`，Blender 端是 `WhiteModel/wc_materials.py`）。
+- 点案台进入做饭界面（3D 案台场景 `CookSet.fbx`，由 `build_cook_view.py --export WhiteModel/CookView/export` 导出）：选菜 → 点灶台 → 到点再点一次出炉。出炉判定、自动做计数、评价概率和经验都按总文档第二部分和 JSON 里的 `rules.service`。出炉的菜自动端给点了这道菜的桌；这一步以后改成玩家或小二端菜。
 - 规则代码在 `Assets/Scripts/Core/`（不依赖 Unity，可单测）；界面和场景在 `Assets/Scripts/`。
 - 字体是 Noto Sans SC 的子集（SIL OFL，见 `Assets/Resources/Fonts/`），加了新文字后用 `Unity/Tools/build_font.py` 重新生成。
 

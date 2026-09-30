@@ -19,8 +19,10 @@ from mathutils import Matrix, Vector
 
 ARGS = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 HERE = os.path.dirname(os.path.abspath(__file__))
-WC = '--wc' in ARGS   # 水彩 version: painted materials, soft light, cast shadows (EEVEE)
-ARGS = [a for a in ARGS if a != '--wc']
+WC = '--wc' in ARGS or '--export' in ARGS   # 水彩 version: painted materials, soft light, cast shadows (EEVEE)
+# --export <dir>: write the set (no food, no outline hulls) as CookSet.fbx + cook_set.json for Unity
+EXPORT = ARGS[ARGS.index('--export') + 1] if '--export' in ARGS else None
+ARGS = [a for a in ARGS if a not in ('--wc', '--export', EXPORT)]
 OUT = os.path.abspath(ARGS[0]) if ARGS else os.path.join(HERE, 'CookView', 'cook_view_wc.png' if WC else 'cook_view_toon.png')
 FOOD = os.path.join(HERE, 'Food')
 random.seed(3)
@@ -97,7 +99,7 @@ if WC:   # richer, warmer colours like the painted kitchen
     sys.path.insert(0, HERE)
     import wc_materials
     TEXDIR = os.path.join(HERE, 'CookView', 'tex')   # patches cut from 背景.png / 案台 (2).png
-    TEX = {'Plaster': ('plaster', 0.55), 'Floor': ('floor', 0.35), 'Timber': ('post', 1.2), 'Counter': ('wood', 1.1),
+    TEX = {'Plaster': ('plaster', 0.55), 'Floor': ('floor', 0.35, 0.95, 0.92), 'Timber': ('post', 1.2, 1.05, 0.98), 'Counter': ('wood', 1.1, 1.05, 1.0),
            'TrayWood': ('countertop', 1.4, 1.15, 0.92), 'CounterTop': ('countertop', 0.8, 1.15, 0.92), 'Brick': ('brick', 2.2), 'Mortar': ('brick', 2.2),
            'Porcelain': ('bluewhite', 6.0), 'BlueGlaze': ('glaze', 6.0), 'Straw': ('basket', 5.0)}
     _imgs = {}
@@ -208,12 +210,10 @@ for (a0, a1, b0, b1) in ((-6, wx0, 0, 3.4), (wx1, 6, 0, 3.4), (wx0, wx1, 0, wz0)
     box(f'Wall{a0}{b0}', a0, a1, WALL_Y, WALL_Y + 0.1, b0, b1, 'Plaster', r=0, outline=0)
 sky = box('Sky', wx0, wx1, WALL_Y + 0.4, WALL_Y + 0.41, wz0, wz1, 'Sky', r=0, outline=0)
 if WC:   # the view out of the window is the one painted in 背景.png
-    img = bpy.data.images.load(os.path.join(os.path.dirname(HERE), '背景.png'))
-    view_mat = wc_materials.painted('WindowView', '#ffffff', '#ffffff', srgb, image=img)
+    view_mat = wc_materials.painted('WindowView', '#ffffff', '#ffffff', srgb, image=_img('windowview'))
     me = sky.data
     uv = me.uv_layers.new()
-    # crop of the window in the painting, in UV space (x 390–1000, y 130–345 of 1672 × 941, v from the bottom)
-    u0, u1, v0, v1 = 390 / 1672, 1000 / 1672, 1 - 345 / 941, 1 - 130 / 941
+    u0, u1, v0, v1 = 0, 1, 0, 1   # windowview.png is the window of 背景.png
     xs = [v.co.x for v in me.vertices]
     zs = [v.co.z for v in me.vertices]
     for poly in me.polygons:
@@ -342,7 +342,17 @@ for s in (-1, 1):
 # ---------------------------------------------------------------- food from build_food.py
 
 
+MARKERS = {'board': [], 'trays': []}
+
+
 def place(key, pos, scale=1.0, rot=0.0):
+    if EXPORT:
+        m = {'id': key, 'pos': list(pos), 'scale': scale, 'rot': rot}
+        if 'wok' in key:
+            MARKERS['wok'] = m
+        else:
+            (MARKERS['trays'] if key.startswith('D0') else MARKERS['board']).append(m)
+        return
     path = os.path.join(FOOD, f'SM_{key}.blend')
     with bpy.data.libraries.load(path) as (src, dst):
         dst.objects = [n for n in src.objects if n.startswith('SM_')]
@@ -365,7 +375,11 @@ for i, (key, k) in enumerate((('flour', 0.75), ('greens', 1.0), ('pork', 1.0))):
     place(key, (BX0 + 0.27 + i * 0.47, 0.56, top), S * k, rot=0.2)
 for i, (key, k) in enumerate((('salt', 1.1), ('oil', 1.0), ('scallion', 0.85), ('ginger', 1.0))):
     place(key, (BX0 + 0.2 + i * 0.35, 0.24, top), S * k * 0.9, rot=0.3)
-place('D02', ((TRAYS[0][0] + TRAYS[0][1]) / 2, 0.38, top), S)
+if EXPORT:
+    for x0, x1 in TRAYS:
+        place('D02', ((x0 + x1) / 2, 0.38, top), S)
+else:
+    place('D02', ((TRAYS[0][0] + TRAYS[0][1]) / 2, 0.38, top), S)
 place('D01_wok', (WOK.x, WOK.y, WOK.z + 0.04), S * 1.2)
 
 # ---------------------------------------------------------------- outlines, camera, render
@@ -383,7 +397,7 @@ nt.links.new(nt.nodes.new('ShaderNodeBsdfTransparent').outputs[0], mix.inputs[2]
 nt.links.new(mix.outputs[0], nt.nodes.new('ShaderNodeOutputMaterial').inputs['Surface'])
 dg = bpy.context.evaluated_depsgraph_get()
 for ob, w in OBJS:
-    if w <= 0:
+    if w <= 0 or EXPORT:
         continue
     me = bpy.data.meshes.new_from_object(ob.evaluated_get(dg), depsgraph=dg)
     me.transform(ob.matrix_world)
@@ -413,6 +427,56 @@ if WC:   # a little from above, like the painting: the counter top and trays rea
     cam.rotation_euler = (math.radians(68), 0, 0)
 scene.render.resolution_x, scene.render.resolution_y = 1920, 1080
 scene.view_settings.view_transform = 'Standard'
+if EXPORT:
+    # ---- Unity export. Unity (x, y, z) = Blender (x, z, y); the set keeps Blender's metres.
+    U = lambda v: [round(v[0], 4), round(v[2], 4), round(v[1], 4)]   # noqa: E731
+    bpy.context.view_layer.update()
+    q = cam.matrix_world.to_quaternion()
+    fwd, up = q @ Vector((0, 0, -1)), q @ Vector((0, 1, 0))
+    for group in ('board', 'trays'):
+        for m in MARKERS[group]:
+            m['pos'] = U(m['pos'])
+    MARKERS['wok']['pos'] = U(MARKERS['wok']['pos'])
+    MARKERS['fire'] = U(((1.2 + 2.05) / 2, -0.004, 0.33))
+    MARKERS['camera'] = {'pos': U(cam.location), 'forward': U(fwd), 'up': U(up), 'focal': cam.data.lens, 'sensor': 36.0}
+    # materials: set pieces become C_<name>, the painted cards Card_<name>
+    table = {}
+    for mat in bpy.data.materials:
+        if not mat.name.startswith('W_'):
+            continue
+        key = mat.name[2:]
+        if key in PALETTE or key in MATS:
+            lit, shade = PALETTE.get(key, (None, None))
+            if lit is None:
+                v = food_pal[key]
+                lit, shade = v['lit'], v['shade']
+            t = TEX.get(key)
+            table['C_' + key] = {'lit': lit, 'shade': shade, 'tex': t[0] if t else None, 'scale': t[1] if t else 1.0,
+                                 'sat': t[2] if t and len(t) > 2 else 1.28, 'val': t[3] if t and len(t) > 3 else 1.08,
+                                 'kind': wc_materials.kind_of(key), 'dappled': key in wc_materials.DAPPLED,
+                                 'emissive': key in EMISSIVE}
+            mat.name = 'M_C_' + key
+        else:
+            img = next((n.image for n in mat.node_tree.nodes if n.type == 'TEX_IMAGE'), None)
+            MARKERS.setdefault('cards', {})['Card_' + key] = os.path.splitext(os.path.basename(img.filepath))[0] if img else None
+            mat.name = 'M_Card_' + key
+    MARKERS['materials'] = table
+    os.makedirs(EXPORT, exist_ok=True)
+    keep = [o for o in scene.objects if o.type == 'MESH' and not o.name.endswith('_line')]
+    root = bpy.data.objects.new('CookSet', None)
+    scene.collection.objects.link(root)
+    for o in keep:
+        o.parent = root
+    for o in bpy.data.objects:
+        o.select_set(o in keep or o == root)
+    bpy.context.view_layer.objects.active = root
+    bpy.ops.export_scene.fbx(filepath=os.path.join(EXPORT, 'CookSet.fbx'), use_selection=True, object_types={'EMPTY', 'MESH'},
+                             apply_scale_options='FBX_SCALE_ALL', axis_forward='-Z', axis_up='Y', bake_space_transform=False,
+                             use_mesh_modifiers=True, mesh_smooth_type='OFF', add_leaf_bones=False, bake_anim=False)
+    with open(os.path.join(EXPORT, 'cook_set.json'), 'w', encoding='utf-8') as fh:
+        json.dump(MARKERS, fh, indent=1, ensure_ascii=False)
+    print('[cookview] exported', EXPORT, len(keep), 'objects', flush=True)
+    sys.exit(0)
 if WC:   # sunlight from the upper left, a soft sky fill; EEVEE for Shader-to-RGB
     sun = bpy.data.objects.new('Sun', bpy.data.lights.new('Sun', 'SUN'))
     sun.data.energy = 3.2

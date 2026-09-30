@@ -33,6 +33,7 @@ ARGS = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 OUT = os.path.abspath(ARGS[0]) if ARGS and not ARGS[0].startswith('--') else \
     os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Level1')
 RENDER = '--no-render' not in ARGS
+WC = '--wc' in ARGS   # also render the approved style C (painted textures, watercolor light) to renders/wc.png
 NAME = 'SM_Level1'
 CLAY = (0.8, 0.8, 0.8)
 F = 0.45     # floor height (top of the stone plinth)
@@ -912,7 +913,7 @@ m_line.use_backface_culling = True
 nt = m_line.node_tree
 nt.nodes.clear()
 emit = nt.nodes.new('ShaderNodeEmission')
-emit.inputs['Color'].default_value = (*srgb('#5a3a26'), 1)
+emit.inputs['Color'].default_value = (*srgb('#6b4630' if WC else '#5a3a26'), 1)
 geo = nt.nodes.new('ShaderNodeNewGeometry')
 mix = nt.nodes.new('ShaderNodeMixShader')
 nt.links.new(geo.outputs['Backfacing'], mix.inputs['Fac'])
@@ -933,11 +934,56 @@ for ob in list(PARTS):
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-4)
     bm.normal_update()
     for v in bm.verts:
-        v.co += v.normal * 0.012
+        v.co += v.normal * (0.009 if WC else 0.012)
     bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
     bm.to_mesh(me)
     bm.free()
 
+if WC:
+    # ---- style C: the same scene with painted materials and real sunlight (see wc_materials.py)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import wc_materials
+    TEXDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'CookView', 'tex')
+    TEX = {'Plaster': ('plaster', 0.5), 'Timber': ('post', 1.2, 1.05, 0.98), 'Wood': ('countertop', 1.2, 1.0, 0.95),
+           'WoodFloor': ('floor', 0.3, 0.9, 0.95), 'Tile': ('brick', 0.9, 0.55, 1.3),
+           'Brick': ('brick', 1.8), 'Straw': ('basket', 5.0), 'Glaze': ('glaze', 6.0)}
+    WC_COL = {'Cloth': ('#4a619a', '#35477a'), 'Cushion': ('#a9bf8a', '#7f9763')}
+    imgs = {}
+    new = {}
+    for key in MATS:
+        lit, shade = WC_COL.get(key, PALETTE[key])
+        t = TEX.get(key)
+        kw = {}
+        if t:
+            if t[0] not in imgs:
+                imgs[t[0]] = bpy.data.images.load(os.path.join(TEXDIR, t[0] + '.png'))
+            kw = dict(tex=imgs[t[0]], tex_scale=t[1], **dict(zip(('sat', 'val'), t[2:])))
+        new[MATS[key].name] = wc_materials.painted(key, lit, shade, srgb, key == 'Fire', **kw)
+    for ob in PARTS:
+        for i, m in enumerate(ob.data.materials):
+            if m and m.name in new:
+                ob.data.materials[i] = new[m.name]
+    with open(os.path.join(OUT, 'wc_materials.json'), 'w', encoding='utf-8') as fh:   # for the Unity shader
+        json.dump({k: {'lit': WC_COL.get(k, PALETTE[k])[0], 'shade': WC_COL.get(k, PALETTE[k])[1],
+                       'tex': TEX[k][0] if k in TEX else None, 'scale': TEX[k][1] if k in TEX else 1.0,
+                       'sat': TEX[k][2] if k in TEX and len(TEX[k]) > 2 else 1.28,
+                       'val': TEX[k][3] if k in TEX and len(TEX[k]) > 3 else 1.08,
+                       'kind': wc_materials.kind_of(k), 'dappled': k in wc_materials.DAPPLED,
+                       'emissive': k == 'Fire'} for k in MATS}, fh, indent=1, ensure_ascii=False)
+    sun = bpy.data.objects.new('Sun', bpy.data.lights.new('Sun', 'SUN'))
+    sun.data.energy = 3.2
+    sun.data.angle = 0.1
+    sun.rotation_euler = (-light).to_track_quat('-Z', 'Y').to_euler()
+    scene.collection.objects.link(sun)
+    scene.world = bpy.data.worlds.new('World')
+    scene.world.use_nodes = True
+    scene.world.node_tree.nodes['Background'].inputs['Color'].default_value = (0.35, 0.33, 0.3, 1)
+    scene.render.film_transparent = True
+    scene.render.engine = 'BLENDER_EEVEE'
+    scene.eevee.taa_render_samples = 32
+    render('wc.png')
+    bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, 'renders', 'level1_wc.blend'))
+    sys.exit(0)
 scene.render.engine = 'CYCLES'
 scene.cycles.device = 'CPU'
 scene.cycles.samples = 16

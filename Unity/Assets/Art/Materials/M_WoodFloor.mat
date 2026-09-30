@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_WoodFloor
-  m_Shader: {fileID: 4800000, guid: ce9436f26121b4043b0e2728f828aa1b, type: 3}
+  m_Shader: {fileID: 4800000, guid: 98c6409c5e3bbdf4291cfcbe415cad24, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -22,18 +22,31 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: d426600d0c1cb3b4194e210c9a16ac4f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PaintTex:
+        m_Texture: {fileID: 2800000, guid: ff51dbbf7b5c63c4fa6335235cb6e34e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Dappled: 1
     - _Emission: 0
     - _Highlight: 0
-    - _OutlineWidth: 2.2
+    - _OutlineWidth: 1.6
+    - _PaintScale: 0.3
+    - _Saturation: 0.9
     - _ShadowStrength: 0.6
     - _Softness: 0.02
     - _Threshold: 0
+    - _UsePaint: 1
+    - _Value: 0.95
     m_Colors:
     - _BaseColor: {r: 0.8509804, g: 0.627451, b: 0.36862746, a: 1}
-    - _OutlineColor: {r: 0.23419607, g: 0.14936161, b: 0.07812942, a: 1}
+    - _OutlineColor: {r: 0.42, g: 0.27, b: 0.19, a: 1}
     - _ShadeColor: {r: 0.7137255, g: 0.49019608, b: 0.25882354, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

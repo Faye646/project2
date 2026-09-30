@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEngine;
 
 namespace BianHe.EditorTools
 {
@@ -10,6 +11,16 @@ namespace BianHe.EditorTools
     {
         void OnPreprocessTexture()
         {
+            if (assetPath.StartsWith("Assets/Art/Textures/"))   // painted patches for WatercolorLit: tile mirrored
+            {
+                var t = (TextureImporter)assetImporter;
+                t.textureType = TextureImporterType.Default;
+                t.wrapMode = TextureWrapMode.Mirror;
+                t.sRGBTexture = !assetPath.EndsWith("wc_noise.png");
+                t.mipmapEnabled = true;
+                t.maxTextureSize = 1024;
+                return;
+            }
             bool food = assetPath.StartsWith("Assets/Resources/Food/") || assetPath.StartsWith("Assets/Resources/Food3D/");
             bool ui = assetPath.StartsWith("Assets/Resources/UI/");
             if (!food && !ui) return;

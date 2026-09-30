@@ -17,7 +17,9 @@ namespace BianHe
     /// The gauge shows CookRules: the needle swings over a gold band; within the time limit (cook time
     /// + 3 s) gold is 完美 and anywhere else 没熟, and after the limit it's 糊了. Stoves keep cooking
     /// while the screen is closed. The room, counter, trays, stove and wok are the painted layers
-    /// 背景.png and 案台 (2).png (Resources/UI); the dishes and ingredients on them are 三渲二 renders.
+    /// The room, counter, trays, stove and wok are a 3D set (CookSet.fbx, built by build_cook_view.py
+    /// --export in the approved 水彩 style) seen through its own camera; the food on it is 3D too. The
+    /// UI is pinned over the set's markers (Resources/cook_set.json) every frame.
     /// </summary>
     public class CookingScreen : MonoBehaviour
     {
@@ -58,6 +60,22 @@ namespace BianHe
         static readonly Color Immortal = UIKit.Hex("#ffe27a");
         static readonly Color PlaqueWood = UIKit.Hex("#e9c993");
 
+        // the 3D set
+        Transform setRoot;
+        Camera setCam;
+        JObjectLite markers;
+        RectTransform pinLayer;
+        readonly List<(RectTransform rt, Vector3 world, Vector2 half)> pins = new();
+        readonly Dictionary<string, (Vector3 pos, float scale, float rot)> boardSpots = new();
+        readonly List<(Vector3 pos, float scale)> traySpots = new();
+        (Vector3 pos, float scale) wokSpot;
+        readonly GameObject[] trayModels = new GameObject[GameSession.TrayCount];
+        readonly string[] trayModelIds = new string[GameSession.TrayCount];
+        GameObject wokModel;
+        string wokModelId;
+        readonly List<GameObject> prepModels = new();
+        string prepKey = "";
+
         static readonly string[] SeasoningOrder = { "salt", "oil", "scallion", "ginger" };   // 糖 joins when a dish needs it
 
         // Where things are in the backdrop art (背景.png / 案台 (2).png, 1672 × 941), as fractions of the
@@ -72,27 +90,27 @@ namespace BianHe
         static readonly Rect WokArt = Rect.MinMaxRect(0.735f, 0.425f, 0.88f, 0.55f);     // inside of the wok
         static readonly Rect FireArt = Rect.MinMaxRect(0.768f, 0.09f, 0.878f, 0.235f);   // fire mouth
 
-        public void Build(GameSession s)
+        public void Build(GameSession s, Transform cookSet)
         {
             session = s;
+            setRoot = cookSet;
+            LoadSet();
             canvas = UIKit.Canvas("CookingScreen", 10);
             canvas.transform.SetParent(transform, false);
             group = canvas.gameObject.AddComponent<CanvasGroup>();
             var root = canvas.transform;
 
-            // the painted kitchen, scaled to cover the screen; things on the art live inside `art`
-            var blocker = UIKit.Rect(root, "Backdrop", Vector2.zero, Vector2.one);
-            blocker.gameObject.AddComponent<Image>().color = UIKit.Hex("#3b2a1c");
+            // the 3D set shows through; UI for things on it is pinned to their markers
+            pinLayer = UIKit.Rect(root, "Pins", Vector2.zero, Vector2.one);
             var art = UIKit.Rect(root, "Art", Vector2.zero, Vector2.one);
             var fit = art.gameObject.AddComponent<AspectRatioFitter>();
             fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            fit.aspectRatio = ArtAspect;
-            UIKit.Img(art, "Background", Resources.Load<Sprite>("UI/kitchen_bg"), Color.white, Vector2.zero, Vector2.one);
-            UIKit.Img(art, "Counter", Resources.Load<Sprite>("UI/kitchen_counter"), Color.white, Vector2.zero, Vector2.one);
-            fireGlow = UIKit.Img(art, "FireGlow", UIKit.Circle, UIKit.Fire, FireArt.min, FireArt.max);   // flares while cooking
+            fit.aspectRatio = 16f / 9f;
+            fireGlow = UIKit.Img(pinLayer, "FireGlow", UIKit.Circle, UIKit.Fire, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+            Pin(fireGlow.rectTransform, markers.Vec("fire"), new Vector2(0.45f, 0.35f));
 
-            BuildTrays(art);
-            BuildBoard(art);
+            BuildTrays(pinLayer);
+            BuildBoard(pinLayer);
             BuildStove(art, root);
             BuildTop(root);
             BuildPicker(root);
@@ -106,11 +124,87 @@ namespace BianHe
             canvas.gameObject.SetActive(false);
         }
 
+        // ------------------------------------------------------------------ the 3D set
+
+        void LoadSet()
+        {
+            markers = new JObjectLite(Resources.Load<TextAsset>("cook_set").text);
+            var o = setRoot.position;
+            foreach (var m in markers.List("board"))
+                boardSpots[m.Str("id")] = (o + m.Vec("pos"), m.Num("scale"), m.Num("rot"));
+            foreach (var m in markers.List("trays"))
+                traySpots.Add((o + m.Vec("pos"), m.Num("scale")));
+            var wk = markers.Obj("wok");
+            wokSpot = (o + wk.Vec("pos"), wk.Num("scale"));
+            markers.Offset = o;
+
+            var cam = markers.Obj("camera");
+            var go = new GameObject("CookCamera");
+            go.transform.SetParent(transform, false);
+            setCam = go.AddComponent<Camera>();
+            go.AddComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
+            go.transform.SetPositionAndRotation(o + cam.Vec("pos"), Quaternion.LookRotation(cam.Vec("forward"), cam.Vec("up")));
+            setCam.usePhysicalProperties = true;
+            setCam.focalLength = cam.Num("focal");
+            setCam.sensorSize = new Vector2(cam.Num("sensor"), cam.Num("sensor") * 9f / 16f);
+            setCam.gateFit = Camera.GateFitMode.Overscan;   // never crop the set on narrow or wide screens
+            setCam.clearFlags = CameraClearFlags.SolidColor;
+            setCam.backgroundColor = UIKit.Hex("#3b2a1c");
+            setCam.nearClipPlane = 0.05f;
+            setCam.farClipPlane = 30f;
+            setCam.depth = 5;
+            setCam.enabled = false;
+        }
+
+        void Pin(RectTransform rt, Vector3 world, Vector2 halfMetres)
+        {
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+            pins.Add((rt, world, halfMetres));
+        }
+
+        /// <summary>Keeps every pinned rect over its 3D spot, sized to what that spot covers on screen.</summary>
+        void UpdatePins()
+        {
+            foreach (var (rt, world, half) in pins)
+            {
+                var parent = (RectTransform)rt.parent;
+                Vector2 Local(Vector3 w)
+                {
+                    RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, setCam.WorldToScreenPoint(w), null, out var lp);
+                    return lp;
+                }
+                var c = Local(world);
+                var r = Local(world + setCam.transform.right * half.x);
+                var u = Local(world + setCam.transform.up * half.y);
+                rt.anchoredPosition = c;
+                rt.sizeDelta = new Vector2(Mathf.Abs(r.x - c.x) * 2, Mathf.Abs(u.y - c.y) * 2);
+            }
+        }
+
+        GameObject SpawnFood(string id, Vector3 pos, float scale, float rotRad)
+        {
+            var prefab = Resources.Load<GameObject>("FoodModels/SM_" + id);
+            if (prefab == null) return null;
+            var go = Instantiate(prefab, pos, Quaternion.Euler(0, -rotRad * Mathf.Rad2Deg, 0) * prefab.transform.rotation, setRoot);
+            go.transform.localScale = prefab.transform.localScale * scale;
+            go.name = "Food_" + id;
+            return go;
+        }
+
+        /// <summary>Shows exactly `id` at a spot, replacing whatever was there (null clears it).</summary>
+        void ShowAt(ref GameObject current, ref string currentId, string id, Vector3 pos, float scale)
+        {
+            if (currentId == id) return;
+            if (current) Destroy(current);
+            current = id == null ? null : SpawnFood(id, pos, scale, 0);
+            currentId = id;
+        }
+
         // ------------------------------------------------------------------ layout
 
         static RectTransform Plaque(Transform parent, string text, float x0, float x1, float y0 = 0.205f, float y1 = 0.25f)
         {
-            var rt = UIKit.Rect(parent, "Plaque_" + text, new Vector2(x0, y0), new Vector2(x1, y1));
+            var rt = UIKit.Rect(parent, "Plaque_" + text, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
             UIKit.Panel(rt, PlaqueWood).raycastTarget = false;
             UIKit.Label(rt, text, 28, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
             return rt;
@@ -118,11 +212,13 @@ namespace BianHe
 
         void BuildTrays(RectTransform art)
         {
-            Plaque(art, "放置区", 0.13f, 0.29f);
+            var mid = (traySpots[0].pos + traySpots[traySpots.Count - 1].pos) / 2;
+            Pin(Plaque(art, "放置区", 0, 0), mid + new Vector3(0, -0.2f, -0.42f), new Vector2(0.4f, 0.045f));
             for (int i = 0; i < GameSession.TrayCount; i++)
             {
                 int idx = i;
-                var t = UIKit.Rect(art, "Tray" + i, TrayArt[i].min, TrayArt[i].max);
+                var t = UIKit.Rect(art, "Tray" + i, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+                Pin(t, traySpots[i].pos + new Vector3(0, 0.02f, 0), new Vector2(0.27f, 0.13f));
                 var hit = t.gameObject.AddComponent<Image>();
                 hit.color = Color.clear;
                 var b = t.gameObject.AddComponent<Button>();
@@ -143,26 +239,29 @@ namespace BianHe
 
         void BuildBoard(RectTransform art)
         {
-            Plaque(art, "食材与调味", 0.45f, 0.6f);
-            var zone = UIKit.Rect(art, "Board", BoardArt.min, BoardArt.max);
-            // back row: the ingredients the open recipes use; front row: seasonings, as on the mock-up
-            var ingIds = session.OpenRecipes().SelectMany(r => r.Ingredients.Keys).Distinct().ToList();
-            for (int i = 0; i < ingIds.Count; i++)
-                AddItem(zone, ingIds[i], new Vector2(i / (float)ingIds.Count, 0.42f), new Vector2((i + 1) / (float)ingIds.Count, 1.05f));
-            for (int i = 0; i < SeasoningOrder.Length; i++)
-                AddItem(zone, SeasoningOrder[i], new Vector2(i / (float)SeasoningOrder.Length, -0.02f), new Vector2((i + 1) / (float)SeasoningOrder.Length, 0.46f));
+            var c = boardSpots.Values.Aggregate(Vector3.zero, (a, b) => a + b.pos) / Mathf.Max(1, boardSpots.Count);
+            Pin(Plaque(art, "食材与调味", 0, 0), c + new Vector3(0, -0.2f, -0.52f), new Vector2(0.45f, 0.045f));
+            // one spot on the board per ingredient/seasoning (cook_set.json); the 3D food sits there
+            var ids = session.OpenRecipes().SelectMany(r => r.Ingredients.Keys).Distinct().Concat(SeasoningOrder);
+            foreach (var id in ids)
+            {
+                if (!boardSpots.TryGetValue(id, out var spot)) continue;
+                AddItem(art, id, Vector2.zero, Vector2.zero);
+                Pin((RectTransform)items[items.Count - 1].cg.transform, spot.pos + new Vector3(0, 0.1f, 0), new Vector2(0.16f, 0.14f));
+                SpawnFood(id, spot.pos, spot.scale, spot.rot);
+            }
         }
 
         void AddItem(RectTransform zone, string id, Vector2 a0, Vector2 a1)
         {
-            var cell = UIKit.Rect(zone, "Item_" + id, a0, a1, new Vector2(2, 2), new Vector2(-2, -2));
+            var cell = UIKit.Rect(zone, "Item_" + id, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
             var cg = cell.gameObject.AddComponent<CanvasGroup>();
             var hit = cell.gameObject.AddComponent<Image>();
             hit.color = Color.clear;
             var btn = cell.gameObject.AddComponent<Button>();
             btn.transition = Selectable.Transition.None;
             btn.onClick.AddListener(() => TapItem(id));
-            var ring = UIKit.Img(cell, "Glow", UIKit.Circle, new Color(1f, 0.86f, 0.45f, 0.55f), new Vector2(0.02f, 0.02f), new Vector2(0.98f, 0.98f), preserveAspect: true);
+            var ring = UIKit.Img(cell, "Glow", UIKit.Circle, new Color(1f, 0.86f, 0.45f, 0.3f), new Vector2(0.02f, 0.02f), new Vector2(0.98f, 0.98f), preserveAspect: true);
             var sprite = DishSprite(id);
             Image img;
             if (sprite != null)
@@ -183,20 +282,21 @@ namespace BianHe
 
         void BuildStove(RectTransform art, Transform root)
         {
-            Plaque(art, "灶台", 0.775f, 0.87f, 0.30f, 0.345f);   // on the brick face, clear of the fire
-            // what goes into the wok, then the dish itself, drawn inside the painted wok
-            var wok = UIKit.Rect(art, "WokInside", WokArt.min, WokArt.max);
+            Pin(Plaque(art, "灶台", 0, 0), markers.Vec("fire") + new Vector3(0, 0.46f, -0.02f), new Vector2(0.2f, 0.045f));
+            // steam over the wok; the food in it is 3D
+            var wok = UIKit.Rect(art, "WokInside", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+            Pin(wok, wokSpot.pos + new Vector3(0, 0.06f, 0), new Vector2(0.33f, 0.1f));
             for (int i = 0; i < 5; i++)
                 wokItems.Add(UIKit.Img(wok, "In" + i, null, Color.white, new Vector2(0.06f + i * 0.17f, 0.05f), new Vector2(0.3f + i * 0.17f, 0.75f), preserveAspect: true));
             wokFood = UIKit.Img(wok, "Food", null, Color.white, new Vector2(0.14f, -0.02f), new Vector2(0.86f, 0.95f), preserveAspect: true);
             for (int i = 0; i < 3; i++)
                 steam.Add(UIKit.Img(wok, "Steam" + i, UIKit.Circle, new Color(1, 1, 1, 0), new Vector2(0.2f + i * 0.25f, 0.8f), new Vector2(0.4f + i * 0.25f, 1.3f), preserveAspect: true));
-            stoveLabel = UIKit.Label(UIKit.Rect(art, "Which", new Vector2(0.9f, 0.3f), new Vector2(0.99f, 0.34f)), "", 18, Color.white, TextAnchor.MiddleRight);
+            stoveLabel = UIKit.Label(UIKit.Rect(wok, "Which", new Vector2(0.6f, -0.6f), new Vector2(1.2f, -0.1f)), "", 18, Color.white, TextAnchor.MiddleRight);
 
             // 火候 gauge above the stove: stacked half rings, each filled from the left up to its end, so
             // the gold band (and the 仙味 core for 高等菜) sits in the middle: raw | gold | core | gold | raw
-            var gauge = UIKit.Rect(art, "Gauge", new Vector2(0.69f, 0.63f), new Vector2(0.92f, 0.86f));
-            UIKit.Img(gauge, "Back", UIKit.HalfRing, new Color(1, 1, 1, 0.7f), new Vector2(-0.03f, -0.03f), new Vector2(1.03f, 1.06f));
+            var gauge = UIKit.Rect(art, "Gauge", new Vector2(0.745f, 0.64f), new Vector2(0.945f, 0.855f));
+            UIKit.Img(gauge, "Back", UIKit.HalfRing, new Color(0.98f, 0.95f, 0.88f, 0.95f), new Vector2(-0.03f, -0.03f), new Vector2(1.03f, 1.06f));
             Color[] zoneColors = { Raw, Gold, Immortal, Gold, Raw };
             for (int i = 0; i < gaugeZones.Length; i++)
             {
@@ -216,19 +316,19 @@ namespace BianHe
             needle.color = UIKit.Ink;
             needle.raycastTarget = false;
             UIKit.Img(pivot, "Hub", UIKit.Circle, UIKit.Ink, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).rectTransform.sizeDelta = new Vector2(28, 28);
-            var hint = UIKit.Rect(art, "GaugeHint", new Vector2(0.68f, 0.575f), new Vector2(0.93f, 0.62f));
+            var hint = UIKit.Rect(art, "GaugeHint", new Vector2(0.72f, 0.585f), new Vector2(0.97f, 0.63f));
             UIKit.Panel(hint, new Color(UIKit.Paper.r, UIKit.Paper.g, UIKit.Paper.b, 0.92f), false);
             gaugeHint = UIKit.Label(hint, "", 22, UIKit.Ink);
             var bar = UIKit.Rect(hint, "TimeLeft", new Vector2(0, 0), new Vector2(1, 0), new Vector2(8, 3), new Vector2(-8, 9));
             timeBar = UIKit.Panel(bar, Green, false);
             timeBar.type = Image.Type.Filled;
             timeBar.fillMethod = Image.FillMethod.Horizontal;
-            var res = UIKit.Rect(art, "Result", new Vector2(0.72f, 0.665f), new Vector2(0.89f, 0.755f));   // inside the arc
+            var res = UIKit.Rect(art, "Result", new Vector2(0.765f, 0.665f), new Vector2(0.925f, 0.755f));   // inside the arc
             resultText = UIKit.Label(res, "", 56, UIKit.Hex("#d9861c"), TextAnchor.MiddleCenter, FontStyle.Bold);
             resultText.gameObject.AddComponent<Outline>().effectColor = new Color(1, 1, 1, 0.85f);
 
             // 出锅 sticks to the screen corner so a wide phone never crops it
-            var btn = UIKit.Rect(root, "CookButton", new Vector2(0.575f, 0.03f), new Vector2(0.76f, 0.135f));   // left of the fire mouth
+            var btn = UIKit.Rect(root, "CookButton", new Vector2(0.79f, 0.03f), new Vector2(0.975f, 0.135f));
             var b = UIKit.Button(btn, "出锅", 52, Green, Color.white, TapCook);
             cookButton = (Image)b.targetGraphic;
             cookButtonText = btn.GetComponentInChildren<Text>();
@@ -302,6 +402,7 @@ namespace BianHe
         {
             if (IsOpen) return;
             IsOpen = true;
+            setCam.enabled = true;
             canvas.gameObject.SetActive(true);
             fade = 0;
             group.alpha = 0;
@@ -315,6 +416,7 @@ namespace BianHe
         {
             if (!IsOpen) return;
             IsOpen = false;
+            setCam.enabled = false;
             ShowPicker(false);
             canvas.gameObject.SetActive(false);
             Closed?.Invoke();
@@ -415,6 +517,11 @@ namespace BianHe
 
         // ------------------------------------------------------------------ per frame
 
+        void LateUpdate()
+        {
+            if (IsOpen) UpdatePins();
+        }
+
         void Update()
         {
             if (!IsOpen) return;
@@ -438,6 +545,7 @@ namespace BianHe
             var needs = selected != null && st == StoveState.Idle ? Needs(selected).ToHashSet() : new HashSet<string>();
             foreach (var (id, img, ring, check, cg) in items)
             {
+                img.enabled = false;   // the 3D food on the board is the picture
                 bool need = needs.Contains(id), done = prep.Contains(id);
                 ring.enabled = need && !done;
                 ring.transform.localScale = Vector3.one * (1f + 0.04f * Mathf.Sin(t * 5f));
@@ -445,7 +553,9 @@ namespace BianHe
                 cg.alpha = need ? (done ? 0.55f : 1f) : 0.55f;
             }
 
-            // trays
+            // trays: the 3D dish on each (burnt dishes stay as they were, darkened by the UI badge)
+            for (int i = 0; i < trays.Count; i++)
+                ShowAt(ref trayModels[i], ref trayModelIds[i], session.Trays[i]?.dish.Id, traySpots[i].pos, traySpots[i].scale * 0.85f);
             for (int i = 0; i < trays.Count; i++)
             {
                 var (dish, label, badge, badgeText) = trays[i];
@@ -456,6 +566,7 @@ namespace BianHe
                 if (tray == null) continue;
                 var (rec, q) = tray.Value;
                 dish.sprite = DishSprite(rec.Id);
+                dish.enabled = false;   // the 3D dish sits on the tray instead
                 dish.color = q == Quality.Burnt ? new Color(0.35f, 0.3f, 0.28f) : Color.white;
                 badgeText.text = CookRules.Name(q);
                 badge.color = q switch { Quality.Burnt => Burn, Quality.Underdone => UIKit.InkSoft, _ => Green };
@@ -476,7 +587,25 @@ namespace BianHe
                 wokItems[i].enabled = id != null;
                 if (id != null) wokItems[i].sprite = DishSprite(id) ?? UIKit.Circle;
             }
-            wokFood.enabled = cooking;
+            foreach (var w in wokItems) w.enabled = false;
+            // 3D: what is being put in, then the dish tossing in the wok
+            var key = st == StoveState.Idle ? string.Join(",", contents) : "";
+            if (key != prepKey)
+            {
+                foreach (var m in prepModels) Destroy(m);
+                prepModels.Clear();
+                for (int k = 0; k < contents.Count; k++)
+                {
+                    var off = new Vector3((k - (contents.Count - 1) / 2f) * 0.13f, 0.02f, (k % 2) * 0.06f);
+                    var m = SpawnFood(contents[k], wokSpot.pos + off, 0.9f, k);
+                    if (m) prepModels.Add(m);
+                }
+                prepKey = key;
+            }
+            ShowAt(ref wokModel, ref wokModelId, cooking ? s.Dish.Id + "_wok" : null, wokSpot.pos, wokSpot.scale);
+            if (wokModel)
+                wokModel.transform.position = wokSpot.pos + new Vector3(0, Mathf.Abs(Mathf.Sin(t * 6f)) * 0.03f, 0);
+            wokFood.enabled = false;
             if (cooking)
             {
                 wokFood.sprite = DishSprite(s.Dish.Id + "_wok") ?? DishSprite(s.Dish.Id);
@@ -485,7 +614,7 @@ namespace BianHe
                     : Color.Lerp(new Color(1f, 1f, 1f), new Color(0.93f, 0.85f, 0.72f), p);
                 wokFood.rectTransform.anchoredPosition = new Vector2(Mathf.Sin(t * 5f) * 4f, Mathf.Abs(Mathf.Sin(t * 6f)) * 6f);
             }
-            fireGlow.color = new Color(1f, 0.62f, 0.2f, cooking ? 0.3f + 0.12f * Mathf.Sin(t * 9f) : 0f);
+            fireGlow.color = new Color(1f, 0.62f, 0.2f, cooking ? 0.14f + 0.06f * Mathf.Sin(t * 9f) : 0f);
             fireGlow.transform.localScale = Vector3.one * (cooking ? 1.1f + 0.08f * Mathf.Sin(t * 13f) : 1f);
             for (int i = 0; i < steam.Count; i++)
             {

@@ -18,13 +18,21 @@ from mathutils import Vector
 
 ARGS = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.abspath(ARGS[0]) if ARGS and not ARGS[0].startswith('--') else os.path.join(HERE, 'StyleTest', '三渲二样片.mp4')
+OUT = os.path.abspath(ARGS[0]) if ARGS and not ARGS[0].startswith('--') else os.path.join(HERE, 'StyleTest', '水彩样片.mp4' if '--wc' in ARGS else '三渲二样片.mp4')
 FRAMES = os.path.join(HERE, 'StyleTest', 'frames')
 W, H, FPS = 1280, 720, 30
 PAPER = (244 / 255, 236 / 255, 217 / 255)
 
 
 def setup_render(scene, samples=8):
+    if WCV:   # keep the file's own sun and fill; paper behind the shop comes from a backdrop plane
+        scene.render.resolution_x, scene.render.resolution_y = W, H
+        scene.render.resolution_percentage = 100
+        scene.render.fps = FPS
+        scene.render.film_transparent = False
+        scene.eevee.taa_render_samples = 24
+        scene.render.image_settings.file_format = 'PNG'
+        return
     scene.render.resolution_x, scene.render.resolution_y = W, H
     scene.render.resolution_percentage = 100
     scene.render.fps = FPS
@@ -73,15 +81,33 @@ def render_frames(scene, name, n):
 
 
 JOIN_ONLY = '--join-only' in ARGS
+WCV = '--wc' in ARGS   # the approved 水彩 style: level1_wc.blend and cook_view_wc.blend
 if not JOIN_ONLY:
     shutil.rmtree(FRAMES, ignore_errors=True)
 
 d1, d2 = os.path.join(FRAMES, 'shot1'), os.path.join(FRAMES, 'shot2')
 if not JOIN_ONLY:
     # ---------------------------------------------------------------- shot 1: the shop
-    bpy.ops.wm.open_mainfile(filepath=os.path.join(HERE, 'Level1', 'renders', 'level1_toon.blend'))
+    bpy.ops.wm.open_mainfile(filepath=os.path.join(HERE, 'Level1', 'renders', 'level1_wc.blend' if WCV else 'level1_toon.blend'))
     scene = bpy.context.scene
     setup_render(scene)
+    if WCV:
+        import bmesh
+        bm = bmesh.new()
+        bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=200)
+        me = bpy.data.meshes.new('Paper')
+        bm.to_mesh(me)
+        bm.free()
+        m = bpy.data.materials.new('Paper')
+        nt = m.node_tree
+        nt.nodes.clear()
+        em = nt.nodes.new('ShaderNodeEmission')
+        em.inputs['Color'].default_value = (0.9, 0.83, 0.7, 1)
+        nt.links.new(em.outputs[0], nt.nodes.new('ShaderNodeOutputMaterial').inputs['Surface'])
+        me.materials.append(m)
+        paper = bpy.data.objects.new('Paper', me)
+        paper.location.z = -0.05
+        scene.collection.objects.link(paper)
     cam = scene.camera
     view = (cam.matrix_world.to_quaternion() @ Vector((0, 0, 1))).normalized()   # from the target toward the camera
     right = (cam.matrix_world.to_quaternion() @ Vector((1, 0, 0))).normalized()
@@ -99,13 +125,14 @@ if not JOIN_ONLY:
     d1 = render_frames(scene, 'shot1', N1)
 
     # ---------------------------------------------------------------- shot 2: the cooking view
-    bpy.ops.wm.open_mainfile(filepath=os.path.join(HERE, 'CookView', 'cook_view.blend'))
+    bpy.ops.wm.open_mainfile(filepath=os.path.join(HERE, 'CookView', 'cook_view_wc.blend' if WCV else 'cook_view.blend'))
     scene = bpy.context.scene
     setup_render(scene)
     cam = scene.camera
     start = cam.location.copy()
     N2 = int(os.environ.get('N2', 6 * FPS))
-    key_camera(cam, [(1, start, 30.0), (N2, start + Vector((0.35, 0.9, -0.2)), 33.0)])
+    L0 = cam.data.lens
+    key_camera(cam, [(1, start, L0), (N2, start + Vector((0.3, 0.55, -0.12)), L0 * 1.12)])
     wok_food = next((o for o in scene.objects if o.name.startswith('SM_D01_wok') and not o.name.endswith('_line')), None)
     wok_line = next((o for o in scene.objects if o.name.startswith('SM_D01_wok') and o.name.endswith('_line')), None)
     flames = [o for o in scene.objects if o.name.startswith('Flame') and not o.name.endswith('_line')]

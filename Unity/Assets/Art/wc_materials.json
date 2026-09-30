@@ -1,0 +1,200 @@
+{
+ "Stone": {
+  "lit": "#ece0c9",
+  "shade": "#cdbd9f",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "stone",
+  "dappled": false,
+  "emissive": false
+ },
+ "Tile": {
+  "lit": "#c8c3b2",
+  "shade": "#a9a391",
+  "tex": "brick",
+  "scale": 0.9,
+  "sat": 0.55,
+  "val": 1.3,
+  "kind": "stone",
+  "dappled": true,
+  "emissive": false
+ },
+ "Timber": {
+  "lit": "#c0823f",
+  "shade": "#8d5a2b",
+  "tex": "post",
+  "scale": 1.2,
+  "sat": 1.05,
+  "val": 0.98,
+  "kind": "wood",
+  "dappled": false,
+  "emissive": false
+ },
+ "Plaster": {
+  "lit": "#f4e2ae",
+  "shade": "#dcc38d",
+  "tex": "plaster",
+  "scale": 0.5,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "plaster",
+  "dappled": true,
+  "emissive": false
+ },
+ "Paper": {
+  "lit": "#fff4d6",
+  "shade": "#f0dcae",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "food",
+  "dappled": false,
+  "emissive": false
+ },
+ "Cloth": {
+  "lit": "#4a619a",
+  "shade": "#35477a",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "cloth",
+  "dappled": false,
+  "emissive": false
+ },
+ "Brick": {
+  "lit": "#bdb5a6",
+  "shade": "#968e80",
+  "tex": "brick",
+  "scale": 1.8,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "stone",
+  "dappled": false,
+  "emissive": false
+ },
+ "Iron": {
+  "lit": "#55504b",
+  "shade": "#35312e",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "iron",
+  "dappled": false,
+  "emissive": false
+ },
+ "Fire": {
+  "lit": "#ffb347",
+  "shade": "#ff8a2a",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "food",
+  "dappled": false,
+  "emissive": true
+ },
+ "Straw": {
+  "lit": "#dcc07a",
+  "shade": "#b89a55",
+  "tex": "basket",
+  "scale": 5.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "wood",
+  "dappled": false,
+  "emissive": false
+ },
+ "Wood": {
+  "lit": "#dba35c",
+  "shade": "#b27a3b",
+  "tex": "countertop",
+  "scale": 1.2,
+  "sat": 1.0,
+  "val": 0.95,
+  "kind": "wood",
+  "dappled": false,
+  "emissive": false
+ },
+ "Veg": {
+  "lit": "#a8c95f",
+  "shade": "#7d9d3f",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "food",
+  "dappled": false,
+  "emissive": false
+ },
+ "Chili": {
+  "lit": "#d9573b",
+  "shade": "#a8392a",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "food",
+  "dappled": false,
+  "emissive": false
+ },
+ "Ceramic": {
+  "lit": "#e6ebec",
+  "shade": "#bcc6cb",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "stone",
+  "dappled": false,
+  "emissive": false
+ },
+ "Glaze": {
+  "lit": "#6f8497",
+  "shade": "#50647a",
+  "tex": "glaze",
+  "scale": 6.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "stone",
+  "dappled": false,
+  "emissive": false
+ },
+ "Water": {
+  "lit": "#8cc2d8",
+  "shade": "#6399b4",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "food",
+  "dappled": false,
+  "emissive": false
+ },
+ "WoodFloor": {
+  "lit": "#d9a05e",
+  "shade": "#b67d42",
+  "tex": "floor",
+  "scale": 0.3,
+  "sat": 0.9,
+  "val": 0.95,
+  "kind": "wood",
+  "dappled": true,
+  "emissive": false
+ },
+ "Cushion": {
+  "lit": "#a9bf8a",
+  "shade": "#7f9763",
+  "tex": null,
+  "scale": 1.0,
+  "sat": 1.28,
+  "val": 1.08,
+  "kind": "food",
+  "dappled": false,
+  "emissive": false
+ }
+}

@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Glaze
-  m_Shader: {fileID: 4800000, guid: ce9436f26121b4043b0e2728f828aa1b, type: 3}
+  m_Shader: {fileID: 4800000, guid: 98c6409c5e3bbdf4291cfcbe415cad24, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -22,18 +22,31 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: d426600d0c1cb3b4194e210c9a16ac4f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PaintTex:
+        m_Texture: {fileID: 2800000, guid: e7c0f3c1dfebcd44a9199e714c6d082f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Dappled: 0
     - _Emission: 0
     - _Highlight: 0
-    - _OutlineWidth: 2.2
+    - _OutlineWidth: 1.6
+    - _PaintScale: 6
+    - _Saturation: 1.28
     - _ShadowStrength: 0.6
     - _Softness: 0.02
     - _Threshold: 0
+    - _UsePaint: 1
+    - _Value: 1.08
     m_Colors:
     - _BaseColor: {r: 0.43529412, g: 0.5176471, b: 0.5921569, a: 1}
-    - _OutlineColor: {r: 0.16015686, g: 0.13248646, b: 0.12154902, a: 1}
+    - _OutlineColor: {r: 0.42, g: 0.27, b: 0.19, a: 1}
     - _ShadeColor: {r: 0.3137255, g: 0.39215687, b: 0.47843137, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

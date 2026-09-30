@@ -6,12 +6,12 @@ Used by build_cook_view.py --wc. `kind` picks the painted texture:
 """
 import bpy
 
-WOOD = {'Timber', 'Counter', 'TrayWood', 'Floor', 'Straw', 'LightWood', 'Burlap', 'Twine'}
+WOOD = {'Timber', 'Counter', 'CounterTop', 'TrayWood', 'Floor', 'Straw', 'LightWood', 'Burlap', 'Twine', 'Wood', 'WoodFloor'}
 PLASTER = {'Plaster'}
-STONE = {'Brick', 'Mortar', 'Jar', 'Porcelain', 'Celadon', 'Clay', 'BlueGlaze'}
+STONE = {'Brick', 'Mortar', 'Jar', 'Porcelain', 'Celadon', 'Clay', 'BlueGlaze', 'Stone', 'Tile', 'Ceramic', 'Glaze'}
 CLOTH = {'Cloth', 'ClothPattern'}
 IRON = {'Iron', 'Ember'}
-DAPPLED = {'Plaster', 'Floor'}
+DAPPLED = {'Plaster', 'Floor', 'WoodFloor', 'Tile'}
 
 COOL = (0.34, 0.36, 0.55)      # the blue-violet mixed into shadows
 WARM = (1.0, 0.86, 0.62)       # sunlight tint

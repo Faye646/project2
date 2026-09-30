@@ -22,6 +22,7 @@ namespace BianHe
     {
         public CameraRig rig;
         public Transform level;
+        public Transform cookSet;   // the 3D kitchen counter set the cooking screen looks at
         public string stationName = "K_AnTai";
 
         GameSession session;
@@ -61,7 +62,7 @@ namespace BianHe
             session.Service.Notice += (party, msg) => Notice(msg);
 
             cooking = new GameObject("Cooking").AddComponent<CookingScreen>();
-            cooking.Build(session);
+            cooking.Build(session, cookSet);
             cooking.Closed += OnCookingClosed;
 
             rig.Tapped += OnTap;
@@ -260,13 +261,13 @@ namespace BianHe
             yield return new WaitForSecondsRealtime(0.18f);
             hud.gameObject.SetActive(false);
             station.ShowTag(false);
-            rig.Cam.cullingMask = 0;           // the cooking screen is its own flat screen
+            rig.Cam.enabled = false;           // the cooking screen has its own camera on the counter set
             cooking.Open();
         }
 
         void OnCookingClosed()
         {
-            rig.Cam.cullingMask = sceneMask;
+            rig.Cam.enabled = true;
             hud.gameObject.SetActive(true);
             station.ShowTag(true);
             rig.InputEnabled = true;

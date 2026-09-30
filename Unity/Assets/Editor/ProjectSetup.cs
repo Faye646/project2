@@ -25,6 +25,9 @@ namespace BianHe.EditorTools
     public static class ProjectSetup
     {
         const string ModelPath = "Assets/Art/Models/SM_Level1.fbx";
+        const string CookSetPath = "Assets/Art/Models/CookSet.fbx";
+        const string CookSetJson = "Assets/Resources/cook_set.json";
+        static readonly Vector3 CookSetOffset = new Vector3(0, 0, 300);   // far from the shop, never in its view
         const string PalettePath = "Assets/Art/palette.json";
         const string MaterialDir = "Assets/Art/Materials";
         const string ScenePath = "Assets/Scenes/Level1.unity";
@@ -80,6 +83,9 @@ namespace BianHe.EditorTools
             Set("m_ShadowCascadeCount", p => p.intValue = 1);
             Set("m_SoftShadowsSupported", p => p.boolValue = true);
             so.ApplyModifiedPropertiesWithoutUndo();
+            var rendererList = so.FindProperty("m_RendererDataList");
+            if (rendererList != null && rendererList.arraySize > 0)
+                EnableSsao(rendererList.GetArrayElementAtIndex(0).objectReferenceValue as ScriptableRendererData);
 
             GraphicsSettings.defaultRenderPipeline = asset;
             var levels = QualitySettings.names.Length;
@@ -98,7 +104,7 @@ namespace BianHe.EditorTools
         const string DishIconDir = "Assets/Resources/Food3D";
 
         static IEnumerable<string> ModelPaths() =>
-            new[] { ModelPath }.Concat(Directory.GetFiles(DishDir, "*.fbx").Select(f => f.Replace('\\', '/')));
+            new[] { ModelPath, CookSetPath }.Concat(Directory.GetFiles(DishDir, "*.fbx").Select(f => f.Replace('\\', '/')));
 
         static void SetupMaterials()
         {
@@ -127,8 +133,34 @@ namespace BianHe.EditorTools
                 // thin parts (lattice bars, planks) get thinner lines than the big masses
                 mat.SetFloat("_OutlineWidth", p.Name is "Leaf" or "Flower" or "Veg" or "Chili" or "Scallion" ? 1.8f : 2.2f);
                 mat.enableInstancing = true;
+                ApplyWatercolor(mat, p.Name);
                 EditorUtility.SetDirty(mat);
                 mats[p.Name] = mat;
+            }
+            if (File.Exists(CookSetJson))
+            {
+                var cook = JObject.Parse(File.ReadAllText(CookSetJson));
+                foreach (JProperty p in cook["materials"])
+                {
+                    var path = $"{MaterialDir}/M_{p.Name}.mat";
+                    var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+                    if (mat == null) { mat = new Material(shader); AssetDatabase.CreateAsset(mat, path); }
+                    ApplyWatercolor(mat, p.Name, (JObject)p.Value);
+                    EditorUtility.SetDirty(mat);
+                    mats[p.Name] = mat;
+                }
+                var card = Shader.Find("BianHe/PaintedCard");
+                foreach (JProperty p in cook["cards"])
+                {
+                    var path = $"{MaterialDir}/M_{p.Name}.mat";
+                    var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+                    if (mat == null) { mat = new Material(card); AssetDatabase.CreateAsset(mat, path); }
+                    mat.shader = card;
+                    mat.SetTexture("_MainTex", AssetDatabase.LoadAssetAtPath<Texture2D>($"{TextureDir}/{(string)p.Value}.png"));
+                    mat.SetFloat("_Flicker", p.Name == "Card_FireMouth" ? 1 : 0);
+                    EditorUtility.SetDirty(mat);
+                    mats[p.Name] = mat;
+                }
             }
             foreach (var modelPath in ModelPaths())
             {
@@ -202,6 +234,67 @@ namespace BianHe.EditorTools
             AssetDatabase.Refresh();
         }
 
+        // ------------------------------------------------------------------ 水彩 (style C)
+
+        const string WcTablePath = "Assets/Art/wc_materials.json";
+        const string TextureDir = "Assets/Art/Textures";
+        static JObject wcTable, cookTable;
+
+        /// <summary>
+        /// Materials listed in wc_materials.json (written by build_level1.py --wc) switch to
+        /// BianHe/WatercolorLit: painted patch, saturation/value, dappled light, flat colours.
+        /// </summary>
+        static void ApplyWatercolor(Material mat, string name, JObject entry = null)
+        {
+            if (wcTable == null && File.Exists(WcTablePath)) wcTable = JObject.Parse(File.ReadAllText(WcTablePath));
+            if (cookTable == null && File.Exists(CookSetJson)) cookTable = (JObject)JObject.Parse(File.ReadAllText(CookSetJson))["materials"];
+            var e = entry ?? wcTable?[name] ?? cookTable?["C_" + name];
+            var shader = Shader.Find("BianHe/WatercolorLit");
+            if (e == null || shader == null) return;
+            mat.shader = shader;
+            ColorUtility.TryParseHtmlString((string)e["lit"], out var lit);
+            ColorUtility.TryParseHtmlString((string)e["shade"], out var shade);
+            mat.SetColor("_BaseColor", lit);
+            mat.SetColor("_ShadeColor", shade);
+            var tex = (string)e["tex"];
+            var t2d = tex == null ? null : AssetDatabase.LoadAssetAtPath<Texture2D>($"{TextureDir}/{tex}.png");
+            mat.SetTexture("_PaintTex", t2d);
+            mat.SetFloat("_UsePaint", t2d != null ? 1 : 0);
+            mat.SetFloat("_PaintScale", (float)e["scale"]);
+            mat.SetFloat("_Saturation", (float)e["sat"]);
+            mat.SetFloat("_Value", (float)e["val"]);
+            mat.SetFloat("_Dappled", (bool)e["dappled"] ? 1 : 0);
+            mat.SetFloat("_Emission", (bool)e["emissive"] ? 1 : 0);
+            mat.SetTexture("_NoiseTex", AssetDatabase.LoadAssetAtPath<Texture2D>($"{TextureDir}/wc_noise.png"));
+            mat.SetColor("_OutlineColor", new Color(0.42f, 0.27f, 0.19f));
+            mat.SetFloat("_OutlineWidth", 1.6f);
+        }
+
+        /// <summary>Adds URP's SSAO to the renderer (pigment pooling in corners), if this URP exposes it.</summary>
+        static void EnableSsao(ScriptableRendererData renderer)
+        {
+            if (renderer == null || renderer.rendererFeatures.Exists(f => f != null && f.GetType().Name == "ScreenSpaceAmbientOcclusion")) return;
+            var type = typeof(UniversalRenderPipelineAsset).Assembly.GetType("UnityEngine.Rendering.Universal.ScreenSpaceAmbientOcclusion");
+            if (type == null) { Debug.LogWarning("[BianHe] SSAO feature not found"); return; }
+            var feature = (ScriptableRendererFeature)ScriptableObject.CreateInstance(type);
+            feature.name = "SSAO";
+            AssetDatabase.AddObjectToAsset(feature, renderer);
+            renderer.rendererFeatures.Add(feature);
+            var so = new SerializedObject(renderer);
+            var map = so.FindProperty("m_RendererFeatureMap");
+            if (map != null)
+            {
+                map.arraySize++;
+                AssetDatabase.TryGetGUIDAndLocalFileIdentifier(feature, out _, out long id);
+                map.GetArrayElementAtIndex(map.arraySize - 1).longValue = id;
+                so.ApplyModifiedPropertiesWithoutUndo();
+            var rendererList = so.FindProperty("m_RendererDataList");
+            if (rendererList != null && rendererList.arraySize > 0)
+                EnableSsao(rendererList.GetArrayElementAtIndex(0).objectReferenceValue as ScriptableRendererData);
+            }
+            EditorUtility.SetDirty(renderer);
+        }
+
         /// <summary>Ink colour for a material: its shade colour pushed dark and warm, like the art's brown lines.</summary>
         static Color OutlineFor(Color shade)
         {
@@ -256,10 +349,21 @@ namespace BianHe.EditorTools
             rig.distance = 70f;
             rig.groundHeight = 0.45f;
 
+            var cookModel = AssetDatabase.LoadAssetAtPath<GameObject>(CookSetPath);
+            Transform cookSet = null;
+            if (cookModel != null)
+            {
+                var cs = (GameObject)PrefabUtility.InstantiatePrefab(cookModel);
+                cs.name = "CookSet";
+                cs.transform.position = CookSetOffset;
+                cookSet = cs.transform;
+            }
+
             var flowGo = new GameObject("GameFlow");
             var flow = flowGo.AddComponent<GameFlow>();
             flow.rig = rig;
             flow.level = level.transform;
+            flow.cookSet = cookSet;
 
             Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));
             EditorSceneManager.SaveScene(scene, ScenePath);
