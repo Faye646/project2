@@ -146,6 +146,28 @@
   "Card_WindowView": "windowview"
  },
  "materials": {
+  "C_BambooFlesh": {
+   "lit": "#f9e6ae",
+   "shade": "#e3c47c",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_BambooHusk": {
+   "lit": "#d59b5f",
+   "shade": "#a86b3a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Blossom": {
    "lit": "#fbf6ea",
    "shade": "#e3dccb",
@@ -165,6 +187,17 @@
    "sat": 1.28,
    "val": 1.08,
    "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_BottleGlass": {
+   "lit": "#e0e8d4",
+   "shade": "#b5c5ae",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
    "dappled": false,
    "emissive": false
   },
@@ -201,6 +234,17 @@
    "dappled": false,
    "emissive": false
   },
+  "C_BundleCloth": {
+   "lit": "#ece8d0",
+   "shade": "#c8c2a0",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Burlap": {
    "lit": "#e6d2a6",
    "shade": "#c5aa7b",
@@ -209,6 +253,17 @@
    "sat": 1.28,
    "val": 1.08,
    "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_CalyxGreen": {
+   "lit": "#99a346",
+   "shade": "#6f7a2d",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
    "dappled": false,
    "emissive": false
   },
@@ -234,9 +289,31 @@
    "dappled": false,
    "emissive": false
   },
+  "C_ChickenMeat": {
+   "lit": "#f8c0a6",
+   "shade": "#e39a84",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Chili": {
    "lit": "#d24a34",
    "shade": "#a33427",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_ChiliRed": {
+   "lit": "#e5392a",
+   "shade": "#b3221c",
    "tex": null,
    "scale": 1.0,
    "sat": 1.28,
@@ -253,6 +330,17 @@
    "sat": 1.28,
    "val": 1.08,
    "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_ClayPot": {
+   "lit": "#dc9a68",
+   "shade": "#b6704b",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
    "dappled": false,
    "emissive": false
   },
@@ -278,6 +366,28 @@
    "dappled": false,
    "emissive": false
   },
+  "C_ColaDark": {
+   "lit": "#7a3018",
+   "shade": "#541d0c",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_CornCob": {
+   "lit": "#fcc54c",
+   "shade": "#e9a02e",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Counter": {
    "lit": "#b0672f",
    "shade": "#7d431c",
@@ -297,6 +407,94 @@
    "sat": 1.15,
    "val": 0.92,
    "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_CrabBelly": {
+   "lit": "#efc690",
+   "shade": "#cfa067",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_CrabShell": {
+   "lit": "#8fa0a8",
+   "shade": "#6b7c86",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_CucumberFlesh": {
+   "lit": "#f4efc0",
+   "shade": "#dcd38f",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_CucumberGreen": {
+   "lit": "#6f8f41",
+   "shade": "#4f6a2d",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_CucumberSeed": {
+   "lit": "#e6dc8e",
+   "shade": "#ccc06a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_DuckBill": {
+   "lit": "#eeb25c",
+   "shade": "#cc8a38",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_DuckSkin": {
+   "lit": "#fce4c4",
+   "shade": "#efbd97",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_EggShell": {
+   "lit": "#fde4cd",
+   "shade": "#efbf9c",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
    "dappled": false,
    "emissive": false
   },
@@ -333,6 +531,72 @@
    "dappled": false,
    "emissive": true
   },
+  "C_FishBack": {
+   "lit": "#a39d94",
+   "shade": "#7e7870",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_FishBelly": {
+   "lit": "#f6ead2",
+   "shade": "#dccaa8",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_FishEye": {
+   "lit": "#3d322b",
+   "shade": "#2b231e",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_FishFin": {
+   "lit": "#eeb28f",
+   "shade": "#cf8f6d",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_FishGill": {
+   "lit": "#ec9a8c",
+   "shade": "#cc786d",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_FishIris": {
+   "lit": "#f3dc98",
+   "shade": "#d6b86c",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Floor": {
    "lit": "#a86c3a",
    "shade": "#7c4a22",
@@ -347,6 +611,50 @@
   "C_Flour": {
    "lit": "#fbf7ee",
    "shade": "#e3dccd",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_GarlicClove": {
+   "lit": "#f9ecc8",
+   "shade": "#e3cc97",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_GarlicPeel": {
+   "lit": "#ebc4ad",
+   "shade": "#c99782",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_GarlicSkin": {
+   "lit": "#f8eedf",
+   "shade": "#dcc3b6",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_GarlicStreak": {
+   "lit": "#c99aa6",
+   "shade": "#a57a86",
    "tex": null,
    "scale": 1.0,
    "sat": 1.28,
@@ -421,6 +729,39 @@
    "dappled": false,
    "emissive": false
   },
+  "C_JugStopper": {
+   "lit": "#b5714a",
+   "shade": "#8a5233",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_KidneyRed": {
+   "lit": "#bb4a4d",
+   "shade": "#923338",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_LabelRed": {
+   "lit": "#e0453a",
+   "shade": "#b52e25",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Leaf": {
    "lit": "#a2c17a",
    "shade": "#789a55",
@@ -440,6 +781,39 @@
    "sat": 1.28,
    "val": 1.08,
    "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_MandarinFin": {
+   "lit": "#e9c47f",
+   "shade": "#cba05e",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_MandarinSkin": {
+   "lit": "#cdb46f",
+   "shade": "#a68d4c",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_MandarinSpot": {
+   "lit": "#76683f",
+   "shade": "#594d2f",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
    "dappled": false,
    "emissive": false
   },
@@ -487,6 +861,72 @@
    "dappled": false,
    "emissive": false
   },
+  "C_Pancake": {
+   "lit": "#fcefcf",
+   "shade": "#ead09d",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_PerillaDeep": {
+   "lit": "#8a4466",
+   "shade": "#632f4a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_PerillaGreen": {
+   "lit": "#a3b065",
+   "shade": "#7a8642",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_PerillaPurple": {
+   "lit": "#a85a7c",
+   "shade": "#7d3b58",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Pickle": {
+   "lit": "#f5df8c",
+   "shade": "#d5b552",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_PickleLeaf": {
+   "lit": "#adab52",
+   "shade": "#828034",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Plaster": {
    "lit": "#ecd6ae",
    "shade": "#cfae82",
@@ -506,6 +946,127 @@
    "sat": 1.28,
    "val": 1.08,
    "kind": "stone",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_PorkSkin": {
+   "lit": "#fad5ba",
+   "shade": "#efb999",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_PotatoEye": {
+   "lit": "#9e6532",
+   "shade": "#764720",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_PotatoFlesh": {
+   "lit": "#faeaa6",
+   "shade": "#e6cd78",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_PotatoSkin": {
+   "lit": "#e8b563",
+   "shade": "#c4893f",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_RadishFlesh": {
+   "lit": "#fcf8ee",
+   "shade": "#e6dcc6",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_RadishLeaf": {
+   "lit": "#8db158",
+   "shade": "#62863a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_RadishTop": {
+   "lit": "#e3df9c",
+   "shade": "#bfbd68",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_RadishWhite": {
+   "lit": "#f7efdd",
+   "shade": "#dcc9a6",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_RiceGrain": {
+   "lit": "#fdf5e1",
+   "shade": "#e9d3ab",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_RiceWine": {
+   "lit": "#efe2ab",
+   "shade": "#d5c483",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_RockSugar": {
+   "lit": "#f6c979",
+   "shade": "#dca452",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
    "dappled": false,
    "emissive": false
   },
@@ -553,6 +1114,61 @@
    "dappled": false,
    "emissive": false
   },
+  "C_Scallop": {
+   "lit": "#f9bb5c",
+   "shade": "#e3973a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_ScallopTop": {
+   "lit": "#fde391",
+   "shade": "#efc466",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_ShiitakeCap": {
+   "lit": "#b06a3e",
+   "shade": "#86492a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_ShiitakeFlesh": {
+   "lit": "#f6dfba",
+   "shade": "#dcb98a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Shrimp": {
+   "lit": "#fa9c66",
+   "shade": "#e26e42",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Sky": {
    "lit": "#c7e4f0",
    "shade": "#c7e4f0",
@@ -563,6 +1179,17 @@
    "kind": "food",
    "dappled": false,
    "emissive": true
+  },
+  "C_StarchBag": {
+   "lit": "#fae09b",
+   "shade": "#e4b866",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
   },
   "C_Stem": {
    "lit": "#eef0d2",
@@ -586,6 +1213,17 @@
    "dappled": false,
    "emissive": false
   },
+  "C_SugarWhite": {
+   "lit": "#fbf1df",
+   "shade": "#e6d2ae",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_Timber": {
    "lit": "#9a5c30",
    "shade": "#6a3a19",
@@ -594,6 +1232,50 @@
    "sat": 1.05,
    "val": 0.98,
    "kind": "wood",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_TofuWhite": {
+   "lit": "#fcf0d6",
+   "shade": "#e6cba4",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_TomatoFlesh": {
+   "lit": "#f8925c",
+   "shade": "#e06c3e",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_TomatoRed": {
+   "lit": "#f1532f",
+   "shade": "#c9301c",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_TomatoSeed": {
+   "lit": "#f8c45e",
+   "shade": "#e0a040",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
    "dappled": false,
    "emissive": false
   },
@@ -619,9 +1301,97 @@
    "dappled": false,
    "emissive": false
   },
+  "C_VinegarDark": {
+   "lit": "#6f2b13",
+   "shade": "#4c1a0a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_VinegarGlaze": {
+   "lit": "#7d4129",
+   "shade": "#552a19",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_Wicker": {
+   "lit": "#efc685",
+   "shade": "#c8955a",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_WickerBind": {
+   "lit": "#f7e6bd",
+   "shade": "#d8c191",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_WickerBindGreen": {
+   "lit": "#c5c27c",
+   "shade": "#9c9a52",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_WingCut": {
+   "lit": "#e98a7e",
+   "shade": "#c8665d",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_WingSkin": {
+   "lit": "#fbd8c2",
+   "shade": "#eab196",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
   "C_WontonSkin": {
    "lit": "#f6ecd3",
    "shade": "#dccaa0",
+   "tex": null,
+   "scale": 1.0,
+   "sat": 1.28,
+   "val": 1.08,
+   "kind": "food",
+   "dappled": false,
+   "emissive": false
+  },
+  "C_WrapPaper": {
+   "lit": "#f0d3a3",
+   "shade": "#cfa572",
    "tex": null,
    "scale": 1.0,
    "sat": 1.28,

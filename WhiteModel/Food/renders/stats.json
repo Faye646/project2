@@ -50,5 +50,133 @@
  "ginger": {
   "faces": 226,
   "tris": 344
+ },
+ "chicken": {
+  "faces": 332,
+  "tris": 592
+ },
+ "duck": {
+  "faces": 488,
+  "tris": 772
+ },
+ "kidney": {
+  "faces": 304,
+  "tris": 508
+ },
+ "wing": {
+  "faces": 442,
+  "tris": 676
+ },
+ "tofu": {
+  "faces": 274,
+  "tris": 520
+ },
+ "skin": {
+  "faces": 456,
+  "tris": 904
+ },
+ "fish": {
+  "faces": 372,
+  "tris": 622
+ },
+ "mandarin_fish": {
+  "faces": 486,
+  "tris": 702
+ },
+ "fish_head": {
+  "faces": 378,
+  "tris": 640
+ },
+ "crab": {
+  "faces": 472,
+  "tris": 800
+ },
+ "rice": {
+  "faces": 476,
+  "tris": 764
+ },
+ "rice_prep": {
+  "faces": 493,
+  "tris": 880
+ },
+ "pickle_base": {
+  "faces": 480,
+  "tris": 868
+ },
+ "seafood": {
+  "faces": 469,
+  "tris": 816
+ },
+ "starch": {
+  "faces": 410,
+  "tris": 720
+ },
+ "sauerkraut": {
+  "faces": 472,
+  "tris": 832
+ },
+ "stock": {
+  "faces": 406,
+  "tris": 696
+ },
+ "pancake": {
+  "faces": 492,
+  "tris": 900
+ },
+ "egg": {
+  "faces": 472,
+  "tris": 872
+ },
+ "radish": {
+  "faces": 420,
+  "tris": 732
+ },
+ "gourd": {
+  "faces": 332,
+  "tris": 466
+ },
+ "bamboo": {
+  "faces": 390,
+  "tris": 704
+ },
+ "perilla": {
+  "faces": 397,
+  "tris": 728
+ },
+ "mushroom": {
+  "faces": 396,
+  "tris": 648
+ },
+ "tomato": {
+  "faces": 434,
+  "tris": 670
+ },
+ "chili": {
+  "faces": 342,
+  "tris": 654
+ },
+ "potato": {
+  "faces": 211,
+  "tris": 312
+ },
+ "garlic": {
+  "faces": 404,
+  "tris": 728
+ },
+ "sugar": {
+  "faces": 340,
+  "tris": 616
+ },
+ "vinegar": {
+  "faces": 424,
+  "tris": 786
+ },
+ "wine": {
+  "faces": 432,
+  "tris": 824
+ },
+ "cola": {
+  "faces": 360,
+  "tris": 660
  }
 }

@@ -109,6 +109,356 @@
    "lit": "#f7e49c",
    "shade": "#dcc36c",
    "emission": 0.0
+  },
+  "ChickenMeat": {
+   "lit": "#f8c0a6",
+   "shade": "#e39a84",
+   "emission": 0.0
+  },
+  "WingSkin": {
+   "lit": "#fbd8c2",
+   "shade": "#eab196",
+   "emission": 0.0
+  },
+  "WingCut": {
+   "lit": "#e98a7e",
+   "shade": "#c8665d",
+   "emission": 0.0
+  },
+  "DuckSkin": {
+   "lit": "#fce4c4",
+   "shade": "#efbd97",
+   "emission": 0.0
+  },
+  "DuckBill": {
+   "lit": "#eeb25c",
+   "shade": "#cc8a38",
+   "emission": 0.0
+  },
+  "KidneyRed": {
+   "lit": "#bb4a4d",
+   "shade": "#923338",
+   "emission": 0.0
+  },
+  "TofuWhite": {
+   "lit": "#fcf0d6",
+   "shade": "#e6cba4",
+   "emission": 0.0
+  },
+  "PorkSkin": {
+   "lit": "#fad5ba",
+   "shade": "#efb999",
+   "emission": 0.0
+  },
+  "FishBack": {
+   "lit": "#a39d94",
+   "shade": "#7e7870",
+   "emission": 0.0
+  },
+  "FishBelly": {
+   "lit": "#f6ead2",
+   "shade": "#dccaa8",
+   "emission": 0.0
+  },
+  "FishFin": {
+   "lit": "#eeb28f",
+   "shade": "#cf8f6d",
+   "emission": 0.0
+  },
+  "FishIris": {
+   "lit": "#f3dc98",
+   "shade": "#d6b86c",
+   "emission": 0.0
+  },
+  "FishEye": {
+   "lit": "#3d322b",
+   "shade": "#2b231e",
+   "emission": 0.0
+  },
+  "FishGill": {
+   "lit": "#ec9a8c",
+   "shade": "#cc786d",
+   "emission": 0.0
+  },
+  "MandarinSkin": {
+   "lit": "#cdb46f",
+   "shade": "#a68d4c",
+   "emission": 0.0
+  },
+  "MandarinSpot": {
+   "lit": "#76683f",
+   "shade": "#594d2f",
+   "emission": 0.0
+  },
+  "MandarinFin": {
+   "lit": "#e9c47f",
+   "shade": "#cba05e",
+   "emission": 0.0
+  },
+  "CrabShell": {
+   "lit": "#8fa0a8",
+   "shade": "#6b7c86",
+   "emission": 0.0
+  },
+  "CrabBelly": {
+   "lit": "#efc690",
+   "shade": "#cfa067",
+   "emission": 0.0
+  },
+  "RiceGrain": {
+   "lit": "#fdf5e1",
+   "shade": "#e9d3ab",
+   "emission": 0.0
+  },
+  "Wicker": {
+   "lit": "#efc685",
+   "shade": "#c8955a",
+   "emission": 0.0
+  },
+  "WickerBind": {
+   "lit": "#f7e6bd",
+   "shade": "#d8c191",
+   "emission": 0.0
+  },
+  "WickerBindGreen": {
+   "lit": "#c5c27c",
+   "shade": "#9c9a52",
+   "emission": 0.0
+  },
+  "BundleCloth": {
+   "lit": "#ece8d0",
+   "shade": "#c8c2a0",
+   "emission": 0.0
+  },
+  "WrapPaper": {
+   "lit": "#f0d3a3",
+   "shade": "#cfa572",
+   "emission": 0.0
+  },
+  "Pickle": {
+   "lit": "#f5df8c",
+   "shade": "#d5b552",
+   "emission": 0.0
+  },
+  "PickleLeaf": {
+   "lit": "#adab52",
+   "shade": "#828034",
+   "emission": 0.0
+  },
+  "Scallop": {
+   "lit": "#f9bb5c",
+   "shade": "#e3973a",
+   "emission": 0.0
+  },
+  "ScallopTop": {
+   "lit": "#fde391",
+   "shade": "#efc466",
+   "emission": 0.0
+  },
+  "Shrimp": {
+   "lit": "#fa9c66",
+   "shade": "#e26e42",
+   "emission": 0.0
+  },
+  "StarchBag": {
+   "lit": "#fae09b",
+   "shade": "#e4b866",
+   "emission": 0.0
+  },
+  "CornCob": {
+   "lit": "#fcc54c",
+   "shade": "#e9a02e",
+   "emission": 0.0
+  },
+  "ClayPot": {
+   "lit": "#dc9a68",
+   "shade": "#b6704b",
+   "emission": 0.0
+  },
+  "Pancake": {
+   "lit": "#fcefcf",
+   "shade": "#ead09d",
+   "emission": 0.0
+  },
+  "EggShell": {
+   "lit": "#fde4cd",
+   "shade": "#efbf9c",
+   "emission": 0.0
+  },
+  "RadishWhite": {
+   "lit": "#f7efdd",
+   "shade": "#dcc9a6",
+   "emission": 0.0
+  },
+  "RadishFlesh": {
+   "lit": "#fcf8ee",
+   "shade": "#e6dcc6",
+   "emission": 0.0
+  },
+  "RadishTop": {
+   "lit": "#e3df9c",
+   "shade": "#bfbd68",
+   "emission": 0.0
+  },
+  "RadishLeaf": {
+   "lit": "#8db158",
+   "shade": "#62863a",
+   "emission": 0.0
+  },
+  "CucumberGreen": {
+   "lit": "#6f8f41",
+   "shade": "#4f6a2d",
+   "emission": 0.0
+  },
+  "CucumberFlesh": {
+   "lit": "#f4efc0",
+   "shade": "#dcd38f",
+   "emission": 0.0
+  },
+  "CucumberSeed": {
+   "lit": "#e6dc8e",
+   "shade": "#ccc06a",
+   "emission": 0.0
+  },
+  "CalyxGreen": {
+   "lit": "#99a346",
+   "shade": "#6f7a2d",
+   "emission": 0.0
+  },
+  "BambooHusk": {
+   "lit": "#d59b5f",
+   "shade": "#a86b3a",
+   "emission": 0.0
+  },
+  "BambooFlesh": {
+   "lit": "#f9e6ae",
+   "shade": "#e3c47c",
+   "emission": 0.0
+  },
+  "PerillaPurple": {
+   "lit": "#a85a7c",
+   "shade": "#7d3b58",
+   "emission": 0.0
+  },
+  "PerillaDeep": {
+   "lit": "#8a4466",
+   "shade": "#632f4a",
+   "emission": 0.0
+  },
+  "PerillaGreen": {
+   "lit": "#a3b065",
+   "shade": "#7a8642",
+   "emission": 0.0
+  },
+  "ShiitakeCap": {
+   "lit": "#b06a3e",
+   "shade": "#86492a",
+   "emission": 0.0
+  },
+  "ShiitakeFlesh": {
+   "lit": "#f6dfba",
+   "shade": "#dcb98a",
+   "emission": 0.0
+  },
+  "TomatoRed": {
+   "lit": "#f1532f",
+   "shade": "#c9301c",
+   "emission": 0.0
+  },
+  "TomatoFlesh": {
+   "lit": "#f8925c",
+   "shade": "#e06c3e",
+   "emission": 0.0
+  },
+  "TomatoSeed": {
+   "lit": "#f8c45e",
+   "shade": "#e0a040",
+   "emission": 0.0
+  },
+  "ChiliRed": {
+   "lit": "#e5392a",
+   "shade": "#b3221c",
+   "emission": 0.0
+  },
+  "PotatoSkin": {
+   "lit": "#e8b563",
+   "shade": "#c4893f",
+   "emission": 0.0
+  },
+  "PotatoFlesh": {
+   "lit": "#faeaa6",
+   "shade": "#e6cd78",
+   "emission": 0.0
+  },
+  "PotatoEye": {
+   "lit": "#9e6532",
+   "shade": "#764720",
+   "emission": 0.0
+  },
+  "GarlicSkin": {
+   "lit": "#f8eedf",
+   "shade": "#dcc3b6",
+   "emission": 0.0
+  },
+  "GarlicClove": {
+   "lit": "#f9ecc8",
+   "shade": "#e3cc97",
+   "emission": 0.0
+  },
+  "GarlicPeel": {
+   "lit": "#ebc4ad",
+   "shade": "#c99782",
+   "emission": 0.0
+  },
+  "GarlicStreak": {
+   "lit": "#c99aa6",
+   "shade": "#a57a86",
+   "emission": 0.0
+  },
+  "SugarWhite": {
+   "lit": "#fbf1df",
+   "shade": "#e6d2ae",
+   "emission": 0.0
+  },
+  "RockSugar": {
+   "lit": "#f6c979",
+   "shade": "#dca452",
+   "emission": 0.0
+  },
+  "VinegarGlaze": {
+   "lit": "#7d4129",
+   "shade": "#552a19",
+   "emission": 0.0
+  },
+  "VinegarDark": {
+   "lit": "#6f2b13",
+   "shade": "#4c1a0a",
+   "emission": 0.0
+  },
+  "JugStopper": {
+   "lit": "#b5714a",
+   "shade": "#8a5233",
+   "emission": 0.0
+  },
+  "RiceWine": {
+   "lit": "#efe2ab",
+   "shade": "#d5c483",
+   "emission": 0.0
+  },
+  "ColaDark": {
+   "lit": "#7a3018",
+   "shade": "#541d0c",
+   "emission": 0.0
+  },
+  "LabelRed": {
+   "lit": "#e0453a",
+   "shade": "#b52e25",
+   "emission": 0.0
+  },
+  "BottleGlass": {
+   "lit": "#e0e8d4",
+   "shade": "#b5c5ae",
+   "emission": 0.0
   }
  }
 }

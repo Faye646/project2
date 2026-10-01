@@ -29,7 +29,7 @@
 - `WhiteModel/`：纹璃宫灯白模，包括生成脚本、`.blend` 和 `.fbx`（高模、约 3000 面、500 面定稿）、预览渲染、水彩脚本和过程图截图脚本。
 - `纹璃宫灯_1_白模.png`、`纹璃宫灯_3_水彩.png`：纹璃宫灯的过程图（Blender 截图）。
 - `WhiteModel/build_level1.py`、`WhiteModel/Level1/`：初始关卡（一级·1 桌）的场景白模。
-- `WhiteModel/build_food.py`、`WhiteModel/Food/`：开局 3 道菜和 7 样食材、调味（面粉、时蔬、猪肉、盐、油、葱、姜）的 3D 白模，三渲二用，每件 ≤500 面。Unity 里放在 `Resources/FoodModels`，一键设置时渲成 `Resources/Food3D` 的立体图给界面用。
+- `WhiteModel/build_food.py`、`WhiteModel/Food/`：开局 3 道菜，和设计数据里除 6 种酒以外的全部 38 样食材、调料的 3D 白模，另有一个通用的青瓷酒壶 `wine`（按 `酒_待定.png` 做，等每种酒有了图再分开）。每件 ≤500 面。Unity 里放在 `Resources/FoodModels`，一键设置时套上水彩材质，渲成 `Resources/Food3D` 的立体图给界面用。原图和游戏里样子的对照见 `WhiteModel/Food/新食材对照.png`。
 - `Unity/`：手机版 demo 的 Unity 工程（见下面「Unity demo」）。打包结果输出到 `Builds/`，不进仓库。
 
 ## 修改设计文档
@@ -91,6 +91,18 @@ blender --factory-startup -p 0 0 2560 1440 --no-window-focus WhiteModel/SM_Wenli
 blender -b --factory-startup --python WhiteModel/build_level1.py -- WhiteModel/Level1
 copy WhiteModel\Level1\SM_Level1.fbx Unity\Assets\Art\Models\
 Unity 菜单 BianHe ▸ Setup Level1        # 材质、场景、渲染管线和打包设置
+```
+
+改了菜、食材或调料的模型以后（`--only` 只重建列出的几样，不加就全部重建）：
+
+```
+blender -b --factory-startup --python WhiteModel/build_food.py -- WhiteModel/Food --only rice,egg
+blender -b --factory-startup --python WhiteModel/check_backfaces.py -- WhiteModel/Food rice,egg   # Unity 剔除背面，翻面和漏缝都要在 0.5% 以下
+copy WhiteModel\Food\SM_rice.fbx Unity\Assets\Resources\FoodModels\
+copy WhiteModel\Food\palette_food.json Unity\Assets\Art\
+blender -b --factory-startup --python WhiteModel/build_cook_view.py -- --export WhiteModel/CookView/export
+copy WhiteModel\CookView\export\cook_set.json Unity\Assets\Resources\   # 新颜色的水彩参数在这里，漏了就还是旧的卡通材质
+Unity 菜单 BianHe ▸ Setup Level1        # 生成材质，重新烘焙 Food3D 图标
 ```
 
 测试与打包（菜单 BianHe 里也有）：

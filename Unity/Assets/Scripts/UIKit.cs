@@ -34,7 +34,7 @@ namespace BianHe
             return f != null ? f : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         }
 
-        static Sprite circle, halfRing;
+        static Sprite circle, halfRing, halfDisc;
 
         /// <summary>White disc with a soft 1-px edge (wok, glow, dots), tinted by the Image colour.</summary>
         public static Sprite Circle => circle ??= MakeSprite(128, 128, (x, y) =>
@@ -49,6 +49,10 @@ namespace BianHe
             float d = Mathf.Sqrt((x - 128) * (x - 128) + y * y);
             return Mathf.Clamp01(Mathf.Min(127.5f - d, d - 80f));
         });
+
+        /// <summary>Upper half of a disc, the same size as HalfRing: the solid face behind the gauge.</summary>
+        public static Sprite HalfDisc => halfDisc ??= MakeSprite(256, 128, (x, y) =>
+            Mathf.Clamp01(127.5f - Mathf.Sqrt((x - 128) * (x - 128) + y * y)));
 
         static Sprite MakeSprite(int w, int h, System.Func<float, float, float> alpha)
         {

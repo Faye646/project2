@@ -296,6 +296,8 @@ namespace BianHe
             // 火候 gauge above the stove: stacked half rings, each filled from the left up to its end, so
             // the gold band (and the 仙味 core for 高等菜) sits in the middle: raw | gold | core | gold | raw
             var gauge = UIKit.Rect(art, "Gauge", new Vector2(0.745f, 0.64f), new Vector2(0.945f, 0.855f));
+            // a solid face, so the shelf jars and the chili string behind the dial don't show through the ring
+            UIKit.Img(gauge, "Face", UIKit.HalfDisc, new Color(UIKit.Paper.r, UIKit.Paper.g, UIKit.Paper.b, 0.95f), new Vector2(-0.03f, -0.03f), new Vector2(1.03f, 1.06f));
             UIKit.Img(gauge, "Back", UIKit.HalfRing, new Color(0.98f, 0.95f, 0.88f, 0.95f), new Vector2(-0.03f, -0.03f), new Vector2(1.03f, 1.06f));
             Color[] zoneColors = { Raw, Gold, Immortal, Gold, Raw };
             for (int i = 0; i < gaugeZones.Length; i++)

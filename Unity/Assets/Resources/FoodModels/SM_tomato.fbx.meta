@@ -1,0 +1,1274 @@
+fileFormatVersion: 2
+guid: 24ee3956cfbe8db43bcd065952800493
+ModelImporter:
+  serializedVersion: 24501
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_BambooFlesh
+    second: {fileID: 2100000, guid: 9ef6573eac1df4d45bd5292011172ffd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_BambooHusk
+    second: {fileID: 2100000, guid: 95f00e8c1827c054ebf78bb2009a31e4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_BottleGlass
+    second: {fileID: 2100000, guid: 7748cfffe4b09f048b2962d575f925f9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Bread
+    second: {fileID: 2100000, guid: c3cfcc6fc934ad342b9ed003237213d1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Brick
+    second: {fileID: 2100000, guid: 804ca8902b64da24b8bbaa02326cdb09, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Broth
+    second: {fileID: 2100000, guid: 5a8b69b49214b3244bf418a01b3fb8e4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_BundleCloth
+    second: {fileID: 2100000, guid: 02ee1ec1f460cf1478361180540f363c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Burlap
+    second: {fileID: 2100000, guid: 9c61c3b05f9b74e43bea7acb69a3e379, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_BambooFlesh
+    second: {fileID: 2100000, guid: 91a386996bba292428fb1feeb8522258, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_BambooHusk
+    second: {fileID: 2100000, guid: e0c53e6844f5d4147a841f0fb607b563, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Blossom
+    second: {fileID: 2100000, guid: d2199158c39f63f408e41e1f74829404, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_BlueGlaze
+    second: {fileID: 2100000, guid: caed69d56f5bffc48a8df8e3f0ab444a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_BottleGlass
+    second: {fileID: 2100000, guid: f0d410a09881de841a5db22603115d2d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Bread
+    second: {fileID: 2100000, guid: 08c296785ef416c4e963725550651dc8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Brick
+    second: {fileID: 2100000, guid: aed160323c8712042b45b73f78a21119, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Broth
+    second: {fileID: 2100000, guid: 0d644b4c06f41f44eb9f5ddace85706c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_BundleCloth
+    second: {fileID: 2100000, guid: c7d0285856b875641832fe1ed9059b85, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Burlap
+    second: {fileID: 2100000, guid: 793d5bb2432d183459a24c8c728ef250, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_CalyxGreen
+    second: {fileID: 2100000, guid: 341d4a8d6bec79e43b433fbf7ba06e5e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Celadon
+    second: {fileID: 2100000, guid: c82c49eba8584474fbc40194c6e954c5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Char
+    second: {fileID: 2100000, guid: 7ee123bce6436dd4fa2ae095702461fc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ChickenMeat
+    second: {fileID: 2100000, guid: dfa32f2a1b3f423499a92e5adfb6f24d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Chili
+    second: {fileID: 2100000, guid: 46ea5f8987c12ba4d8d34945d6bb2f15, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ChiliRed
+    second: {fileID: 2100000, guid: a029b1196ce44684298f66026e335997, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Clay
+    second: {fileID: 2100000, guid: 48562d860e7b3f74492c6c39e43f9d33, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ClayPot
+    second: {fileID: 2100000, guid: 80887ed0b0e1b734ca00d020b149ed44, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Cloth
+    second: {fileID: 2100000, guid: 7fa2ba5f74e199043a8eb4833dbae203, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ClothPattern
+    second: {fileID: 2100000, guid: 50e2b3fe1e2f9f148be9d9085862b22b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ColaDark
+    second: {fileID: 2100000, guid: b6301c9bafca0dd4d994bac6f8601659, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_CornCob
+    second: {fileID: 2100000, guid: 034c6a65056aae743b720fd6e8ca2d6a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Counter
+    second: {fileID: 2100000, guid: bdd12405cc91f864b800672d7203d3ad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_CounterTop
+    second: {fileID: 2100000, guid: c0e91f359beb9c24eb12ad921660ac86, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_CrabBelly
+    second: {fileID: 2100000, guid: 2c17588e10336bb48b7141d839938a03, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_CrabShell
+    second: {fileID: 2100000, guid: 79d0bc798e4d5594c9b6758410c08681, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_CucumberFlesh
+    second: {fileID: 2100000, guid: fa9b6826f220d4a49927e1673c756b53, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_CucumberGreen
+    second: {fileID: 2100000, guid: 4db6089428d364b4d8a55d7d59e418f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_CucumberSeed
+    second: {fileID: 2100000, guid: 3e9f8ac19094aef43b4ec167ce76c42f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_DuckBill
+    second: {fileID: 2100000, guid: 2b0c7d2005cea5744a12d5e9568b2898, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_DuckSkin
+    second: {fileID: 2100000, guid: bb6c33d67fc019b4684285979873ae13, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_EggShell
+    second: {fileID: 2100000, guid: 30bf8418c1c2e5546be018f7b05e9161, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Ember
+    second: {fileID: 2100000, guid: 70c12e10bd9eafd47a5f9a7188d0c32d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Fat
+    second: {fileID: 2100000, guid: d4a2b135d46604f4fb44e3c69bc57ed9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Fire
+    second: {fileID: 2100000, guid: 46b2b4d6014abed4eb4743e163bae792, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_FishBack
+    second: {fileID: 2100000, guid: 58bd09bda9df29d49ab9657e45115013, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_FishBelly
+    second: {fileID: 2100000, guid: 63b1972294281bb4ab76cfcd43f03bcc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_FishEye
+    second: {fileID: 2100000, guid: 1fcccfee0bb5e3c40972159f7afe279f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_FishFin
+    second: {fileID: 2100000, guid: c114e46b5f0111d44b8c6c98a729d805, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_FishGill
+    second: {fileID: 2100000, guid: 370e58db527727143b35e0e86d179da3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_FishIris
+    second: {fileID: 2100000, guid: 697098ebd6a57184f820b16689f6013e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Floor
+    second: {fileID: 2100000, guid: 1014e6a4d5fe2494a85a56167135ed85, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Flour
+    second: {fileID: 2100000, guid: e4bd9ff678d47e945a5ee3bfef528be8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_GarlicClove
+    second: {fileID: 2100000, guid: 42df82b383374104e933e87d4b14014b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_GarlicPeel
+    second: {fileID: 2100000, guid: afdc1c7b639295e498685eeb91366e1d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_GarlicSkin
+    second: {fileID: 2100000, guid: 40eae35cbfa21cb4cbb568e4ec67f2a1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_GarlicStreak
+    second: {fileID: 2100000, guid: 0f648641730047443af9feb75ebb1eda, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Ginger
+    second: {fileID: 2100000, guid: c8b2a513fceb8f74a99d049cb5a64812, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_GingerFlesh
+    second: {fileID: 2100000, guid: 2257770986d09d14fb1d775dad187225, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Greens
+    second: {fileID: 2100000, guid: 1fa0f97bc9a98984e9e0e621af6a6d7b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Hill
+    second: {fileID: 2100000, guid: 5ce80e7e7cb508b42b03f54f3bd84631, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Iron
+    second: {fileID: 2100000, guid: d9dee71979921354cafc3a243f5042c4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Jar
+    second: {fileID: 2100000, guid: 04d1bd1f1c9404545b21df34bf6ca348, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_JugStopper
+    second: {fileID: 2100000, guid: 8fbce01d1f7248548941515b82dc3116, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_KidneyRed
+    second: {fileID: 2100000, guid: 80fb67ec5c123ad4389721da64bdebdc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_LabelRed
+    second: {fileID: 2100000, guid: 945629ecc2fc74d46a549987c27ab28c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Leaf
+    second: {fileID: 2100000, guid: bdcd75ec9b1909b4d8e63703fe97e3df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_LightWood
+    second: {fileID: 2100000, guid: 2a274531e9aeaaf4a947d13cfd5a6aa0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_MandarinFin
+    second: {fileID: 2100000, guid: 0474d526a423eff499674b700ef1befa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_MandarinSkin
+    second: {fileID: 2100000, guid: bc2012d7b64b48e40a5d9db03a8f3bc3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_MandarinSpot
+    second: {fileID: 2100000, guid: 0cd8d2105c2094b45af82627d62c990b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Meat
+    second: {fileID: 2100000, guid: d34e9c80cec44a8478c4f7438234b0a5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Mortar
+    second: {fileID: 2100000, guid: 92e2c7455284de14ca38e59d50c21398, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Noodle
+    second: {fileID: 2100000, guid: ef28b62c278ae3b44a018a2f80c3c6d3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Oil
+    second: {fileID: 2100000, guid: 3f0ea8b5eb4652c41b84eda55c798b61, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Pancake
+    second: {fileID: 2100000, guid: 5a03674e26bdfcc4d9c53484dba4ebf8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_PerillaDeep
+    second: {fileID: 2100000, guid: 9a81680410b55984e857385d874d70d8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_PerillaGreen
+    second: {fileID: 2100000, guid: bede5ecf8739a3a46aa1e43051bfb6c6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_PerillaPurple
+    second: {fileID: 2100000, guid: 31558d078a9a9b94487085e35f8278e2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Pickle
+    second: {fileID: 2100000, guid: 91b2f755c9fa5c043aa8060471e42b24, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_PickleLeaf
+    second: {fileID: 2100000, guid: 517749940394ce847b8c8fb9714cd91e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Plaster
+    second: {fileID: 2100000, guid: a4fbf49e38d63374bb880775cde15258, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Porcelain
+    second: {fileID: 2100000, guid: a723fe806f84f6744bc2b580d71297f4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_PorkSkin
+    second: {fileID: 2100000, guid: afb49404574ffc943be708808c501f5c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_PotatoEye
+    second: {fileID: 2100000, guid: 213c92b0ba2063f46bab5eb1497597ed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_PotatoFlesh
+    second: {fileID: 2100000, guid: f81cbad02e1fdbe43a28c8933265116d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_PotatoSkin
+    second: {fileID: 2100000, guid: 7057c1ddbe7e828488e920cffc9f8c9a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_RadishFlesh
+    second: {fileID: 2100000, guid: 704fc06c91af66c4eb920be16cbe91f3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_RadishLeaf
+    second: {fileID: 2100000, guid: 2666c007084de5f43aa3d75e17bc4a05, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_RadishTop
+    second: {fileID: 2100000, guid: a41d9698e96082f4d88eaa536383932b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_RadishWhite
+    second: {fileID: 2100000, guid: f289b6eddfed32d4db97aa9c3f634efd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_RiceGrain
+    second: {fileID: 2100000, guid: d656b45a1d9aed346b2f9d6da4a72c8d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_RiceWine
+    second: {fileID: 2100000, guid: 0f31cf2cd1b529146a02f487afb0ad0f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_RockSugar
+    second: {fileID: 2100000, guid: 2331f6edb35798b4fbd9564f422fa413, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Roof
+    second: {fileID: 2100000, guid: 5aef4e3b6e04cbd49b1ab7e7a5fcb130, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Salt
+    second: {fileID: 2100000, guid: 1a572b900f00be0479b70759d74158e4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Scallion
+    second: {fileID: 2100000, guid: 1e690509ed03a0b4ba32d6753ed859d3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ScallionWhite
+    second: {fileID: 2100000, guid: 642c9b702d4b53a4ea9ac827f7c31179, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Scallop
+    second: {fileID: 2100000, guid: f865c558bce9bc447b51c5a3a9beb936, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ScallopTop
+    second: {fileID: 2100000, guid: af4ad6cf1b50be94595b2eb6aa4e03fe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ShiitakeCap
+    second: {fileID: 2100000, guid: 42cb90e8471292c42815c653fc843000, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_ShiitakeFlesh
+    second: {fileID: 2100000, guid: cb0953aeb9bc56643893a9d847758075, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Shrimp
+    second: {fileID: 2100000, guid: 54d493147cb4da44d9125176dada687a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Sky
+    second: {fileID: 2100000, guid: d80340bbe31abe84d8f2793483e977b5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_StarchBag
+    second: {fileID: 2100000, guid: e8f724154442445498555bc49317efb7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Stem
+    second: {fileID: 2100000, guid: 7400cff37c5617847a41fe13c14e3060, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Straw
+    second: {fileID: 2100000, guid: eec036153dcec8340924175bc46e792d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_SugarWhite
+    second: {fileID: 2100000, guid: 735e0b43732c44d469529ed7e3867f1f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Timber
+    second: {fileID: 2100000, guid: 14e41b46c340a3543aea17585530ca56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_TofuWhite
+    second: {fileID: 2100000, guid: d621a9e5900452c469e16ca64ea64197, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_TomatoFlesh
+    second: {fileID: 2100000, guid: 1dfffe0f5c157d640aa77616bccabda3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_TomatoRed
+    second: {fileID: 2100000, guid: 8ce9509069e9c514699614dc99a2ae7c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_TomatoSeed
+    second: {fileID: 2100000, guid: d263fac8b572fd0478c85ba2a68560ed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_TrayWood
+    second: {fileID: 2100000, guid: 3c381c476a2d85c4ba61327a52eaaa0c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Twine
+    second: {fileID: 2100000, guid: 09750bf82673b5e46a9dd1b03a4975a1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_VinegarDark
+    second: {fileID: 2100000, guid: b1b1b862c456a9540a50ec8b8961aebe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_VinegarGlaze
+    second: {fileID: 2100000, guid: d775e9de4878dac4e9a21c8fd1a44fb5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_Wicker
+    second: {fileID: 2100000, guid: 58abbe5b577bd4a4c92f539f959b4390, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_WickerBind
+    second: {fileID: 2100000, guid: a989e00427bd66a4bad8f9aaaaf8a427, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_WickerBindGreen
+    second: {fileID: 2100000, guid: ecb42fd9257d3a5499e6fcbe4ce8ba35, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_WingCut
+    second: {fileID: 2100000, guid: 775b23ed53ca4de4ba9387b9d5268a0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_WingSkin
+    second: {fileID: 2100000, guid: 972d31b5def2dc348b2a4b3cc69cd602, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_WontonSkin
+    second: {fileID: 2100000, guid: b6223d9174208a64090f61aa76f28ed6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_C_WrapPaper
+    second: {fileID: 2100000, guid: f0b65204686a90e4c8c54a6fd1a39b3b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_CalyxGreen
+    second: {fileID: 2100000, guid: a98f239ff6062a645b2c7dfa420be14c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Card_ChiliString
+    second: {fileID: 2100000, guid: 763b16fd950127c4cbd2e8e4eb892312, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Card_FireMouth
+    second: {fileID: 2100000, guid: c467148e0bb349843b7b236ad04e074a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Card_Scroll
+    second: {fileID: 2100000, guid: 15834c0a1ad171e4d8ad6f8ff059e843, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Card_Sieve
+    second: {fileID: 2100000, guid: 095f2a804b9856347bb4ae0390ac1afc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Card_Towel
+    second: {fileID: 2100000, guid: 2fde8a74b6af40549a08b33bd5b10642, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Card_WindowView
+    second: {fileID: 2100000, guid: 4d7d2ebd85547784daf956f257a28ce3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Celadon
+    second: {fileID: 2100000, guid: 298aa67b663620c41add73014980f9d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Ceramic
+    second: {fileID: 2100000, guid: c8bc2b63d41b8da4a864549a79f3da0a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Char
+    second: {fileID: 2100000, guid: 90629a7ea6096e04b94e31d675ae4829, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ChickenMeat
+    second: {fileID: 2100000, guid: 6f524f74d45558649aafc3aa6ad55db6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Chili
+    second: {fileID: 2100000, guid: da42395decc882044a4268e73f382314, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ChiliRed
+    second: {fileID: 2100000, guid: 75ff68acfc1e5ad4891ef304e3c6dd65, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Clay
+    second: {fileID: 2100000, guid: 6cd215d1fe5413843b11af0ed8bfb279, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ClayPot
+    second: {fileID: 2100000, guid: 9856cc9580288a64dbc63e11c63c1127, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Cloth
+    second: {fileID: 2100000, guid: feac65368819bfe4c8042043248d89a8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ColaDark
+    second: {fileID: 2100000, guid: c4cb371d0de29e04fadba75f3f3c4aa6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_CornCob
+    second: {fileID: 2100000, guid: e0925465d315f1044b9aa827d802bf96, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_CrabBelly
+    second: {fileID: 2100000, guid: c2c7a421bf99c40459d3853bcb606162, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_CrabShell
+    second: {fileID: 2100000, guid: 18026f506658a7a419f5a04c5c4391eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_CucumberFlesh
+    second: {fileID: 2100000, guid: 06cb8b7b32a82b4479b2884d78f4ef6f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_CucumberGreen
+    second: {fileID: 2100000, guid: 186ded10213c9834d9b2ca222ae51242, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_CucumberSeed
+    second: {fileID: 2100000, guid: 482253d094b127d4a8c57b709470ae8d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Cushion
+    second: {fileID: 2100000, guid: d1399a044122e4d49b9622f9d131d295, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_DuckBill
+    second: {fileID: 2100000, guid: f613ed969c513a245b081f67d97e6bcd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_DuckSkin
+    second: {fileID: 2100000, guid: a49776f4bd7e0ff49b23ccaabd536733, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_EggShell
+    second: {fileID: 2100000, guid: 572f600eeb868e7468c744276153ecca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Fat
+    second: {fileID: 2100000, guid: 19f1915c03dcefc43bc91d827f9b77b5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Fire
+    second: {fileID: 2100000, guid: 112b20152269b204d9a6845b2b4512c4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_FishBack
+    second: {fileID: 2100000, guid: 0ba0ad32728890241b05dc8437924ffb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_FishBelly
+    second: {fileID: 2100000, guid: e8b2da3705474fb468d345d4f50079af, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_FishEye
+    second: {fileID: 2100000, guid: 7038d0d6893ff44479c62a5c58c797a2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_FishFin
+    second: {fileID: 2100000, guid: 3c734697285a9644b958e6ed76b4f86d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_FishGill
+    second: {fileID: 2100000, guid: c1225474036a6444f8cff62fd7a4eb1d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_FishIris
+    second: {fileID: 2100000, guid: b56326e6e6b831e42b1eb0b06a9d92eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Flour
+    second: {fileID: 2100000, guid: 4fe72fb371d42c046b48a0e6a2d9eec9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Flower
+    second: {fileID: 2100000, guid: dcab535ae5cca544eacf6659581520e5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_GarlicClove
+    second: {fileID: 2100000, guid: e824422cb30c55b44a7488594b352fb9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_GarlicPeel
+    second: {fileID: 2100000, guid: 66b7dc0c6ea579443b8eeb2cdf56c8c9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_GarlicSkin
+    second: {fileID: 2100000, guid: dd6777f8364def34fa370404a8eb6528, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_GarlicStreak
+    second: {fileID: 2100000, guid: 676ed4092eaaa724e86590cc29a4d16a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Ginger
+    second: {fileID: 2100000, guid: 2e8ca7ff6e072914ea5ec081dd540c48, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_GingerFlesh
+    second: {fileID: 2100000, guid: 49abdd798302fba4a8fd3157dad5522e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Glaze
+    second: {fileID: 2100000, guid: a882372929836a04e954d09fbcdb7f9c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Greens
+    second: {fileID: 2100000, guid: a1040dbce9cede04a82364c94b3a0e70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Iron
+    second: {fileID: 2100000, guid: a0b2fe1b8ebc422449d24ff4b40d79de, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Jar
+    second: {fileID: 2100000, guid: f5204528cf75a6741a7b8a62261040ae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_JugStopper
+    second: {fileID: 2100000, guid: 5e7153e41d8fcb643804779ebffeaae1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_KidneyRed
+    second: {fileID: 2100000, guid: 959ffbbc600c047469bb3167154b6fe3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_LabelRed
+    second: {fileID: 2100000, guid: bb9459bcbccc4744da1d507d728f9f8b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Leaf
+    second: {fileID: 2100000, guid: cef326cdc048048489704c2351e9cc6d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_LightWood
+    second: {fileID: 2100000, guid: 64e604180a608c94c83e68ff1133e8f7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_MandarinFin
+    second: {fileID: 2100000, guid: ebe1c470800ceeb4b9dff9e5fe8eeafb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_MandarinSkin
+    second: {fileID: 2100000, guid: 6ad9b74ac7370814a9299aafabd12d0e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_MandarinSpot
+    second: {fileID: 2100000, guid: c27ef3fcc46ae7244aee2e6fdd228eca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Meat
+    second: {fileID: 2100000, guid: 443e368450209f7448ee76e7f9c98c14, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Noodle
+    second: {fileID: 2100000, guid: b236d31809813464db0ba9dad52f272e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Oil
+    second: {fileID: 2100000, guid: e1fd84642b6ff5445a2d5e68f0ae6b73, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Pancake
+    second: {fileID: 2100000, guid: 7282286f9e5e6444fb4a032d62a50497, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Paper
+    second: {fileID: 2100000, guid: 353a1fcf46bcdbb409c2ad04d4f798f3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_PerillaDeep
+    second: {fileID: 2100000, guid: d658d7cb56cdefa4b85214c467a38a91, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_PerillaGreen
+    second: {fileID: 2100000, guid: b9b35015f9f4fec459da304e56e12ece, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_PerillaPurple
+    second: {fileID: 2100000, guid: 0e46200adbfd7ee43b0d29256a4ee250, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Pickle
+    second: {fileID: 2100000, guid: 7a2c2843782f9d1468f9b0140a79b169, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_PickleLeaf
+    second: {fileID: 2100000, guid: 4b45ade78b48871488f9d95d05d4b764, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Plaster
+    second: {fileID: 2100000, guid: 684cb69ba8f64b340a09972ed33ca243, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_PorkSkin
+    second: {fileID: 2100000, guid: 9a24d45c1fa31f9419ab379d0524947d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_PotatoEye
+    second: {fileID: 2100000, guid: 9f16148ef0db9a347a9c0701810100db, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_PotatoFlesh
+    second: {fileID: 2100000, guid: 323f4c59be2dca74fb2e8578a2dad534, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_PotatoSkin
+    second: {fileID: 2100000, guid: d4baa2d54f31bb94481169de21f4e55a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RadishFlesh
+    second: {fileID: 2100000, guid: 69fd74ca443ea0549a7221c054d9f398, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RadishLeaf
+    second: {fileID: 2100000, guid: 835cb7e74a29c4d4db8b731b013f782e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RadishTop
+    second: {fileID: 2100000, guid: 93ff5e74c44c1e6419aeeb600d13e671, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RadishWhite
+    second: {fileID: 2100000, guid: 5fc27668b275dfb429b52abe76010b5c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RiceGrain
+    second: {fileID: 2100000, guid: 0cd48d91061a6304c8ddc15fbdae8bfd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RiceWine
+    second: {fileID: 2100000, guid: 1571b30ca4ef4474190548e7637a8ff3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RockSugar
+    second: {fileID: 2100000, guid: ce85e2cf19dd84c4999e48c55d5935bf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Salt
+    second: {fileID: 2100000, guid: 002ea026e5ff93c4984c7d47a694cf46, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Scallion
+    second: {fileID: 2100000, guid: c0f4ee5084d78a94990ce2ff34ed4264, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ScallionWhite
+    second: {fileID: 2100000, guid: 43823e5502a579c48883357713a1da7f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Scallop
+    second: {fileID: 2100000, guid: be2b1715a9ddabe4cb5ff795b3e83c86, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ScallopTop
+    second: {fileID: 2100000, guid: 83cd0d44f437fe248a81fe9e7afa45cc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ShiitakeCap
+    second: {fileID: 2100000, guid: 168536fe1f0295a4194517e86ea0ecf6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ShiitakeFlesh
+    second: {fileID: 2100000, guid: 7f5569165cb512f4d96b29f21b9c1f94, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Shrimp
+    second: {fileID: 2100000, guid: 72ab6f030a56d804ea03d63d874ce873, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_StarchBag
+    second: {fileID: 2100000, guid: 3137ca878061f7e459235debdccf40d1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Stem
+    second: {fileID: 2100000, guid: e36c3c346488d2f42bd1e41741542845, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Stone
+    second: {fileID: 2100000, guid: 601f8d0820606854a8d8ffd9560aa48d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Straw
+    second: {fileID: 2100000, guid: 9dd8a81bf8ceaa449a48f7446ccdefaa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_SugarWhite
+    second: {fileID: 2100000, guid: c995705bd65d0dd499cfa33caf5465cd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Tile
+    second: {fileID: 2100000, guid: c5d7456302e2dc047a4d8087b1315e6f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Timber
+    second: {fileID: 2100000, guid: bfd037e1a5897a347bd438e6e4e7e374, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_TofuWhite
+    second: {fileID: 2100000, guid: 296ce67e0520d094984b61ce6f730a8a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_TomatoFlesh
+    second: {fileID: 2100000, guid: 6189643052784054c8327a0c81359ba2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_TomatoRed
+    second: {fileID: 2100000, guid: 141179a27fc9e20439d2d5140d9d2f65, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_TomatoSeed
+    second: {fileID: 2100000, guid: 7da0b224a20a981429a09b446e39a267, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Twine
+    second: {fileID: 2100000, guid: abed3c69cf66cfc4383b80449904692a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Veg
+    second: {fileID: 2100000, guid: b78e9fd9fa91c49488198770e6349341, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_VinegarDark
+    second: {fileID: 2100000, guid: e4becd4f6d400154aba5d84812450168, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_VinegarGlaze
+    second: {fileID: 2100000, guid: ff3926cc1171ae144bfc64385792b582, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Water
+    second: {fileID: 2100000, guid: 6943137ca322a5943af3f6207eb7629f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Wicker
+    second: {fileID: 2100000, guid: f5cd90752fc770a438939d9de2dfcfd5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WickerBind
+    second: {fileID: 2100000, guid: 980281cb12343cd48983b58eb07351b1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WickerBindGreen
+    second: {fileID: 2100000, guid: 329b51ec20e33124a9ae5411f5268871, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WingCut
+    second: {fileID: 2100000, guid: b555699dfd502ee4eb69c4fd2e005b81, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WingSkin
+    second: {fileID: 2100000, guid: 8b335c14b26d45a4ab3e1d1a5728d705, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WontonSkin
+    second: {fileID: 2100000, guid: 72df70424d57d8a43bed2f3bf07a8e91, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Wood
+    second: {fileID: 2100000, guid: 462bf72eedd69c245be39526d9a7940a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WoodFloor
+    second: {fileID: 2100000, guid: c75aef350ba4dc8499d850e4d5571a78, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WrapPaper
+    second: {fileID: 2100000, guid: 6bc3f7dc1e278324c8287fd0fea6532d, type: 2}
+  materials:
+    materialImportMode: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+    searchTexturesGlobally: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    importUVs: -1
+    importVertexColors: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 2
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+    calculateBlendshapeNormalsDeltaFromImportedNormals: 0
+  referencedClips: []
+  importAnimation: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 0
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
