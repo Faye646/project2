@@ -39,6 +39,9 @@ namespace BianHe
         Canvas hud;
         GuestViews guests;
         ShopFloor floor;
+        MarketScreen market;
+        RectTransform marketButton;
+        GameObject marketDot;
         Text titleText, statusText, noticeText;
         float noticeUntil;
         Text dayText;
@@ -90,6 +93,8 @@ namespace BianHe
 
             guests = new GameObject("Guests").AddComponent<GuestViews>();
             floor = new GameObject("ShopFloor").AddComponent<ShopFloor>();
+            market = new GameObject("Market").AddComponent<MarketScreen>();
+            market.Build(session);
             session.Service.Notice += Notice;
 
             cooking = new GameObject("Cooking").AddComponent<CookingScreen>();
@@ -105,6 +110,12 @@ namespace BianHe
             if (Arg("-shopshot") is { } shopShots) StartCoroutine(ShopShot(shopShots));
             if (Arg("-buyshots") is { } buyShots) StartCoroutine(BuyShots(buyShots));
             if (Arg("-stoveshots") is { } stoveShots) StartCoroutine(StoveShots(stoveShots));
+            if (Arg("-marketshots") is { } marketShots) StartCoroutine(MarketShots(marketShots));
+            if (Arg("-autoshots") is { } autoShots) StartCoroutine(AutoShots(autoShots));
+            // the screenshot and video runs cook straight away: a storeroom with enough of everything
+            if (new[] { "-shots", "-shopshot", "-buyshots", "-stoveshots", "-video", "-wok", "-autoshots" }.Any(a => System.Array.IndexOf(args, a) >= 0))
+                session.StockForDemo();
+            else if (session.Pantry.MainCount == 0) Notice("先点「采购」去集市买菜");
             if (System.Array.IndexOf(args, "-video") >= 0) StartCoroutine(PlayForVideo());
             int w = System.Array.IndexOf(args, "-wok");
             if (w >= 0 && w + 1 < args.Length)
@@ -254,6 +265,17 @@ namespace BianHe
             dot.rectTransform.anchoredPosition = new Vector2(-10, -10);
             buyDot = dot.gameObject;
 
+            // 采购, under 添置: before opening only; a dot on it while the storeroom has no main ingredient
+            marketButton = UIKit.Rect(root, "Market", new Vector2(1, 1), new Vector2(1, 1));
+            marketButton.pivot = new Vector2(1, 1);
+            marketButton.anchoredPosition = new Vector2(-32, -244);
+            marketButton.sizeDelta = new Vector2(200, 96);
+            UIKit.Button(marketButton, "采购", 40, UIKit.Paper, UIKit.Ink, () => { if (!building) market.Open(); });
+            var mdot = UIKit.Img(marketButton, "Dot", UIKit.Circle, UIKit.Fire, new Vector2(1, 1), new Vector2(1, 1));
+            mdot.rectTransform.sizeDelta = new Vector2(30, 30);
+            mdot.rectTransform.anchoredPosition = new Vector2(-10, -10);
+            marketDot = mdot.gameObject;
+
             var hint = UIKit.Rect(root, "Hint", new Vector2(0.5f, 0), new Vector2(0.5f, 0));
             hint.pivot = new Vector2(0.5f, 0);
             hint.anchoredPosition = new Vector2(0, 28);
@@ -268,7 +290,7 @@ namespace BianHe
             var sTitle = UIKit.Rect(settlement, "Title", new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, -110), new Vector2(0, -20));
             UIKit.Label(sTitle, "打烊结算", 52, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
             var sBody = UIKit.Rect(settlement, "Body", Vector2.zero, Vector2.one, new Vector2(60, 150), new Vector2(-60, -120));
-            settlementText = UIKit.Label(sBody, "", 34, UIKit.Ink, TextAnchor.UpperLeft);
+            settlementText = UIKit.Label(sBody, "", 30, UIKit.Ink, TextAnchor.UpperLeft);
             settlementText.lineSpacing = 1.3f;
             var next = UIKit.Rect(settlement, "Next", new Vector2(0.5f, 0), new Vector2(0.5f, 0));
             next.pivot = new Vector2(0.5f, 0);
@@ -298,6 +320,7 @@ namespace BianHe
             if (up && stoves > CookRules.StovesOpen(stages.IndexOf(before))) news.Add($"灶台第 {stoves} 口锅开了");
             if (up && session.NextOffer is { Allowed: true } o && p.Next(before, session.Day.Day) is not { Allowed: true })
                 news.Add($"可以添置{session.OfferName(o)}了（{o.Price / 100} 文）");
+            if (session.Pantry.MainCount == 0) news.Add("库存空了，先点「采购」");
             if (news.Count > 0) Notice(string.Join("；", news));
         }
 
@@ -476,7 +499,12 @@ namespace BianHe
         void OnDayButton()
         {
             var day = session.Day;
-            if (day.Phase == DayPhase.BeforeOpening) session.OpenShop();
+            if (day.Phase == DayPhase.BeforeOpening)
+            {
+                if (session.Pantry.MainCount == 0) { Notice("还没买菜：先点「采购」去集市"); return; }
+                market.Close();
+                session.OpenShop();
+            }
             else if (day.Phase == DayPhase.Service)
             {
                 if (session.CanCloseEarly) session.CloseShop();
@@ -537,6 +565,10 @@ namespace BianHe
             var offer = session.NextOffer;
             bool affordable = offer != null && session.Cash >= offer.Price;
             buyButton.gameObject.SetActive(!settling && !building);
+            bool morning = day.Phase == DayPhase.BeforeOpening;
+            marketButton.gameObject.SetActive(morning && !building);
+            marketDot.SetActive(session.Pantry.MainCount == 0);
+            if (!morning && market.IsOpen) market.Close();
             buyDot.SetActive(offer is { Allowed: true } && affordable);
             floor.SetAffordable(affordable);
             if (shopPanel.gameObject.activeSelf)
@@ -579,6 +611,20 @@ namespace BianHe
                     lines.Add($"明天可以添置{session.OfferName(o)}（{o.Price / 100} 文）");
             }
             if (session.NewlyOpened.Count > 0) lines.Add("新菜：" + string.Join("、", session.NewlyOpened.Select(r => r.Name)));
+            // the storeroom's day: bought, thrown out at inspection, used, lost at 出锅, spoiled overnight, what is left
+            var f = session.Food;
+            var data = session.Data;
+            var food = new List<string>();
+            if (f.Bought > 0) food.Add($"买 {f.Bought} 份（{MarketScreen.Wen(f.Spent)} 文），验货丢掉坏料 {f.Thrown} 份");
+            if (f.Used > 0) food.Add($"做菜用掉 {f.Used} 份");
+            if (f.LostAtWok > 0) food.Add($"出锅发现坏料倒掉 {f.LostAtWok} 盘");
+            if (f.AutoCooked > 0) food.Add($"自动做菜 {f.AutoCooked} 盘");
+            if (food.Count > 0) lines.Add("食材：" + string.Join("，", food));
+            if (f.Spoiled.Count > 0)
+                lines.Add("过夜坏掉：" + string.Join("、", f.Spoiled.Select(kv => $"{data.IngredientName(kv.Key)} {kv.Value}")));
+            var left = session.Pantry.Lots.Where(l => data.Ingredients[l.Id].IsMain).GroupBy(l => l.Id)
+                .Select(g => $"{data.IngredientName(g.Key)} {g.Sum(l => l.Count)}").ToList();
+            lines.Add($"剩下（主料 {session.Pantry.MainCount}/{session.Stage.InventoryCap}）：{(left.Count > 0 ? string.Join("、", left) : "空了，明天要采购")}");
             if (day.Day % 10 == 0) lines.Add("今天发工钱");
             return string.Join("\n", lines);
         }
@@ -921,6 +967,99 @@ namespace BianHe
                 yield return new WaitForSecondsRealtime(0.4f);
                 yield return Shot("4_picked");
             }
+            Application.Quit();
+        }
+
+        /// <summary>
+        /// -marketshots: buying at the market, photographed (market_…): the first stall with an order in it (1_stall),
+        /// after asking the vendor down (2_bargain), the vegetables in 优质 (3_veg), the delivery inspected (4_report), the
+        /// cooking screen's board with the storeroom's counts (5_board), and the day's settlement with the food lines
+        /// (6_settle). Then it quits.
+        /// </summary>
+        IEnumerator MarketShots(string dir)
+        {
+            Directory.CreateDirectory(dir);
+            IEnumerator Shot(string name)
+            {
+                yield return new WaitForEndOfFrame();
+                ScreenCapture.CaptureScreenshot(Path.Combine(dir, $"market_{name}.png"));
+                yield return new WaitForSecondsRealtime(0.25f);
+            }
+            yield return new WaitForSecondsRealtime(1.2f);
+            market.Open();
+            var stalls = market.DemoStalls.ToList();
+            market.DemoAdd("flour", 20);
+            yield return new WaitForSecondsRealtime(0.4f);
+            yield return Shot("1_stall");
+            market.DemoBargain(0);
+            yield return new WaitForSecondsRealtime(0.4f);
+            yield return Shot("2_bargain");
+            if (stalls.Contains("调料"))
+            {
+                market.DemoShow("调料");
+                foreach (var id in new[] { "salt", "oil", "scallion", "ginger" }) market.DemoAdd(id, 20);
+            }
+            if (stalls.Contains("肉铺"))
+            {
+                market.DemoShow("肉铺");
+                market.DemoAdd("pork", 10);
+            }
+            if (stalls.Contains("菜贩"))
+            {
+                market.DemoShow("菜贩");
+                market.DemoAdd("greens", 12, Core.Grade.Premium);
+                market.DemoAdd("radish", 10);
+            }
+            yield return new WaitForSecondsRealtime(0.4f);
+            yield return Shot("3_veg");
+            market.DemoBuy();
+            yield return new WaitForSecondsRealtime(0.5f);
+            yield return Shot("4_report");
+            market.Close();
+            yield return OpenCooking();
+            cooking.DemoChoose("D02");
+            yield return new WaitForSecondsRealtime(0.8f);
+            yield return Shot("5_board");
+            cooking.Close();
+            yield return new WaitForSecondsRealtime(0.3f);
+            OnDayButton();                                      // 开门营业, and 提前打烊 at once: the settlement
+            session.CloseShop();
+            yield return new WaitForSecondsRealtime(0.6f);
+            yield return Shot("6_settle");
+            Application.Quit();
+        }
+
+        /// <summary>
+        /// -autoshots: 自动做菜 at work, photographed (auto_&lt;stage&gt;_…): the open dishes counted as cooked well often enough,
+        /// the shop opened and a party at every table; in the kitchen auto-cook takes two woks for their orders (1_cooking),
+        /// and a while later the dishes are out on the trays (2_trays); the hall (3_hall). Then it quits.
+        /// </summary>
+        IEnumerator AutoShots(string dir)
+        {
+            Directory.CreateDirectory(dir);
+            string id = session.Stage.Id;
+            IEnumerator Shot(string name)
+            {
+                yield return new WaitForEndOfFrame();
+                ScreenCapture.CaptureScreenshot(Path.Combine(dir, $"auto_{id}_{name}.png"));
+                yield return new WaitForSecondsRealtime(0.25f);
+            }
+            session.Book.Counting = true;
+            foreach (var r in session.OpenRecipes())
+                for (int k = 0; k < CookRules.AutoCookThreshold(r.Difficulty); k++) session.Book.RecordHandCooked(r, Quality.Perfect);
+            yield return new WaitForSecondsRealtime(1.2f);
+            OnDayButton();                                      // 开门营业
+            for (int k = 0; k < session.Service.Tables.Count; k++) session.Service.ArriveNow(GameSession.NowMs);
+            yield return new WaitForSecondsRealtime(0.6f);
+            yield return OpenCooking();
+            cooking.DemoQuiet = false;
+            yield return new WaitForSecondsRealtime(1.2f);
+            yield return Shot("1_cooking");
+            yield return new WaitForSecondsRealtime(3.5f);
+            yield return Shot("2_trays");
+            cooking.Close();
+            yield return new WaitForSecondsRealtime(0.6f);
+            yield return Shot("3_hall");
             Application.Quit();
         }
 

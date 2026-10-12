@@ -4,10 +4,42 @@ using Newtonsoft.Json.Linq;
 
 namespace BianHe.Core
 {
+    /// <summary>
+    /// An ingredient, seasoning, wine or modern food as the market sells it (《玩法与数值》06 采购、验货与库存): its vendor,
+    /// its price (and the 优质 grade's, if it has one), how often a portion comes bad (普通 / 优质), how often one left
+    /// overnight spoils, and from how much experience it is on sale. Money in 1/100 文.
+    /// </summary>
     public class Ingredient
     {
-        public string Id, Name, Category;
-        public int UnitCost, MinShopLevel;
+        public string Id, Name, Category, Shelf, Vendor, Source, Condition;
+        public int UnitCost, PremiumCost, MinShopLevel, MinXp;
+        public double BadRate, BadRatePremium, OvernightBad;
+
+        public bool HasPremium => PremiumCost > 0;
+        public bool IsSeasoning => Category == "seasoning";
+        public bool IsWine => Category == "wine";
+        public bool IsModern => Category == "modern";
+
+        /// <summary>主食材: what counts toward the storeroom's cap (seasonings and wine are kept apart, modern food has its own).</summary>
+        public bool IsMain => !IsSeasoning && !IsWine && !IsModern;
+    }
+
+    /// <summary>
+    /// The market's rules (rules.procurement and rules.service.bargain): 优质 costs half as much again; ten or more of one
+    /// 普通 main ingredient at once is a tenth off and twenty or more a fifth (the bottom of such a heap comes bad more
+    /// often); a vendor can be asked to come down once a day; no price goes under seven tenths of the list price; a
+    /// dish whose main ingredients are all 优质 is liked better; and 自动验货 misses a twentieth of the bad portions.
+    /// </summary>
+    public class ProcurementRules
+    {
+        public double PremiumMultiplier = 1.5;
+        public readonly SortedDictionary<int, double> Bulk = new();   // at least this many → this much of the price
+        public double Floor = 0.7;
+        public double BulkBadAdd = 0.05;
+        public int BulkBadThreshold = 10;
+        public double AutoInspectionMiss = 0.05;
+        public double PremiumGoodPp = 10;
+        public readonly List<(string line, double discount, double success)> Bargains = new();
     }
 
     public class Recipe
@@ -35,7 +67,7 @@ namespace BianHe.Core
     public class StageInfo
     {
         public string Id, Name;
-        public int Xp, VisitorCap, TableCap, StoveCap;
+        public int Xp, VisitorCap, TableCap, StoveCap, InventoryCap;
         public long ArrivalIntervalMs;
     }
 
@@ -67,6 +99,7 @@ namespace BianHe.Core
         public readonly Dictionary<string, CustomerProfile> Profiles = new();
         public readonly List<StageInfo> Stages = new();
         public readonly PremisesRules Premises = new();
+        public readonly ProcurementRules Procurement = new();
         public int StartCash;
 
         static string[] Strings(JToken t) => t == null ? new string[0] : t.Select(x => (string)x).ToArray();
@@ -80,7 +113,13 @@ namespace BianHe.Core
                 var ing = new Ingredient
                 {
                     Id = (string)i["id"], Name = (string)i["name"], Category = (string)i["category"],
+                    Shelf = (string)i["display_category"], Vendor = (string)i["vendor"], Source = (string)i["source"],
+                    Condition = (string)i["purchase_condition"],
                     UnitCost = (int?)i["base_unit_cost"] ?? 0, MinShopLevel = (int?)i["min_shop_level"] ?? 1,
+                    PremiumCost = (bool?)i["premium_available"] == true ? (int?)i["premium_unit_cost"] ?? 0 : 0,
+                    MinXp = (int?)i["min_xp"] ?? 0,
+                    BadRate = (double?)i["bad_rate_normal"] ?? 0, BadRatePremium = (double?)i["bad_rate_premium"] ?? 0,
+                    OvernightBad = (double?)i["overnight_bad_rate"] ?? 0,
                 };
                 d.Ingredients[ing.Id] = ing;
             }
@@ -125,6 +164,7 @@ namespace BianHe.Core
                 {
                     Id = (string)s["stage"], Name = (string)s["name"], Xp = (int)s["xp"],
                     VisitorCap = (int)s["visitor_cap"], TableCap = (int)s["table_cap"], StoveCap = (int)s["stove_cap"],
+                    InventoryCap = (int?)s["inventory_cap"] ?? 60,
                     ArrivalIntervalMs = (long)((double)s["arrival_interval_seconds"] * 1000),
                 });
 
@@ -137,6 +177,18 @@ namespace BianHe.Core
             pr.ExpansionMinStage = (string)exp["min_stage"];
             pr.ExpansionTables = exp["adds_tables"].Select(x => (int)x).ToArray();
             pr.MaxTables = d.Stages.Max(s => s.TableCap);
+
+            var proc = rules["procurement"];
+            var pc = d.Procurement;
+            pc.PremiumMultiplier = (double?)proc["premium_multiplier"] ?? 1.5;
+            foreach (var p in (JObject)proc["bulk_discount_thresholds"]) pc.Bulk[int.Parse(p.Key)] = (double)p.Value;
+            pc.Floor = (double?)proc["floor_multiplier"] ?? 0.7;
+            pc.BulkBadAdd = (double?)proc["bulk_bad_rate_addition"] ?? 0.05;
+            pc.BulkBadThreshold = (int?)proc["bulk_bad_rate_threshold"] ?? 10;
+            pc.AutoInspectionMiss = (double?)proc["inspection"]?["auto_inspection"]?["miss_rate"] ?? 0.05;
+            pc.PremiumGoodPp = (double?)rules["service"]["review_modifiers_percentage_points"]?["premium_all_main_ingredients"] ?? 10;
+            foreach (var o in rules["service"]["bargain"]["options"])
+                pc.Bargains.Add(((string)o["line"], (double)o["discount"], (double)o["success"]));
             return d;
         }
 

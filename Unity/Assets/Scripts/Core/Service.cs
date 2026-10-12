@@ -14,6 +14,7 @@ namespace BianHe.Core
         public Recipe Dish;
         public bool Served;
         public Quality Quality;
+        public bool Premium;       // its main ingredients all 优质
     }
 
     public class Guest
@@ -109,6 +110,10 @@ namespace BianHe.Core
         public readonly List<Party> Parties = new();
         public readonly List<string> Log = new();
         public event Action<Party, string> Notice;
+
+        /// <summary>Can the kitchen still make this dish after the ones listed (the party's orders so far), and after every
+        /// order already waiting for it? Null: always (no storeroom).</summary>
+        public Func<Recipe, IReadOnlyList<Recipe>, bool> CanOffer;
 
         readonly GameData data;
         readonly Random rng;
@@ -236,28 +241,46 @@ namespace BianHe.Core
             int size = rng.NextDouble() switch { < 0.25 => 2, < 0.75 => 3, _ => 4 };
             size = Math.Max(1, Math.Min(size, planned - arrived));
             var party = new Party { Id = nextId++, Type = "worker", ArrivedMs = now, State = PartyState.AtDoor };
-            for (int i = 0; i < size; i++) party.Guests.Add(Order(profile));
+            var ordered = new List<Recipe>();   // the party's orders so far: the kitchen has to make those too
+            for (int i = 0; i < size; i++)
+            {
+                var g = Order(profile, ordered);
+                if (g == null) continue;
+                party.Guests.Add(g);
+                ordered.AddRange(g.Plates.Select(pl => pl.Dish));
+            }
             arrived += size;
+            int none = size - party.Guests.Count;   // nothing left they could have: they go again at once
+            GuestsLeft += none;
+            if (party.Guests.Count == 0)
+            {
+                Say(party, $"{size} 位{profile.Name}进门，没有能做的菜了，走了");
+                return;
+            }
             Parties.Add(party);
-            Say(party, $"{size} 位{profile.Name}进门");
+            Say(party, none > 0 ? $"{size} 位{profile.Name}进门，{none} 位没有能吃的，走了" : $"{size} 位{profile.Name}进门");
         }
 
         /// <summary>
-        /// 各点各的: each guest picks a dish within budget, favouring ones that suit their taste; if one
-        /// portion is short of 90% of their appetite and money allows, they add the cheapest dish.
+        /// 各点各的: each guest picks a dish within budget that the kitchen can still make (after `ordered`, the party's
+        /// orders so far), favouring ones that suit their taste; if one portion is short of 90% of their appetite and
+        /// money allows, they add the cheapest such dish. Null when nothing on the menu can be made any more.
         /// </summary>
-        Guest Order(CustomerProfile profile)
+        Guest Order(CustomerProfile profile, List<Recipe> ordered)
         {
+            bool Can(Recipe r, params Recipe[] more) => CanOffer == null || CanOffer(r, ordered.Concat(more).ToList());
+            var open = menu.Where(r => Can(r)).ToList();
+            if (open.Count == 0) return null;
             var g = new Guest { Type = profile.Id };
             int budget = profile.BudgetWen * 100;
-            var affordable = menu.Where(r => r.Price <= budget).ToList();
-            if (affordable.Count == 0) affordable = menu.OrderBy(r => r.Price).Take(1).ToList();
+            var affordable = open.Where(r => r.Price <= budget).ToList();
+            if (affordable.Count == 0) affordable = open.OrderBy(r => r.Price).Take(1).ToList();
             double Weight(Recipe r) => (ServiceRules.TasteMatch(r, profile) ? 2.0 : 1.0) *
                                        (r.SuggestedGroups.Contains(profile.Id) ? 1.5 : 1.0);
             var pick = WeightedPick(affordable, Weight);
             g.Plates.Add(new Plate { Dish = pick });
-            var cheapest = affordable.OrderBy(r => r.Price).First();
-            if (pick.Satiety < 0.9 * profile.TargetSatiety && pick.Price + cheapest.Price <= budget)
+            var cheapest = affordable.Where(r => Can(r, pick)).OrderBy(r => r.Price).FirstOrDefault();
+            if (cheapest != null && pick.Satiety < 0.9 * profile.TargetSatiety && pick.Price + cheapest.Price <= budget)
                 g.Plates.Add(new Plate { Dish = cheapest });
             return g;
         }
@@ -287,20 +310,21 @@ namespace BianHe.Core
         /// A dish came out of the stove. It goes to the oldest waiting plate of that recipe. 糊菜 is
         /// thrown away for a remake (never served here); a dish nobody ordered is wasted.
         /// </summary>
-        public bool Deliver(Recipe dish, Quality q, long now)
+        public bool Deliver(Recipe dish, Quality q, long now, bool premium = false)
         {
             if (q == Quality.Burnt) { Wasted++; return false; }
             var target = Pending().FirstOrDefault(x => x.plate.Dish.Id == dish.Id);
             if (target.plate == null) { Wasted++; return false; }
-            Serve(target.party, target.plate, q, now);
+            Serve(target.party, target.plate, q, now, premium);
             return true;
         }
 
         /// <summary>One plate set before its guest; the party starts eating once everything is on the table.</summary>
-        public void Serve(Party p, Plate plate, Quality q, long now)
+        public void Serve(Party p, Plate plate, Quality q, long now, bool premium = false)
         {
             plate.Served = true;
             plate.Quality = q;
+            plate.Premium = premium;
             if (p.State == PartyState.Waiting && p.AllServed)
             {
                 p.State = PartyState.Dining;
@@ -317,6 +341,7 @@ namespace BianHe.Core
                 // judged on the guest's own plate (the worst one if they ordered two)
                 var plate = g.Plates.OrderBy(pl => QualityRank(pl.Quality)).First();
                 double pp = g.Plates.Any(pl => ServiceRules.TasteMatch(pl.Dish, profile)) ? 15 : 0;   // 合心意 +15, once
+                if (plate.Premium) pp += data.Procurement.PremiumGoodPp;                               // 主料全用优质 +10
                 var r = ServiceRules.Draw(ServiceRules.Modify(ServiceRules.BaseOdds(plate.Quality), pp), rng.NextDouble());
                 if (p.Late) r = ServiceRules.ShiftDown(r);
                 g.Review = r;

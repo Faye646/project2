@@ -44,8 +44,10 @@ namespace BianHe
         Image headerDish;
         Text headerName;
         RectTransform picker;
-        readonly List<(Recipe r, Text pending, Text auto)> pickerCards = new();
-        readonly List<(string id, Image img, Image ring, Text check, CanvasGroup cg)> items = new();
+        readonly List<(Recipe r, Text pending, Text auto, Text info)> pickerCards = new();
+        readonly List<BoardItem> items = new();   // what is on the board: the chosen dish's needs
+        Recipe boardDish;                          // the dish the board is laid out for
+        RectTransform boardLayer;
         readonly List<(Image dish, Text label, Image badge, Text badgeText)> trays = new();
         readonly List<(RectTransform card, Image img, Text text)> orderViews = new();
         Text orderNote, gaugeHint, resultText, cookButtonText;
@@ -84,7 +86,18 @@ namespace BianHe
         Image autoPlateBg;
         const float FlySeconds = 0.55f;
 
-        static readonly string[] SeasoningOrder = { "salt", "oil", "scallion", "ginger" };   // 糖 joins when a dish needs it
+        /// <summary>One thing on the board for the chosen dish: the 3D food (gone when the storeroom has none), and the UI
+        /// over it: a tap area, the glow while it is still needed, a tick once it is in the wok, and its name with how many
+        /// the storeroom holds.</summary>
+        class BoardItem
+        {
+            public string Id;
+            public GameObject Food;
+            public RectTransform Cell;
+            public Image Ring;
+            public Text Check, Name;
+            public CanvasGroup Cg;
+        }
 
         /// <summary>
         /// One block of the stove: its wok, fire mouth and lid in the set (Wok&lt;k&gt;, FireMouth&lt;k&gt;, Lid&lt;k&gt;), what is
@@ -271,47 +284,69 @@ namespace BianHe
         {
             var c = boardSpots.Values.Aggregate(Vector3.zero, (a, b) => a + b.pos) / Mathf.Max(1, boardSpots.Count);
             Pin(Plaque(art, "食材与调味", 0, 0), c + new Vector3(0, -0.2f, -0.52f), new Vector2(0.45f, 0.045f));
-            // one spot on the board per ingredient/seasoning (cook_set.json); the 3D food sits there
-            var ids = session.OpenRecipes().SelectMany(r => r.Ingredients.Keys).Distinct().Concat(SeasoningOrder).ToList();
-            var onBoard = new List<GameObject>();
-            foreach (var id in ids)
-            {
-                if (!boardSpots.TryGetValue(id, out var spot)) continue;
-                AddItem(art, id, Vector2.zero, Vector2.zero);
-                Pin((RectTransform)items[items.Count - 1].cg.transform, spot.pos + new Vector3(0, 0.1f, 0), new Vector2(0.16f, 0.14f));
-                var go = SpawnFood(id, spot.pos, spot.scale, spot.rot);
-                if (go) onBoard.Add(go);
-            }
-            SettleOnBoard(onBoard);
+            boardLayer = art;   // the board itself is laid out for each dish chosen (LayOutBoard)
         }
 
-        void AddItem(RectTransform zone, string id, Vector2 a0, Vector2 a1)
+        /// <summary>
+        /// The board laid out for a dish: what it needs, its main ingredients along the back and its seasonings along the
+        /// front, each in its own place across the board and as big as that place holds (the 3D food, Resources/FoodModels),
+        /// with its UI over it. What was out for another dish is put away.
+        /// </summary>
+        void LayOutBoard(Recipe r)
         {
-            var cell = UIKit.Rect(zone, "Item_" + id, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
-            var cg = cell.gameObject.AddComponent<CanvasGroup>();
-            var hit = cell.gameObject.AddComponent<Image>();
+            if (r == boardDish) return;
+            boardDish = r;
+            foreach (var it in items)
+            {
+                DestroyFood(it.Food);
+                pins.RemoveAll(pn => pn.rt == it.Cell);
+                Destroy(it.Cell.gameObject);
+            }
+            items.Clear();
+            if (r == null || boardRoom.size.x <= 0) return;
+            float mid = boardRoom.min.z + boardRoom.size.z * 0.45f;   // the back row gets a little more depth
+            void Row(List<string> ids, float z0, float z1)
+            {
+                float w = boardRoom.size.x / Mathf.Max(1, ids.Count);
+                for (int k = 0; k < ids.Count; k++)
+                {
+                    var cell = new Bounds(new Vector3(boardRoom.min.x + (k + 0.5f) * w, boardRoom.min.y + 0.25f, (z0 + z1) / 2),
+                                          new Vector3(w * 0.92f, 0.5f, (z1 - z0) * 0.92f));
+                    var spot = boardSpots.TryGetValue(ids[k], out var m) ? m : (cell.center, 2f, 0.25f);
+                    var go = SpawnFood(ids[k], cell.center, spot.Item2, spot.Item3);
+                    if (go) FoodFit.FitIn(go, cell, grow: 1.4f);
+                    var it = AddItem(boardLayer, ids[k]);
+                    it.Food = go;
+                    Pin(it.Cell, new Vector3(cell.center.x, boardRoom.min.y + 0.1f, cell.center.z), new Vector2(Mathf.Min(0.16f, w * 0.46f), 0.14f));
+                }
+            }
+            Row(r.Ingredients.Keys.ToList(), mid, boardRoom.max.z);
+            Row(r.Seasonings.Keys.ToList(), boardRoom.min.z, mid);
+        }
+
+        BoardItem AddItem(RectTransform zone, string id)
+        {
+            var it = new BoardItem { Id = id };
+            it.Cell = UIKit.Rect(zone, "Item_" + id, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+            it.Cg = it.Cell.gameObject.AddComponent<CanvasGroup>();
+            var hit = it.Cell.gameObject.AddComponent<Image>();
             hit.color = Color.clear;
-            var btn = cell.gameObject.AddComponent<Button>();
+            var btn = it.Cell.gameObject.AddComponent<Button>();
             btn.transition = Selectable.Transition.None;
             btn.onClick.AddListener(() => TapItem(id));
-            var ring = UIKit.Img(cell, "Glow", UIKit.Circle, new Color(1f, 0.86f, 0.45f, 0.3f), new Vector2(0.02f, 0.02f), new Vector2(0.98f, 0.98f), preserveAspect: true);
-            var sprite = DishSprite(id);
-            Image img;
-            if (sprite != null)
-                img = UIKit.Img(cell, "Pic", sprite, Color.white, new Vector2(0.04f, 0.1f), new Vector2(0.96f, 1f), preserveAspect: true);
-            else
-            {   // no art yet: a plain jar with the name on it
-                img = UIKit.Img(cell, "Pic", UIKit.Circle, UIKit.Hex("#e9e4d4"), new Vector2(0.2f, 0.15f), new Vector2(0.8f, 0.9f), preserveAspect: true);
-                UIKit.Label(img.transform, session.Data.IngredientName(id), 34, UIKit.InkSoft, TextAnchor.MiddleCenter, FontStyle.Bold);
-            }
-            var nameRt = UIKit.Rect(cell, "Name", new Vector2(0.2f, -0.02f), new Vector2(0.8f, 0.16f));
+            it.Ring = UIKit.Img(it.Cell, "Glow", UIKit.Circle, new Color(1f, 0.86f, 0.45f, 0.3f), new Vector2(0.02f, 0.02f), new Vector2(0.98f, 0.98f), preserveAspect: true);
+            var nameRt = UIKit.Rect(it.Cell, "Name", new Vector2(0.1f, -0.02f), new Vector2(0.9f, 0.16f));
             UIKit.Panel(nameRt, new Color(1f, 0.97f, 0.9f, 0.85f), false).raycastTarget = false;
-            UIKit.Label(nameRt, session.Data.IngredientName(id), 18, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
-            var chk = UIKit.Rect(cell, "Check", new Vector2(0.62f, 0.62f), new Vector2(1f, 1f));
-            var check = UIKit.Label(chk, "✓", 40, Green, TextAnchor.MiddleCenter, FontStyle.Bold);
-            check.gameObject.AddComponent<Outline>().effectColor = Color.white;
-            items.Add((id, img, ring, check, cg));
+            it.Name = UIKit.Label(nameRt, session.Data.IngredientName(id), 18, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
+            var chk = UIKit.Rect(it.Cell, "Check", new Vector2(0.62f, 0.62f), new Vector2(1f, 1f));
+            it.Check = UIKit.Label(chk, "✓", 40, Green, TextAnchor.MiddleCenter, FontStyle.Bold);
+            it.Check.gameObject.AddComponent<Outline>().effectColor = Color.white;
+            items.Add(it);
+            return it;
         }
+
+        static int NeedOf(Recipe r, string id) =>
+            r == null ? 0 : r.Ingredients.TryGetValue(id, out var n) ? n : r.Seasonings.TryGetValue(id, out var m) ? m : 0;
 
         void BuildStove(RectTransform art, Transform root)
         {
@@ -452,10 +487,10 @@ namespace BianHe
                 UIKit.Label(UIKit.Rect(card, "Name", new Vector2(0, 0.34f), new Vector2(1, 0.46f)), r.Name, 36, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
                 var needs = r.Ingredients.Keys.Concat(r.Seasonings.Keys).Select(session.Data.IngredientName);
                 UIKit.Label(UIKit.Rect(card, "Needs", new Vector2(0, 0.22f), new Vector2(1, 0.34f)), string.Join("·", needs), 22, UIKit.InkSoft);
-                UIKit.Label(UIKit.Rect(card, "Info", new Vector2(0, 0.12f), new Vector2(1, 0.22f)), $"{r.CookMs / 1000f:0.#}秒·{r.Price / 100}文", 22, UIKit.InkSoft);
+                var info = UIKit.Label(UIKit.Rect(card, "Info", new Vector2(0, 0.12f), new Vector2(1, 0.22f)), "", 22, UIKit.InkSoft);
                 var pending = UIKit.Label(UIKit.Rect(card, "Pending", new Vector2(0, 0.01f), new Vector2(0.5f, 0.12f)), "", 22, Burn, TextAnchor.MiddleCenter, FontStyle.Bold);
                 var auto = UIKit.Label(UIKit.Rect(card, "Auto", new Vector2(0.5f, 0.01f), new Vector2(1, 0.12f)), "", 20, UIKit.InkSoft);
-                pickerCards.Add((r, pending, auto));
+                pickerCards.Add((r, pending, auto, info));
             }
             picker.gameObject.SetActive(false);
         }
@@ -506,12 +541,14 @@ namespace BianHe
             selected = r;
             headerDish.sprite = DishSprite(r.Id);
             headerName.text = r.Name + " ▾";
+            LayOutBoard(r);
         }
 
         IEnumerable<string> Needs(Recipe r) => r.Ingredients.Keys.Concat(r.Seasonings.Keys);
 
-        /// <summary>A block whose wok can take a dish now: open, not cooking, nothing waiting in it for 装盘.</summary>
-        bool Free(Burner b) => session.Stoves[b.Index].State(GameSession.NowMs) == StoveState.Idle && session.InWok[b.Index] == null;
+        /// <summary>A block whose wok can take a dish now: open, not cooking, nothing waiting in it for 装盘, not 自动做菜's.</summary>
+        bool Free(Burner b) => session.Stoves[b.Index].State(GameSession.NowMs) == StoveState.Idle && session.InWok[b.Index] == null &&
+                               !session.AutoStove[b.Index];
 
         /// <summary>
         /// The wok the chosen dish's next ingredient goes into: the picked one if it is free (and holds nothing of another
@@ -534,17 +571,23 @@ namespace BianHe
         {
             if (selected == null) { ShowPicker(true); return; }
             if (!Needs(selected).Contains(id)) { Toast($"{selected.Name}不用{session.Data.IngredientName(id)}", UIKit.Ink); return; }
+            if (session.Pantry.Count(id) < NeedOf(selected, id)) { Toast($"{session.Data.IngredientName(id)}没了，开门前去集市买", UIKit.Ink); return; }
             var b = Target();
             if (b == null) { Toast("锅都占着，先出锅或装盘", UIKit.Ink); return; }
             stoveIndex = b.Index;
             if (b.PrepDish != selected) { b.Prep.Clear(); b.PrepDish = selected; }
             b.Prep.Add(id);
+            session.Preparing[b.Index] = true;   // 自动做菜 leaves this wok alone
             if (Needs(selected).All(b.Prep.Contains))
             {
-                var res = session.Stoves[b.Index].Start(selected, GameSession.NowMs);
+                // the storeroom gives the whole dish's worth now, or nothing
+                var res = session.StartDish(b.Index, selected, out var shortOf);
                 if (res == Stove.StartResult.TierTooLow) Toast($"{selected.Name}要{CookRules.Name(selected.StoveTier)}", UIKit.Ink);
+                else if (res == Stove.StartResult.Short)
+                    Toast(string.Join("、", shortOf.Select(session.Data.IngredientName)) + "不够了", UIKit.Ink);
                 b.Prep.Clear();
                 b.PrepDish = null;
+                session.Preparing[b.Index] = false;
             }
         }
 
@@ -562,6 +605,12 @@ namespace BianHe
             if (!stove.Unlocked) { Toast($"升到「{OpensAt(k)}」开这口灶", UIKit.Ink); return; }
             var st = stove.State(now);
             bool ready = session.InWok[k] != null || st == StoveState.Cooking && CookRules.InGold(stove.Dish.Difficulty, stove.Needle(now));
+            if (session.AutoStove[k])
+            {   // 自动做菜's: it comes out by itself and goes onto a tray
+                stoveIndex = k;
+                Toast($"这口锅在自动做{stove.Dish?.Name ?? session.InWok[k]?.dish.Name}，到点自己出锅、装盘", UIKit.Good);
+                return;
+            }
             if (k != stoveIndex)
             {
                 stoveIndex = k;
@@ -585,6 +634,7 @@ namespace BianHe
         /// finished), then 装盘 (onto a free tray).</summary>
         void TapCook()
         {
+            if (session.AutoStove[stoveIndex]) { Toast("这口锅在自动做，到点自己出锅、装盘", UIKit.Good); return; }
             if (session.InWok[stoveIndex] != null)
             {
                 if (!session.Plate(stoveIndex)) Toast("放置区满了，先把菜端出去", UIKit.Ink);
@@ -601,6 +651,14 @@ namespace BianHe
                 return;
             }
             var r = session.TakeOut(s);
+            if (r.spoiled)
+            {   // a bad portion that got past inspection: found now, the dish is lost
+                resultText.text = Picked.Result = "坏料";
+                resultText.color = Picked.ResultColor = Burn;
+                resultUntil = Picked.ResultUntil = Time.unscaledTime + 1.6f;
+                Toast($"{r.dish.Name}里有验货漏掉的坏料，这份倒掉重做", Burn);
+                return;
+            }
             resultText.text = CookRules.Name(r.q) + (r.q == Quality.Perfect || r.q == Quality.Immortal ? "！" : "");
             resultText.color = r.q switch
             {
@@ -673,6 +731,7 @@ namespace BianHe
             ShowPicker(false);   // as a card picked from it would
             Picked.Prep.Clear();
             Picked.PrepDish = null;
+            session.Preparing[stoveIndex] = false;
             ActiveStove.Tier = StoveTier.Advanced;
             ActiveStove.Start(r, GameSession.NowMs);
         }
@@ -753,25 +812,32 @@ namespace BianHe
             long now = GameSession.NowMs;
 
             UpdateOrders(now);
-            foreach (var (r, pending, auto) in pickerCards)
+            foreach (var (r, pending, auto, info) in pickerCards)
             {
                 int n = session.PendingCount(r);
                 pending.text = n > 0 ? $"待做 {n}" : "";
                 auto.text = "自动做 " + session.Book.Progress(r);
+                int can = session.Pantry.Portions(r);   // what the storeroom holds of it
+                info.text = can > 0 ? $"{r.CookMs / 1000f:0.#}秒·{r.Price / 100}文·够做 {can} 份"
+                                    : "缺" + string.Join("、", session.Pantry.Short(r).Select(session.Data.IngredientName));
+                info.color = can > 0 ? UIKit.InkSoft : Burn;
             }
 
             // board: what the chosen dish needs lights up while a wok is free for it; what is in that wok is ticked
             var into = selected != null ? Target() : null;
             var needs = into != null ? Needs(selected).ToHashSet() : new HashSet<string>();
             var inWok = into != null && into.PrepDish == selected ? into.Prep : new HashSet<string>();
-            foreach (var (id, img, ring, check, cg) in items)
+            foreach (var it in items)
             {
-                img.enabled = false;   // the 3D food on the board is the picture
-                bool need = needs.Contains(id), added = inWok.Contains(id);
-                ring.enabled = need && !added;
-                ring.transform.localScale = Vector3.one * (1f + 0.04f * Mathf.Sin(t * 5f));
-                check.enabled = added;
-                cg.alpha = need ? (added ? 0.55f : 1f) : 0.55f;
+                int have = session.Pantry.Count(it.Id);
+                bool need = needs.Contains(it.Id), added = inWok.Contains(it.Id), gone = !added && have < NeedOf(selected, it.Id);
+                if (it.Food) it.Food.SetActive(have > 0 || added);   // none left: its place stands empty
+                it.Ring.enabled = need && !added && !gone;
+                it.Ring.transform.localScale = Vector3.one * (1f + 0.04f * Mathf.Sin(t * 5f));
+                it.Check.enabled = added;
+                it.Cg.alpha = gone ? 0.75f : need ? (added ? 0.55f : 1f) : 0.55f;
+                it.Name.text = $"{session.Data.IngredientName(it.Id)} {have}";
+                it.Name.color = gone ? Burn : UIKit.Ink;
             }
 
             // trays: the 3D dish on each (burnt dishes stay as they were, darkened by the UI badge)
@@ -791,7 +857,7 @@ namespace BianHe
                 badge.enabled = badgeText.enabled = tray != null && !DemoQuiet;
                 label.transform.parent.gameObject.SetActive(tray != null && !DemoQuiet);
                 if (tray == null) continue;
-                var (rec, q) = tray.Value;
+                var (rec, q, _) = tray.Value;
                 dish.sprite = DishSprite(rec.Id);
                 dish.enabled = false;   // the 3D dish sits on the tray instead
                 dish.color = q == Quality.Burnt ? new Color(0.35f, 0.3f, 0.28f) : Color.white;
@@ -873,12 +939,26 @@ namespace BianHe
         /// cooking (its name over a small 火候 bar, the card turning gold while the needle is in the band), burnt, or out
         /// and waiting for 装盘; for a moment after 出锅 the result. The picked block's card is edged in gold.
         /// </summary>
-        void UpdateCard(Burner b, Stove stove, StoveState st, (Recipe dish, Quality q, long atMs)? done, long now, float t)
+        void UpdateCard(Burner b, Stove stove, StoveState st, (Recipe dish, Quality q, long atMs, bool premium)? done, long now, float t)
         {
             string text;
             Color bg = UIKit.Paper, fg = UIKit.Ink;
             bool bar = false;
+            bool auto = session.AutoStove[b.Index];
             if (!stove.Unlocked) { text = $"「{OpensAt(b.Index)}」开"; bg = UIKit.Locked; fg = UIKit.InkSoft; }
+            else if (auto && done is { } ad) { text = $"自动·{ad.dish.Name}·等托盘"; bg = UIKit.Hex("#dbe8c3"); }
+            else if (auto && st == StoveState.Cooking)
+            {
+                text = $"自动·{stove.Dish.Name}";
+                bg = UIKit.Hex("#dbe8c3");
+                bar = true;
+                long left = stove.ReadyMs - now, all = stove.Dish.CookMs;
+                b.Gold.rectTransform.anchorMin = new Vector2(0.94f, 0);      // auto-cook's bar fills up to its time
+                b.Gold.rectTransform.anchorMax = new Vector2(1f, 1);
+                float k = Mathf.Clamp01(1f - left / (float)Mathf.Max(1, all));
+                b.Tick.rectTransform.anchorMin = new Vector2(k, -0.35f);
+                b.Tick.rectTransform.anchorMax = new Vector2(k, 1.35f);
+            }
             else if (t < b.ResultUntil) { text = b.Result; bg = b.ResultColor; fg = Color.white; }
             else if (done is { } d) { text = $"{d.dish.Name}·装盘"; bg = Gold; }
             else if (st == StoveState.Burning) { text = "糊了！"; bg = Burn; fg = Color.white; }
@@ -966,32 +1046,6 @@ namespace BianHe
                     return Mathf.Lerp(a.y, b.y, (r - a.x) / (b.x - a.x)) * bl.K;
                 }
             return WokProfile[WokProfile.Length - 1].y * bl.K;
-        }
-
-        /// <summary>
-        /// The ingredients on the board, each in its own place: the board split into its back row (the ingredients) and
-        /// its front row (the seasonings), each row into places halfway between neighbours; each item stands in the middle
-        /// of its place, made smaller only if it is bigger than its place, so that none goes into another or over the
-        /// board's rims.
-        /// </summary>
-        void SettleOnBoard(List<GameObject> gos)
-        {
-            if (boardRoom.size.x <= 0 || gos.Count == 0) return;
-            var at = gos.Select(g => g.transform.position).ToList();
-            float split = (at.Min(p => p.z) + at.Max(p => p.z)) / 2;            // between the two rows of spots
-            float mid = boardRoom.min.z + boardRoom.size.z * 0.45f;             // the back row gets a little more depth
-            for (int i = 0; i < gos.Count; i++)
-            {
-                bool back = at[i].z > split;
-                var row = Enumerable.Range(0, gos.Count).Where(j => (at[j].z > split) == back).Select(j => at[j].x).OrderBy(x => x).ToList();
-                int k = row.IndexOf(at[i].x);
-                float x0 = k == 0 ? boardRoom.min.x : (row[k - 1] + row[k]) / 2;
-                float x1 = k == row.Count - 1 ? boardRoom.max.x : (row[k] + row[k + 1]) / 2;
-                float z0 = back ? mid : boardRoom.min.z, z1 = back ? boardRoom.max.z : mid;
-                var cell = new Bounds(new Vector3((x0 + x1) / 2, boardRoom.min.y + 0.25f, (z0 + z1) / 2),
-                                      new Vector3((x1 - x0) * 0.94f, 0.5f, (z1 - z0) * 0.94f));
-                FoodFit.FitIn(gos[i], cell);
-            }
         }
 
         /// <summary>How many pieces of an ingredient go into the wok, and whether it goes in whole (a fish, a crab);
@@ -1198,7 +1252,7 @@ namespace BianHe
 
         /// <summary>From 出锅 until 装盘: the finished dish in the wok (SM_&lt;dish&gt;_wok), scaled to fit inside it and bent
         /// to the curve of its inside so that nothing goes through it, popping in as the raw pieces go.</summary>
-        void UpdateDone(Burner bl, (Recipe dish, Quality q, long atMs)? done, float t)
+        void UpdateDone(Burner bl, (Recipe dish, Quality q, long atMs, bool premium)? done, float t)
         {
             string id = done == null ? null : done.Value.dish.Id + "_wok";
             if (id != bl.DoneId)
@@ -1276,6 +1330,14 @@ namespace BianHe
                 needle.rectTransform.parent.localRotation = Quaternion.Euler(0, 0, 90);
                 timeBar.fillAmount = 0;
                 gaugeHint.text = session.AutoPlate ? $"{out_.dish.Name}出锅了·马上自动装盘" : $"{out_.dish.Name}出锅了·点「装盘」放到放置区";
+                return;
+            }
+            if (session.AutoStove[stoveIndex] && s.Dish != null)
+            {
+                foreach (var z in gaugeZones) z.fillAmount = 0;
+                needle.rectTransform.parent.localRotation = Quaternion.Euler(0, 0, 90);
+                gaugeHint.text = $"自动做{s.Dish.Name}：还有 {CookRules.Seconds(s.ReadyMs - now)} 秒，到点自己出锅";
+                timeBar.fillAmount = Mathf.Clamp01((s.ReadyMs - now) / (float)Mathf.Max(1, s.Dish.CookMs));
                 return;
             }
             Recipe dish = st == StoveState.Idle ? selected : s.Dish;
