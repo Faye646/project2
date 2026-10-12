@@ -113,7 +113,7 @@ namespace BianHe.Core
         readonly GameData data;
         readonly Random rng;
         StageInfo stage;
-        int tables;
+        readonly List<int> tables = new();   // the tables guests may sit at (0-based), filled in this order
         List<Recipe> menu;
         int planned, arrived;
         long nextArrivalMs;
@@ -131,10 +131,17 @@ namespace BianHe.Core
             this.rng = rng;
         }
 
-        public void StartDay(long nowMs, StageInfo stageInfo, int tablesInShop, IEnumerable<Recipe> openMenu, double reputationFactor)
+        /// <summary>The day opens with the first n tables of the shop (no more than the stage's cap).</summary>
+        public void StartDay(long nowMs, StageInfo stageInfo, int tablesInShop, IEnumerable<Recipe> openMenu, double reputationFactor) =>
+            StartDay(nowMs, stageInfo, Enumerable.Range(0, Math.Max(1, Math.Min(stageInfo.TableCap, tablesInShop))), openMenu, reputationFactor);
+
+        /// <summary>The day opens with these tables (0-based: the shop's D_Table_&lt;t+1&gt;), the ones bought and open.</summary>
+        public void StartDay(long nowMs, StageInfo stageInfo, IEnumerable<int> openTables, IEnumerable<Recipe> openMenu, double reputationFactor)
         {
             stage = stageInfo;
-            tables = Math.Max(1, Math.Min(stageInfo.TableCap, tablesInShop));
+            tables.Clear();
+            tables.AddRange(openTables.Distinct().OrderBy(t => t));
+            if (tables.Count == 0) tables.Add(0);
             menu = openMenu.ToList();
             reputation = reputationFactor;
             planned = (int)Math.Floor(stageInfo.VisitorCap * reputationFactor);
@@ -142,6 +149,17 @@ namespace BianHe.Core
             Parties.Clear();
             Revenue = Xp = GuestsPaid = GuestsLeft = Good = Normal = Bad = Wasted = 0;
             nextArrivalMs = nowMs + 4_000;   // the first group shows up right after opening
+        }
+
+        /// <summary>The tables guests may sit at today (0-based).</summary>
+        public IReadOnlyList<int> Tables => tables;
+
+        /// <summary>A table bought while the shop is open takes guests from now on (the next group at the door sits there).</summary>
+        public void OpenTable(int t)
+        {
+            if (tables.Contains(t)) return;
+            tables.Add(t);
+            tables.Sort();
         }
 
         public bool AllDone => Parties.All(p => p.State is PartyState.Paid or PartyState.LeftAngry or PartyState.LeftAtDoor);
@@ -206,7 +224,7 @@ namespace BianHe.Core
 
         int FreeTable()
         {
-            for (int t = 0; t < tables; t++)
+            foreach (int t in tables)
                 if (!Parties.Any(p => p.Table == t && p.State is PartyState.Waiting or PartyState.Dining)) return t;
             return -1;
         }

@@ -10,19 +10,23 @@ namespace BianHe
 {
     /// <summary>
     /// 做饭界面, laid out after the 烹饪 mock-up (eg.jpg): a first-person view of the kitchen counter in
-    /// three parts — 放置区 (trays for finished dishes), 食材与调味 (the board), 灶台 (wok, fire and
-    /// the 火候 gauge) — with the chosen dish top left and 出锅 bottom right.
+    /// three parts — 放置区 (trays for finished dishes), 食材与调味 (the board), 灶台 (four blocks side by side,
+    /// a wok and a fire mouth each, and the 火候 gauge) — with the chosen dish top left and 出锅 bottom right.
     ///
-    /// Play: pick a dish → tap what it needs on the board (it lights up; the raw ingredients drop into the wok)
+    /// Play: pick a dish → tap what it needs on the board (it lights up; the raw ingredients drop into a wok)
     /// → the wok starts once everything is in, the raw ingredients tossed about in it → tap 出锅 while the
     /// needle is in the gold band: they turn into the finished dish in the wok → 装盘 (the same button, or by
     /// itself with 自动装盘 on) flies it onto a free tray → tap the tray to carry the dish to its table.
-    /// The gauge shows CookRules: the needle swings over a gold band; within the time limit (cook time
-    /// + 3 s) gold is 完美 and anywhere else 没熟, and after the limit it's 糊了. Stoves keep cooking
-    /// while the screen is closed. The room, counter, trays, stove and wok are the painted layers
-    /// The room, counter, trays, stove and wok are a 3D set (CookSet.fbx, built by build_cook_view.py
-    /// --export in the approved 水彩 style) seen through its own camera; the food on it is 3D too. The
-    /// UI is pinned over the set's markers (Resources/cook_set.json) every frame.
+    /// The stove's blocks open by 声望 (one at 一级①, one more with each upgrade; a closed one has its lid on and
+    /// its fire out). Each wok cooks on its own: a tap on a wok picks it, and the gauge, 出锅 and 装盘 are for the
+    /// picked one (a tap on the picked wok does the same as the button, and on any wok whose needle is in the gold or
+    /// whose dish is out, at once); what goes in from the board goes into the picked wok, or the next free one if that
+    /// is busy. A card over each wok says how it is doing, with a small
+    /// 火候 bar while it cooks. The gauge shows CookRules: the needle swings over a gold band; within the time limit
+    /// (cook time + 3 s) gold is 完美 and anywhere else 没熟, and after the limit it's 糊了. Stoves keep cooking
+    /// while the screen is closed. The room, counter, trays, stove and woks are a 3D set (CookSet.fbx, built by
+    /// build_cook_view.py --export in the approved 水彩 style) seen through its own camera; the food on it is 3D
+    /// too. The UI is pinned over the set's markers (Resources/cook_set.json) every frame.
     /// </summary>
     public class CookingScreen : MonoBehaviour
     {
@@ -33,8 +37,8 @@ namespace BianHe
         Canvas canvas;
         CanvasGroup group;
         Recipe selected;
-        int stoveIndex;
-        readonly HashSet<string> prep = new();   // what is already in the wok for the dish being set up
+        int stoveIndex;                          // the picked block of the stove
+        readonly List<Burner> burners = new();   // the stove's blocks, left to right
 
         // views
         Image headerDish;
@@ -44,10 +48,8 @@ namespace BianHe
         readonly List<(string id, Image img, Image ring, Text check, CanvasGroup cg)> items = new();
         readonly List<(Image dish, Text label, Image badge, Text badgeText)> trays = new();
         readonly List<(RectTransform card, Image img, Text text)> orderViews = new();
-        Text orderNote, stoveLabel, gaugeHint, resultText, cookButtonText;
-        Image wokFood, fireGlow, needle, cookButton;
-        readonly List<Image> wokItems = new();
-        readonly List<Image> steam = new();
+        Text orderNote, gaugeHint, resultText, cookButtonText;
+        Image needle, cookButton;
         readonly Image[] gaugeZones = new Image[5];
         Image timeBar;
         Text toast;
@@ -71,18 +73,9 @@ namespace BianHe
         readonly List<(RectTransform rt, Vector3 world, Vector2 half)> pins = new();
         readonly Dictionary<string, (Vector3 pos, float scale, float rot)> boardSpots = new();
         readonly List<(Vector3 pos, float scale)> traySpots = new();
-        (Vector3 pos, float scale) wokSpot;
         Vector3 camHome;   // where the cook camera stands (the video's close-ups move it and bring it back)
         readonly GameObject[] trayModels = new GameObject[GameSession.TrayCount];
         readonly string[] trayModelIds = new string[GameSession.TrayCount];
-        // the wok: the raw ingredients (Resources/FoodModels/RAW_<id>, built by build_raw.py) dropped in, tossed about
-        // while the dish cooks, then the finished dish (SM_<dish>_wok) from 出锅 until 装盘 flies it to a tray
-        string rawKey = "";
-        float rawSince;
-        GameObject doneModel;
-        string doneModelId;
-        float doneSince;
-        Vector3 doneScale;
         readonly float[] trayLandAt = new float[GameSession.TrayCount];
         GameObject flying;
         Vector3 flyFrom, flyTo, flyScale0, flyScale1;
@@ -93,17 +86,44 @@ namespace BianHe
 
         static readonly string[] SeasoningOrder = { "salt", "oil", "scallion", "ginger" };   // 糖 joins when a dish needs it
 
-        // Where things are in the backdrop art (背景.png / 案台 (2).png, 1672 × 941), as fractions of the
-        // picture with y measured from the bottom. Everything that sits on the art is placed with these.
-        const float ArtAspect = 1672f / 941f;
-        static readonly Rect[] TrayArt =
+        /// <summary>
+        /// One block of the stove: its wok, fire mouth and lid in the set (Wok&lt;k&gt;, FireMouth&lt;k&gt;, Lid&lt;k&gt;), what is
+        /// in its wok (the raw ingredients, Resources/FoodModels/RAW_&lt;id&gt; built by build_raw.py, dropped in and tossed
+        /// about while the dish cooks, then the finished dish SM_&lt;dish&gt;_wok from 出锅 until 装盘 flies it to a tray),
+        /// the dish being put together in it, the glow of its fire, the steam over it and the card above it.
+        /// </summary>
+        class Burner
         {
-            Rect.MinMaxRect(0.060f, 0.325f, 0.164f, 0.44f), Rect.MinMaxRect(0.157f, 0.325f, 0.260f, 0.44f),
-            Rect.MinMaxRect(0.260f, 0.325f, 0.365f, 0.44f),
-        };
-        static readonly Rect BoardArt = Rect.MinMaxRect(0.388f, 0.30f, 0.652f, 0.53f);    // the big tray (食材与调味)
-        static readonly Rect WokArt = Rect.MinMaxRect(0.735f, 0.425f, 0.88f, 0.55f);     // inside of the wok
-        static readonly Rect FireArt = Rect.MinMaxRect(0.768f, 0.09f, 0.878f, 0.235f);   // fire mouth
+            public int Index;
+            public Vector3 Spot;                 // over the wok (cook_set.json woks[k])
+            public float Scale = 1f;             // the finished dish's scale there
+            public Vector3 Fire;                 // its fire mouth
+            public Vector3 Axis;                 // the middle of its wok's inside, at the bottom
+            public float K = 1f;                 // its wok over the one WokProfile describes
+            public Renderer[] Wok = new Renderer[0], Lid = new Renderer[0];
+            public Renderer FireCard;
+            public readonly List<RawPiece> Raw = new();
+            public string RawKey = "";
+            public GameObject Done;
+            public string DoneId;
+            public float DoneSince;
+            public Vector3 DoneScale;
+            public Recipe PrepDish;              // the dish being put together in it …
+            public readonly HashSet<string> Prep = new();   // … and what of it is in already
+            public Image Glow, CardBg, Gold, Tick;
+            public Outline CardEdge;
+            public RectTransform Bar;
+            public Text CardText;
+            public readonly List<Image> Steam = new();
+            public string Result;                // 完美！ and the like, for a moment after 出锅
+            public Color ResultColor;
+            public float ResultUntil;
+        }
+
+        readonly MaterialPropertyBlock mpb = new();
+        static readonly int TintId = Shader.PropertyToID("_Tint");
+        static readonly int FlickerId = Shader.PropertyToID("_Flicker");
+        static readonly int HighlightId = Shader.PropertyToID("_Highlight");
 
         public void Build(GameSession s, Transform cookSet)
         {
@@ -121,9 +141,6 @@ namespace BianHe
             var fit = art.gameObject.AddComponent<AspectRatioFitter>();
             fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
             fit.aspectRatio = 16f / 9f;
-            fireGlow = UIKit.Img(pinLayer, "FireGlow", UIKit.Circle, UIKit.Fire, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
-            Pin(fireGlow.rectTransform, markers.Vec("fire"), new Vector2(0.45f, 0.35f));
-
             BuildTrays(pinLayer);
             BuildBoard(pinLayer);
             BuildStove(art, root);
@@ -150,9 +167,13 @@ namespace BianHe
                 boardSpots[m.Str("id")] = (o + m.Vec("pos"), m.Num("scale"), m.Num("rot"));
             foreach (var m in markers.List("trays"))
                 traySpots.Add((o + m.Vec("pos"), m.Num("scale")));
-            var wk = markers.Obj("wok");
-            wokSpot = (o + wk.Vec("pos"), wk.Num("scale"));
+            // the stove's blocks, left to right: over each wok, and its fire mouth (an older set has one of each)
+            var woks = markers.Has("woks") ? markers.List("woks").ToList() : new List<JObjectLite> { markers.Obj("wok") };
+            for (int k = 0; k < Mathf.Min(woks.Count, session.Stoves.Count); k++)
+                burners.Add(new Burner { Index = k, Spot = o + woks[k].Vec("pos"), Scale = woks[k].Num("scale") });
             markers.Offset = o;
+            var fires = markers.Has("fires") ? markers.Vecs("fires").ToList() : new List<Vector3> { markers.Vec("fire") };
+            foreach (var b in burners) b.Fire = fires[Mathf.Min(b.Index, fires.Count - 1)];
 
             var cam = markers.Obj("camera");
             var go = new GameObject("CookCamera");
@@ -294,16 +315,8 @@ namespace BianHe
 
         void BuildStove(RectTransform art, Transform root)
         {
-            Pin(Plaque(art, "灶台", 0, 0), markers.Vec("fire") + new Vector3(0, 0.46f, -0.02f), new Vector2(0.2f, 0.045f));
-            // steam over the wok; the food in it is 3D
-            var wok = UIKit.Rect(art, "WokInside", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
-            Pin(wok, wokSpot.pos + new Vector3(0, 0.06f, 0), new Vector2(0.33f, 0.1f));
-            for (int i = 0; i < 5; i++)
-                wokItems.Add(UIKit.Img(wok, "In" + i, null, Color.white, new Vector2(0.06f + i * 0.17f, 0.05f), new Vector2(0.3f + i * 0.17f, 0.75f), preserveAspect: true));
-            wokFood = UIKit.Img(wok, "Food", null, Color.white, new Vector2(0.14f, -0.02f), new Vector2(0.86f, 0.95f), preserveAspect: true);
-            for (int i = 0; i < 3; i++)
-                steam.Add(UIKit.Img(wok, "Steam" + i, UIKit.Circle, new Color(1, 1, 1, 0), new Vector2(0.2f + i * 0.25f, 0.8f), new Vector2(0.4f + i * 0.25f, 1.3f), preserveAspect: true));
-            stoveLabel = UIKit.Label(UIKit.Rect(wok, "Which", new Vector2(0.6f, -0.6f), new Vector2(1.2f, -0.1f)), "", 18, Color.white, TextAnchor.MiddleRight);
+            Pin(Plaque(art, "灶台", 0, 0), markers.Vec("fire") + new Vector3(0, 0.4f, -0.02f), new Vector2(0.2f, 0.045f));
+            foreach (var bl in burners) BuildBurner(art, bl);
 
             // 火候 gauge above the stove: stacked half rings, each filled from the left up to its end, so
             // the gold band (and the 仙味 core for 高等菜) sits in the middle: raw | gold | core | gold | raw
@@ -350,6 +363,46 @@ namespace BianHe
             var ab = UIKit.Button(auto, "自动装盘", 26, PlaqueWood, UIKit.Ink, () => session.AutoPlate = !session.AutoPlate);
             autoPlateBg = (Image)ab.targetGraphic;
             autoPlateText = auto.GetComponentInChildren<Text>();
+        }
+
+        /// <summary>
+        /// One block's UI: the glow of its fire, the steam over its wok (the food in it is 3D), a tap area on the wok,
+        /// and the card above it (what it is doing; a small 火候 bar while it cooks). A tap on the wok or its card picks
+        /// it; on the picked one it does what 出锅 / 装盘 does.
+        /// </summary>
+        void BuildBurner(RectTransform art, Burner b)
+        {
+            int k = b.Index;
+            b.Glow = UIKit.Img(pinLayer, "FireGlow" + k, UIKit.Circle, UIKit.Fire, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+            Pin(b.Glow.rectTransform, b.Fire, new Vector2(0.25f, 0.2f));
+            b.Glow.transform.SetAsFirstSibling();   // under the trays' and the board's pins
+
+            var wok = UIKit.Rect(art, "Wok" + k, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+            Pin(wok, b.Spot + new Vector3(0, 0.05f, 0), new Vector2(0.27f, 0.15f));
+            var hit = wok.gameObject.AddComponent<Image>();
+            hit.color = Color.clear;
+            var btn = wok.gameObject.AddComponent<Button>();
+            btn.transition = Selectable.Transition.None;
+            btn.onClick.AddListener(() => TapBurner(k));
+            for (int i = 0; i < 3; i++)
+                b.Steam.Add(UIKit.Img(wok, "Steam" + i, UIKit.Circle, new Color(1, 1, 1, 0), new Vector2(0.22f + i * 0.2f, 0.5f), new Vector2(0.38f + i * 0.2f, 0.95f), preserveAspect: true));
+
+            // on the front edge of its block, under the wok (above the woks is where the gauge's hint runs)
+            var card = UIKit.Rect(art, "Card" + k, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+            Pin(card, b.Spot + new Vector3(-0.015f, -0.1f, -0.52f), new Vector2(0.205f, 0.07f));
+            b.CardBg = UIKit.Panel(card, UIKit.Paper, false);
+            b.CardBg.raycastTarget = true;
+            var cardBtn = card.gameObject.AddComponent<Button>();
+            cardBtn.transition = Selectable.Transition.None;
+            cardBtn.onClick.AddListener(() => TapBurner(k));
+            b.CardEdge = card.gameObject.AddComponent<Outline>();
+            b.CardText = UIKit.Label(UIKit.Rect(card, "Text", Vector2.zero, Vector2.one), "", 22, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
+            // the 火候 bar: the needle's way across, the gold band in its middle, a tick where the needle is
+            b.Bar = UIKit.Rect(card, "Bar", new Vector2(0.08f, 0.14f), new Vector2(0.92f, 0.36f));
+            UIKit.Img(b.Bar, "Raw", null, Raw, Vector2.zero, Vector2.one);
+            b.Gold = UIKit.Img(b.Bar, "Gold", null, Gold, new Vector2(0.4f, 0), new Vector2(0.6f, 1));
+            b.Tick = UIKit.Img(b.Bar, "Tick", null, UIKit.Ink, new Vector2(0.5f, -0.35f), new Vector2(0.5f, 1.35f));
+            b.Tick.rectTransform.sizeDelta = new Vector2(5, 0);
         }
 
         void BuildTop(Transform root)
@@ -424,6 +477,7 @@ namespace BianHe
             canvas.gameObject.SetActive(true);
             fade = 0;
             group.alpha = 0;
+            if (!session.Stoves[stoveIndex].Unlocked) stoveIndex = 0;
             // start on the dish the oldest order is waiting for, else keep the last choice
             var next = session.Service.Pending().FirstOrDefault();
             if (next.plate != null && (selected == null || session.PendingCount(selected) == 0)) Select(next.plate.Dish);
@@ -445,10 +499,10 @@ namespace BianHe
         // ------------------------------------------------------------------ actions
 
         Stove ActiveStove => session.Stoves[stoveIndex];
+        Burner Picked => burners[stoveIndex];
 
         void Select(Recipe r)
         {
-            if (selected != r) prep.Clear();
             selected = r;
             headerDish.sprite = DishSprite(r.Id);
             headerName.text = r.Name + " ▾";
@@ -456,20 +510,75 @@ namespace BianHe
 
         IEnumerable<string> Needs(Recipe r) => r.Ingredients.Keys.Concat(r.Seasonings.Keys);
 
+        /// <summary>A block whose wok can take a dish now: open, not cooking, nothing waiting in it for 装盘.</summary>
+        bool Free(Burner b) => session.Stoves[b.Index].State(GameSession.NowMs) == StoveState.Idle && session.InWok[b.Index] == null;
+
+        /// <summary>
+        /// The wok the chosen dish's next ingredient goes into: the picked one if it is free (and holds nothing of another
+        /// dish), else a free one already holding some of this dish, else an empty one, else whichever is free (what of
+        /// another dish was in it is taken back out). Null when every open wok is busy.
+        /// </summary>
+        Burner Target()
+        {
+            var free = burners.Where(Free).ToList();
+            if (free.Count == 0) return null;
+            bool Mine(Burner b) => b.PrepDish == selected && b.Prep.Count > 0;
+            var picked = free.FirstOrDefault(b => b.Index == stoveIndex);
+            if (picked != null && (Mine(picked) || picked.Prep.Count == 0)) return picked;
+            return free.FirstOrDefault(Mine) ?? free.FirstOrDefault(b => b.Prep.Count == 0) ?? picked ?? free[0];
+        }
+
+        /// <summary>A tap on something on the board: into the wok it goes to (Target, then picked); once everything the
+        /// dish needs is in, that wok starts.</summary>
         void TapItem(string id)
         {
-            var st = ActiveStove.State(GameSession.NowMs);
             if (selected == null) { ShowPicker(true); return; }
-            if (st != StoveState.Idle) { Toast("锅里还有菜，先出锅", UIKit.Ink); return; }
-            if (session.InWok[stoveIndex] != null) { Toast("锅里的菜还没装盘", UIKit.Ink); return; }
             if (!Needs(selected).Contains(id)) { Toast($"{selected.Name}不用{session.Data.IngredientName(id)}", UIKit.Ink); return; }
-            prep.Add(id);
-            if (Needs(selected).All(prep.Contains))
+            var b = Target();
+            if (b == null) { Toast("锅都占着，先出锅或装盘", UIKit.Ink); return; }
+            stoveIndex = b.Index;
+            if (b.PrepDish != selected) { b.Prep.Clear(); b.PrepDish = selected; }
+            b.Prep.Add(id);
+            if (Needs(selected).All(b.Prep.Contains))
             {
-                var res = ActiveStove.Start(selected, GameSession.NowMs);
+                var res = session.Stoves[b.Index].Start(selected, GameSession.NowMs);
                 if (res == Stove.StartResult.TierTooLow) Toast($"{selected.Name}要{CookRules.Name(selected.StoveTier)}", UIKit.Ink);
-                prep.Clear();
+                b.Prep.Clear();
+                b.PrepDish = null;
             }
+        }
+
+        /// <summary>
+        /// A tap on a wok or its card: picks it (showing the dish being put together in it, if any); on the picked one,
+        /// 出锅 while it cooks and 装盘 once it is out, as the button does. A wok whose needle is in the gold comes out at
+        /// once and a finished dish goes onto a tray even before it is picked (with several woks going, a second tap
+        /// would miss the gold). A closed block says when it opens.
+        /// </summary>
+        void TapBurner(int k)
+        {
+            var b = burners[k];
+            var stove = session.Stoves[k];
+            long now = GameSession.NowMs;
+            if (!stove.Unlocked) { Toast($"升到「{OpensAt(k)}」开这口灶", UIKit.Ink); return; }
+            var st = stove.State(now);
+            bool ready = session.InWok[k] != null || st == StoveState.Cooking && CookRules.InGold(stove.Dish.Difficulty, stove.Needle(now));
+            if (k != stoveIndex)
+            {
+                stoveIndex = k;
+                if (ready) TapCook();
+                else if (b.PrepDish != null && b.Prep.Count > 0) Select(b.PrepDish);
+                return;
+            }
+            if (ready || st is StoveState.Cooking or StoveState.Burning) TapCook();
+            else if (selected == null) ShowPicker(true);
+        }
+
+        /// <summary>The 声望 stage that opens block k (its short name: 一级②, 二级 …).</summary>
+        string OpensAt(int k)
+        {
+            var stages = session.Data.Stages;
+            var s = stages.FirstOrDefault(x => CookRules.StovesOpen(stages.IndexOf(x)) > k);
+            return s == null ? "" : s.Name.Split(' ')[0];
         }
 
         /// <summary>The button under the wok: 出锅 while it cooks (judged by the needle; the dish stays in the wok,
@@ -482,10 +591,13 @@ namespace BianHe
                 return;
             }
             var s = ActiveStove;
-            var st = s.State(GameSession.NowMs);
+            long now = GameSession.NowMs;
+            var st = s.State(now);
             if (st == StoveState.Idle || st == StoveState.Locked)
             {
-                Toast(selected == null ? "先选一道菜" : "先把亮起来的食材和调味放进锅里", UIKit.Ink);
+                bool other = burners.Any(b => b.Index != stoveIndex && (session.InWok[b.Index] != null ||
+                                              session.Stoves[b.Index].State(now) is StoveState.Cooking or StoveState.Burning));
+                Toast(other ? "先点那口锅，再出锅" : selected == null ? "先选一道菜" : "先把亮起来的食材和调味放进锅里", UIKit.Ink);
                 return;
             }
             var r = session.TakeOut(s);
@@ -499,6 +611,9 @@ namespace BianHe
                 _ => UIKit.InkSoft,
             };
             resultUntil = Time.unscaledTime + 1.6f;
+            Picked.Result = resultText.text;
+            Picked.ResultColor = resultText.color;
+            Picked.ResultUntil = resultUntil;
             if (r.achievement != null) Toast($"成就「{r.achievement}」", UIKit.Good);
             if (r.autoUnlocked) Toast("这道菜你已经做熟了。以后点这道菜会自动做，同时最多占两口灶。", UIKit.Good);
         }
@@ -556,10 +671,31 @@ namespace BianHe
             if (r == null) return;
             Select(r);
             ShowPicker(false);   // as a card picked from it would
-            prep.Clear();
+            Picked.Prep.Clear();
+            Picked.PrepDish = null;
             ActiveStove.Tier = StoveTier.Advanced;
             ActiveStove.Start(r, GameSession.NowMs);
         }
+
+        /// <summary>For the screenshots: pick block k (as a tap on its wok would) and, given a dish, cook it there at once.</summary>
+        public void DemoCookOn(int k, string dishId = null)
+        {
+            if (k < 0 || k >= burners.Count || !session.Stoves[k].Unlocked) return;
+            stoveIndex = k;
+            if (dishId != null) DemoShowcase(dishId);
+        }
+
+        /// <summary>For the screenshots: choose a dish, as a card picked from the dish list would.</summary>
+        public void DemoChoose(string dishId)
+        {
+            var r = session.Data.Recipes.FirstOrDefault(x => x.Id == dishId);
+            if (r == null) return;
+            Select(r);
+            ShowPicker(false);
+        }
+
+        /// <summary>For the screenshots: how many blocks the set has.</summary>
+        public int DemoBlocks => burners.Count;
 
         public bool DemoTraysFull() => session.FreeTray() < 0;
 
@@ -567,7 +703,7 @@ namespace BianHe
         public bool DemoQuiet;
 
         /// <summary>For the video: the wok, and the middle of the trays, on the counter set.</summary>
-        public Vector3 DemoWok => wokAxis;
+        public Vector3 DemoWok => Picked.Axis;
         public Vector3 DemoTrays => (traySpots[0].pos + traySpots[traySpots.Count - 1].pos) / 2;
 
         /// <summary>For the video: the cook camera eased to `dist` metres from `target` along its own view (a close-up),
@@ -624,14 +760,14 @@ namespace BianHe
                 auto.text = "自动做 " + session.Book.Progress(r);
             }
 
-            // board: what the chosen dish needs lights up, what's in the wok is ticked
-            var s = ActiveStove;
-            var st = s.State(now);
-            var needs = selected != null && st == StoveState.Idle ? Needs(selected).ToHashSet() : new HashSet<string>();
+            // board: what the chosen dish needs lights up while a wok is free for it; what is in that wok is ticked
+            var into = selected != null ? Target() : null;
+            var needs = into != null ? Needs(selected).ToHashSet() : new HashSet<string>();
+            var inWok = into != null && into.PrepDish == selected ? into.Prep : new HashSet<string>();
             foreach (var (id, img, ring, check, cg) in items)
             {
                 img.enabled = false;   // the 3D food on the board is the picture
-                bool need = needs.Contains(id), added = prep.Contains(id);
+                bool need = needs.Contains(id), added = inWok.Contains(id);
                 ring.enabled = need && !added;
                 ring.transform.localScale = Vector3.one * (1f + 0.04f * Mathf.Sin(t * 5f));
                 check.enabled = added;
@@ -665,32 +801,15 @@ namespace BianHe
                 label.text = q == Quality.Burnt ? "点击倒掉" : target.plate != null ? $"端给 {target.party.Table + 1} 号桌" : "没人点";
             }
 
-            // wok, fire, steam
-            int unlocked = session.Stoves.Count(x => x.Unlocked);
-            stoveLabel.text = unlocked > 1 ? $"{CookRules.Name(s.Tier)}  {stoveIndex + 1}/{unlocked}" : "";
+            // every block: what is in its wok, its fire and lid, the steam, its card
+            foreach (var b in burners) UpdateBurner(b, now, t);
+            UpdateFlight();
+
+            // the picked block: the gauge and the button
+            var s = ActiveStove;
+            var st = s.State(now);
             bool cooking = st is StoveState.Cooking or StoveState.Burning;
             var done = session.InWok[stoveIndex];
-            foreach (var w in wokItems) w.enabled = false;   // the food in the wok is 3D
-            wokFood.enabled = false;
-            // 3D: the raw ingredients dropping in as they are tapped, tossed about while the dish cooks; from 出锅
-            // the finished dish (its wok model) until 装盘 flies it to a tray
-            var raw = cooking ? s.Dish.Ingredients.Keys.ToList()
-                : st == StoveState.Idle && done == null && selected != null
-                    ? selected.Ingredients.Keys.Where(prep.Contains).ToList() : new List<string>();
-            UpdateRaw(raw, cooking, st == StoveState.Burning, t);
-            UpdateDone(done, t);
-            UpdateFlight();
-            fireGlow.color = new Color(1f, 0.62f, 0.2f, cooking ? 0.14f + 0.06f * Mathf.Sin(t * 9f) : 0f);
-            fireGlow.transform.localScale = Vector3.one * (cooking ? 1.1f + 0.08f * Mathf.Sin(t * 13f) : 1f);
-            bool puff = done != null && t - doneSince < 0.8f;   // a burst of steam as the dish comes out
-            for (int i = 0; i < steam.Count; i++)
-            {
-                float ph = (t * (puff ? 1.4f : 0.6f) + i / 3f) % 1f;
-                float a = puff ? 0.6f : done != null ? 0.18f : !cooking ? 0 : st == StoveState.Burning ? 0.55f : 0.35f;
-                steam[i].color = st == StoveState.Burning ? new Color(0.35f, 0.33f, 0.32f, a * (1 - ph)) : new Color(1, 1, 1, a * (1 - ph));
-                steam[i].rectTransform.anchoredPosition = new Vector2(Mathf.Sin(t * 2 + i) * 6f, ph * 70f);
-            }
-
             UpdateGauge(s, st, now);
             resultText.enabled = t < resultUntil;
 
@@ -700,31 +819,125 @@ namespace BianHe
             autoPlateBg.color = session.AutoPlate ? UIKit.Hex("#cfe3a8") : PlaqueWood;
         }
 
+        /// <summary>
+        /// One block of the stove this frame: the lid on and the fire out while it is closed, the fire burning higher while
+        /// it cooks, the picked wok glowing a little; in its wok (3D) the raw ingredients as they are tapped in, tossed
+        /// about while the dish cooks, and from 出锅 the finished dish until 装盘 flies it to a tray; the glow of its fire,
+        /// the steam over it, and its card.
+        /// </summary>
+        void UpdateBurner(Burner b, long now, float t)
+        {
+            var stove = session.Stoves[b.Index];
+            var st = stove.State(now);
+            bool open = stove.Unlocked, cooking = st is StoveState.Cooking or StoveState.Burning;
+            var done = session.InWok[b.Index];
+            foreach (var r in b.Lid) r.enabled = !open;
+            if (b.FireCard)
+            {
+                float lit = !open ? 0.32f : cooking ? 1f : 0.78f;
+                b.FireCard.GetPropertyBlock(mpb);
+                mpb.SetColor(TintId, new Color(lit, lit, lit, 1f));
+                mpb.SetFloat(FlickerId, cooking ? 1f : open ? 0.35f : 0f);
+                b.FireCard.SetPropertyBlock(mpb);
+            }
+            float glow = open && b.Index == stoveIndex && burners.Count(x => session.Stoves[x.Index].Unlocked) > 1
+                ? 0.14f + 0.08f * Mathf.Sin(t * 4f) : 0f;
+            foreach (var r in b.Wok)
+            {
+                r.GetPropertyBlock(mpb);
+                mpb.SetFloat(HighlightId, glow);
+                r.SetPropertyBlock(mpb);
+            }
+
+            var raw = cooking ? stove.Dish.Ingredients.Keys.ToList()
+                : st == StoveState.Idle && done == null && b.PrepDish != null
+                    ? b.PrepDish.Ingredients.Keys.Where(b.Prep.Contains).ToList() : new List<string>();
+            UpdateRaw(b, raw, cooking, st == StoveState.Burning, t);
+            UpdateDone(b, done, t);
+
+            b.Glow.color = new Color(1f, 0.62f, 0.2f, cooking ? 0.14f + 0.06f * Mathf.Sin(t * 9f + b.Index) : 0f);
+            b.Glow.transform.localScale = Vector3.one * (cooking ? 1.1f + 0.08f * Mathf.Sin(t * 13f + b.Index) : 1f);
+            bool puff = done != null && t - b.DoneSince < 0.8f;   // a burst of steam as the dish comes out
+            for (int i = 0; i < b.Steam.Count; i++)
+            {
+                float ph = (t * (puff ? 1.4f : 0.6f) + i / 3f + b.Index * 0.29f) % 1f;
+                float a = puff ? 0.6f : done != null ? 0.18f : !cooking ? 0 : st == StoveState.Burning ? 0.55f : 0.35f;
+                b.Steam[i].color = st == StoveState.Burning ? new Color(0.35f, 0.33f, 0.32f, a * (1 - ph)) : new Color(1, 1, 1, a * (1 - ph));
+                b.Steam[i].rectTransform.anchoredPosition = new Vector2(Mathf.Sin(t * 2 + i) * 5f, ph * 50f);
+            }
+            UpdateCard(b, stove, st, done, now, t);
+        }
+
+        /// <summary>
+        /// The card over a wok: closed (and the stage that opens it), empty, the dish going in (how much of it is in),
+        /// cooking (its name over a small 火候 bar, the card turning gold while the needle is in the band), burnt, or out
+        /// and waiting for 装盘; for a moment after 出锅 the result. The picked block's card is edged in gold.
+        /// </summary>
+        void UpdateCard(Burner b, Stove stove, StoveState st, (Recipe dish, Quality q, long atMs)? done, long now, float t)
+        {
+            string text;
+            Color bg = UIKit.Paper, fg = UIKit.Ink;
+            bool bar = false;
+            if (!stove.Unlocked) { text = $"「{OpensAt(b.Index)}」开"; bg = UIKit.Locked; fg = UIKit.InkSoft; }
+            else if (t < b.ResultUntil) { text = b.Result; bg = b.ResultColor; fg = Color.white; }
+            else if (done is { } d) { text = $"{d.dish.Name}·装盘"; bg = Gold; }
+            else if (st == StoveState.Burning) { text = "糊了！"; bg = Burn; fg = Color.white; }
+            else if (st == StoveState.Cooking)
+            {
+                text = stove.Dish.Name;
+                bar = true;
+                double p = stove.Needle(now);
+                float w = (float)CookRules.GoldHalfWidth(stove.Dish.Difficulty);
+                b.Gold.rectTransform.anchorMin = new Vector2(0.5f - w, 0);
+                b.Gold.rectTransform.anchorMax = new Vector2(0.5f + w, 1);
+                b.Tick.rectTransform.anchorMin = new Vector2((float)p, -0.35f);
+                b.Tick.rectTransform.anchorMax = new Vector2((float)p, 1.35f);
+                if (CookRules.InGold(stove.Dish.Difficulty, p)) bg = UIKit.Hex("#f7dc94");
+            }
+            else if (b.PrepDish != null && b.Prep.Count > 0) text = $"{b.PrepDish.Name} {b.Prep.Count}/{Needs(b.PrepDish).Count()}";
+            else { text = "空着"; fg = UIKit.InkSoft; }
+            b.CardText.text = text;
+            b.CardText.color = fg;
+            b.CardBg.color = bg;
+            var tr = b.CardText.rectTransform;
+            tr.anchorMin = new Vector2(0, bar ? 0.36f : 0f);
+            b.Bar.gameObject.SetActive(bar);
+            bool picked = b.Index == stoveIndex && stove.Unlocked;
+            b.CardEdge.effectColor = picked ? UIKit.Hex("#d9861c") : new Color(UIKit.Ink.r, UIKit.Ink.g, UIKit.Ink.b, 0.45f);
+            b.CardEdge.effectDistance = picked ? new Vector2(3, -3) : new Vector2(1.5f, -1.5f);
+        }
+
         // ------------------------------------------------------------------ the wok
 
         /// <summary>The wok's inside as build_cook_view.py turns it, (distance from its axis, height over its bottom), in
-        /// metres for a wok 0.36 m across its outside radius; measured against the set's own wok (MeasureSet).</summary>
+        /// metres for a wok 0.36 m across its outside radius; each block's wok is measured against it (MeasureSet).</summary>
         static readonly Vector2[] WokProfile = { new(0f, 0f), new(0.16f, 0.02f), new(0.31f, 0.11f), new(0.345f, 0.155f) };
-        const int MaxRawPieces = 9;   // pieces in the wok at once
-        Vector3 wokAxis;              // the middle of the wok's inside, at its bottom
-        float wokK = 1f;              // the set's wok over the one WokProfile describes
+        const int MaxRawPieces = 9;   // pieces in a wok at once
         readonly List<Bounds> trayRooms = new();   // the inside of each tray, its floor at the bottom
         Bounds boardRoom;
         JObject rawPieces;            // Resources/raw_pieces.json (build_raw.py): per ingredient, its pieces
 
-        /// <summary>The wok and the trays measured from the set itself, so that the food is fitted into them.</summary>
+        /// <summary>The woks and the trays measured from the set itself, so that the food is fitted into them; each block's
+        /// wok, lid and fire mouth found by name.</summary>
         void MeasureSet()
         {
             var rends = setRoot.GetComponentsInChildren<Renderer>(true);
             Renderer Find(string n) => rends.FirstOrDefault(r => r.name == n);
-            var wok = Find("Wok");
-            if (wok)
+            foreach (var bl in burners)
             {
-                var b = wok.bounds;
-                wokK = b.extents.x / 0.36f;
-                wokAxis = new Vector3(b.center.x, b.min.y + 0.02f * wokK, b.center.z);
+                int k = bl.Index;
+                var wok = Find("Wok" + k) ?? (k == 0 ? Find("Wok") : null);
+                if (wok)
+                {
+                    var b = wok.bounds;
+                    bl.K = b.extents.x / 0.36f;
+                    bl.Axis = new Vector3(b.center.x, b.min.y + 0.02f * bl.K, b.center.z);
+                }
+                else bl.Axis = bl.Spot - Vector3.up * 0.04f;
+                bl.Wok = rends.Where(r => r == wok || r.name.StartsWith($"WokHandle{k}_")).ToArray();
+                bl.Lid = rends.Where(r => r.name == "Lid" + k).ToArray();
+                bl.FireCard = Find("FireMouth" + k) ?? (k == 0 ? Find("FireMouth") : null);
             }
-            else wokAxis = wokSpot.pos - Vector3.up * 0.04f;
             for (int i = 0; i < GameSession.TrayCount; i++)
             {
                 var tr = Find("Tray" + i);
@@ -741,18 +954,18 @@ namespace BianHe
             new(new Vector3(tray.center.x, tray.max.y + 0.25f, tray.center.z),
                 new Vector3(tray.size.x - 2 * rim, 0.5f, tray.size.z - 2 * rim));
 
-        /// <summary>How high the wok's inside is this far from its axis, over its bottom.</summary>
-        float WokHeight(float r)
+        /// <summary>How high a wok's inside is this far from its axis, over its bottom.</summary>
+        static float WokHeight(Burner bl, float r)
         {
-            r = Mathf.Abs(r) / wokK;
+            r = Mathf.Abs(r) / bl.K;
             for (int i = 1; i < WokProfile.Length; i++)
                 if (r <= WokProfile[i].x)
                 {
                     var a = WokProfile[i - 1];
                     var b = WokProfile[i];
-                    return Mathf.Lerp(a.y, b.y, (r - a.x) / (b.x - a.x)) * wokK;
+                    return Mathf.Lerp(a.y, b.y, (r - a.x) / (b.x - a.x)) * bl.K;
                 }
-            return WokProfile[WokProfile.Length - 1].y * wokK;
+            return WokProfile[WokProfile.Length - 1].y * bl.K;
         }
 
         /// <summary>
@@ -794,11 +1007,11 @@ namespace BianHe
 
         /// <summary>A raw piece for the wok (Resources/FoodModels/RAW_&lt;id&gt;: one closed, solid piece, true to
         /// size, its pivot at its foot), as big as it is.</summary>
-        GameObject SpawnRaw(string id)
+        GameObject SpawnRaw(Burner bl, string id)
         {
             var prefab = Resources.Load<GameObject>("FoodModels/RAW_" + id);
             if (prefab == null) return null;
-            var go = Instantiate(prefab, wokAxis, prefab.transform.rotation, setRoot);
+            var go = Instantiate(prefab, bl.Axis, prefab.transform.rotation, setRoot);
             go.name = "Raw_" + id;
             return go;
         }
@@ -823,8 +1036,6 @@ namespace BianHe
             public int seed;
         }
 
-        readonly List<RawPiece> raw = new();
-
         /// <summary>
         /// The raw ingredients laid out in the wok, each ingredient as its pieces (raw_pieces.json; at most
         /// MaxRawPieces in all), each as big as it is, made larger so that it reads in the kitchen's view: a whole
@@ -835,8 +1046,12 @@ namespace BianHe
         /// its ends, so that nothing goes through the wok or through another piece. Pieces already in the wok move
         /// over as others come.
         /// </summary>
-        void LayOutRaw(List<string> ids)
+        void LayOutRaw(Burner bl, List<string> ids)
         {
+            var raw = bl.Raw;
+            float wokK = bl.K;
+            var wokAxis = bl.Axis;
+            float WokHeight(float r) => CookingScreen.WokHeight(bl, r);
             var want = ids.Select(id => (id, c: RawCount(id))).Where(w => w.c.count > 0)
                           .Select(w => (w.id, n: w.c.count, w.c.whole)).ToList();
             while (want.Sum(w => w.n) > MaxRawPieces && want.Any(w => w.n > 1))   // the most plentiful give way first
@@ -851,7 +1066,7 @@ namespace BianHe
                 {
                     var p = old.FirstOrDefault(o => o.go && o.id == w.id && o.j == j);
                     if (p != null) { old.Remove(p); raw.Add(p); continue; }
-                    var go = SpawnRaw(w.id);
+                    var go = SpawnRaw(bl, w.id);
                     if (go == null) continue;
                     raw.Add(new RawPiece
                     {
@@ -940,17 +1155,17 @@ namespace BianHe
         /// <summary>The raw ingredients in the wok: each piece drops in when its ingredient is added; while the dish
         /// cooks they are stir-fried, hopping up in turn, turning over in the air (solid pieces, so every side is
         /// real), each hop high enough for it to turn right over clear of the wok, and landing back where they lay.</summary>
-        void UpdateRaw(List<string> ids, bool tossing, bool burning, float t)
+        void UpdateRaw(Burner bl, List<string> ids, bool tossing, bool burning, float t)
         {
             var key = string.Join(",", ids);
-            if (key != rawKey)
+            if (key != bl.RawKey)
             {
-                LayOutRaw(ids);
-                rawKey = key;
-                rawSince = t;
+                LayOutRaw(bl, ids);
+                bl.RawKey = key;
             }
+            float wokK = bl.K;
             float T = burning ? 1.3f : 0.9f;   // one hop; slower once it burns
-            foreach (var p in raw)
+            foreach (var p in bl.Raw)
             {
                 if (!p.go) continue;
                 var tr = p.go.transform;
@@ -983,33 +1198,31 @@ namespace BianHe
 
         /// <summary>From 出锅 until 装盘: the finished dish in the wok (SM_&lt;dish&gt;_wok), scaled to fit inside it and bent
         /// to the curve of its inside so that nothing goes through it, popping in as the raw pieces go.</summary>
-        void UpdateDone((Recipe dish, Quality q, long atMs)? done, float t)
+        void UpdateDone(Burner bl, (Recipe dish, Quality q, long atMs)? done, float t)
         {
             string id = done == null ? null : done.Value.dish.Id + "_wok";
-            if (id != doneModelId)
+            if (id != bl.DoneId)
             {
-                DestroyFood(doneModel);
-                doneModel = id == null ? null : SpawnFood(id, wokAxis, wokSpot.scale, 0)
-                                                ?? SpawnFood(done.Value.dish.Id, wokAxis, wokSpot.scale, 0);
-                if (doneModel)
+                DestroyFood(bl.Done);
+                bl.Done = id == null ? null : SpawnFood(id, bl.Axis, bl.Scale, 0) ?? SpawnFood(done.Value.dish.Id, bl.Axis, bl.Scale, 0);
+                if (bl.Done)
                 {
-                    var f = FoodFit.Footprint(doneModel);
-                    float fit = 0.24f * wokK;   // its reach: well inside the wok's wall
-                    if (f.reach > fit) FoodFit.ScaleAbout(doneModel, f.middle, fit / f.reach);
-                    f = FoodFit.Footprint(doneModel);
-                    doneModel.transform.position += new Vector3(wokAxis.x - f.middle.x, wokAxis.y + 0.004f - f.bottom,
-                                                                wokAxis.z - f.middle.z);
-                    FoodFit.BendInto(doneModel, wokAxis, WokHeight);
-                    doneScale = doneModel.transform.localScale;
+                    var f = FoodFit.Footprint(bl.Done);
+                    float fit = 0.24f * bl.K;   // its reach: well inside the wok's wall
+                    if (f.reach > fit) FoodFit.ScaleAbout(bl.Done, f.middle, fit / f.reach);
+                    f = FoodFit.Footprint(bl.Done);
+                    bl.Done.transform.position += new Vector3(bl.Axis.x - f.middle.x, bl.Axis.y + 0.004f - f.bottom, bl.Axis.z - f.middle.z);
+                    FoodFit.BendInto(bl.Done, bl.Axis, r => WokHeight(bl, r));
+                    bl.DoneScale = bl.Done.transform.localScale;
                 }
-                doneModelId = id;
-                doneSince = t;
+                bl.DoneId = id;
+                bl.DoneSince = t;
             }
-            if (!doneModel) return;
-            float u = t - doneSince;   // swells in, overshoots a little and settles
+            if (!bl.Done) return;
+            float u = t - bl.DoneSince;   // swells in, overshoots a little and settles
             float k = u < 0.12f ? Mathf.Lerp(0.55f, 1.06f, u / 0.12f)
                 : u < 0.45f ? Mathf.Lerp(1.06f, 1f, (u - 0.12f) / 0.33f) : 1f;
-            doneModel.transform.localScale = doneScale * k;
+            bl.Done.transform.localScale = bl.DoneScale * k;
         }
 
         /// <summary>Destroys a placed dish and the bent copies of its meshes.</summary>
@@ -1030,17 +1243,17 @@ namespace BianHe
             return go;
         }
 
-        /// <summary>装盘: the dish flies from the wok to its tray in an arc, growing into its plate.</summary>
+        /// <summary>装盘: the dish flies from its wok to its tray in an arc, growing into its plate.</summary>
         void OnPlated(int stove, int tray)
         {
-            if (!IsOpen || stove != stoveIndex || session.Trays[tray] == null) return;
+            if (!IsOpen || stove >= burners.Count || session.Trays[tray] == null) return;
             if (flying) Destroy(flying);
             flying = SpawnOnTray(session.Trays[tray].Value.dish.Id, tray);   // where it lands, as big as it lands
             if (!flying) return;
             flyTo = flying.transform.position;
             flyScale1 = flying.transform.localScale;
             flyScale0 = flyScale1 * 0.75f;
-            flyFrom = wokAxis + Vector3.up * 0.06f;
+            flyFrom = burners[stove].Axis + Vector3.up * 0.06f;
             flyStart = Time.unscaledTime;
             trayLandAt[tray] = flyStart + FlySeconds;
             UpdateFlight();

@@ -40,6 +40,22 @@ namespace BianHe.Core
     }
 
     /// <summary>
+    /// What the shop floor sells (rules.economy.tables and .expansion; 《玩法与数值》04 桌椅、灶台与扩建): the price of
+    /// each table by its number (the first is free), how many fit downstairs, and the 二楼 with 雅间一, which comes with
+    /// its own two tables from a given stage and opens the day after it is paid for. Money in 1/100 文.
+    /// </summary>
+    public class PremisesRules
+    {
+        public readonly Dictionary<int, int> TablePrice = new();
+        public int GroundFloorMax = 4;
+        public int ExpansionPrice;
+        public string ExpansionMinStage = "3";
+        public int[] ExpansionTables = { 5, 6 };
+        public int PrivateRoom1 = 6, PrivateRoom2 = 12;   // 雅间一 comes with the 二楼; 雅间二 is the last table
+        public int MaxTables = 12;
+    }
+
+    /// <summary>
     /// Typed view of 汴河两岸_菜品与家宴数据.json (schema 1.3): recipes, ingredients, customer profiles
     /// and the reputation stages. Money stays in the file's unit, 1/100 文.
     /// </summary>
@@ -50,6 +66,7 @@ namespace BianHe.Core
         public readonly Dictionary<string, Ingredient> Ingredients = new();
         public readonly Dictionary<string, CustomerProfile> Profiles = new();
         public readonly List<StageInfo> Stages = new();
+        public readonly PremisesRules Premises = new();
         public int StartCash;
 
         static string[] Strings(JToken t) => t == null ? new string[0] : t.Select(x => (string)x).ToArray();
@@ -110,10 +127,23 @@ namespace BianHe.Core
                     VisitorCap = (int)s["visitor_cap"], TableCap = (int)s["table_cap"], StoveCap = (int)s["stove_cap"],
                     ArrivalIntervalMs = (long)((double)s["arrival_interval_seconds"] * 1000),
                 });
+
+            var pr = d.Premises;
+            var tables = eco["tables"];
+            foreach (var p in (JObject)tables["price_by_number"]) pr.TablePrice[int.Parse(p.Key)] = (int)p.Value;
+            pr.GroundFloorMax = (int?)tables["ground_floor_max"] ?? 4;
+            var exp = eco["expansion"];
+            pr.ExpansionPrice = (int)exp["price"];
+            pr.ExpansionMinStage = (string)exp["min_stage"];
+            pr.ExpansionTables = exp["adds_tables"].Select(x => (int)x).ToArray();
+            pr.MaxTables = d.Stages.Max(s => s.TableCap);
             return d;
         }
 
         public StageInfo StageFor(int xp) => Stages.Last(s => xp >= s.Xp);
+
+        /// <summary>Where a stage stands in the order of 声望 (一级① is 0), -1 if there is none by that id.</summary>
+        public int StageIndex(string id) => Stages.FindIndex(s => s.Id == id);
 
         public StageInfo NextStage(int xp) => Stages.FirstOrDefault(s => s.Xp > xp);
 

@@ -43,6 +43,19 @@ namespace BianHe.Tests
         }
 
         [Test]
+        public void StoveOpensABlockWithEachUpgrade()
+        {
+            var data = GameData.Parse(File.ReadAllText("Assets/Resources/GameData.json"));
+            int Open(string stage) => CookRules.StovesOpen(data.StageIndex(stage));
+            Assert.AreEqual(1, Open("1_1"));
+            Assert.AreEqual(2, Open("1_2"));
+            Assert.AreEqual(3, Open("1_3"));
+            Assert.AreEqual(4, Open("2"));
+            Assert.AreEqual(4, Open("5"));            // four blocks in all
+            Assert.AreEqual(1, CookRules.StovesOpen(-1));
+        }
+
+        [Test]
         public void NeedleSwingsBackAndForth()
         {
             Assert.AreEqual(0.0, CookRules.Needle(1, 0), 1e-9);        // starts on the left

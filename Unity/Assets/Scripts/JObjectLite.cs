@@ -25,5 +25,10 @@ namespace BianHe
             var a = t[key];
             return new Vector3((float)a[0], (float)a[1], (float)a[2]) + Offset;
         }
+
+        /// <summary>A list of points, each with <see cref="Offset"/> added as <see cref="Vec"/> does.</summary>
+        public IEnumerable<Vector3> Vecs(string key) => t[key].Select(a => new Vector3((float)a[0], (float)a[1], (float)a[2]) + Offset);
+
+        public bool Has(string key) => t[key] != null;
     }
 }

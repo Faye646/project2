@@ -2,8 +2,10 @@
 
 A fixed front camera looks at the kitchen counter: plaster wall with timber frame, a window with
 the blue 门帘, shelves with jars on the right; the counter with three small trays (放置区) and one
-big tray (食材与调味); the brick stove with the fire mouth and the wok (灶台). The food models from
-build_food.py are placed on it. Same toon look as the hall: two-tone ramp + inverted-hull outlines.
+big tray (食材与调味); the brick stove (灶台) in four blocks side by side, each with its own fire mouth,
+wok and a wooden lid (the game opens one block more with each 声望 upgrade and keeps the lid on the
+ones not open yet). The food models from build_food.py are placed on it. Same toon look as the hall:
+two-tone ramp + inverted-hull outlines.
 
     blender -b --factory-startup --python build_cook_view.py -- <out_png>
 """
@@ -116,8 +118,9 @@ if WC:   # richer, warmer colours like the painted kitchen
         extra = dict(zip(('sat', 'val'), t[2:]))
         return wc_materials.painted(name, lit, shade, srgb, emissive, tex=_img(t[0]), tex_scale=t[1], **extra)
 
-    def image_card(name, key, x0, x1, y, z0, z1, glow=False):
-        """A flat card carrying a piece of the painting, facing the camera (-y)."""
+    def image_card(name, key, x0, x1, y, z0, z1, glow=False, mat_name=None):
+        """A flat card carrying a piece of the painting, facing the camera (-y); cards of one picture can share
+        one material (mat_name)."""
         bm = bmesh.new()
         vs = [bm.verts.new(v) for v in ((x0, y, z0), (x1, y, z0), (x1, y, z1), (x0, y, z1))]
         f = bm.faces.new(vs)
@@ -127,7 +130,7 @@ if WC:   # richer, warmer colours like the painted kitchen
         me = bpy.data.meshes.new(name)
         bm.to_mesh(me)
         bm.free()
-        me.materials.append(wc_materials.painted(name, '#ffffff', '#ffffff', srgb, image=_img(key), glow=glow))
+        me.materials.append(wc_materials.painted(mat_name or name, '#ffffff', '#ffffff', srgb, image=_img(key), glow=glow))
         ob = bpy.data.objects.new(name, me)
         scene.collection.objects.link(ob)
         return ob
@@ -280,64 +283,77 @@ lathe('Ladle', [(0.0, 0), (0.07, 0.01), (0.075, 0.05), (0.0, 0.05)], (0.6, WALL_
 box('LadleHandle', 0.585, 0.615, WALL_Y - 0.12, WALL_Y - 0.09, 1.6, 2.05, 'Timber', r=0.008, outline=0.003)
 for k in range(6):   # firewood beside the stove
     lathe(f'Wood{k}', [(0.055, -0.22), (0.055, 0.22)], (0, 0, 0), 'LightWood', n=8,
-          M=Matrix.Translation((2.45 + (k % 3) * 0.12 + (k // 3) * 0.06, 0.25, 0.055 + (k // 3) * 0.1)) @ Matrix.Rotation(math.pi / 2, 4, 'X'))
+          M=Matrix.Translation((2.4 + (k % 3) * 0.12 + (k // 3) * 0.06, 0.25, 0.055 + (k // 3) * 0.1)) @ Matrix.Rotation(math.pi / 2, 4, 'X'))
 lathe('Basket', [(0.0, 0), (0.16, 0), (0.2, 0.22), (0.18, 0.22), (0.0, 0.02)], (-3.1, 0.35, 0), 'Straw', n=16)
 for k in range(3):
     blob(f'BasketVeg{k}', (-3.12 + k * 0.08, 0.35, 0.22), 0.07, 'Greens' if 'Greens' in MATS else 'Leaf')
 
 # ---------------------------------------------------------------- counter (放置区 + 食材与调味)
 CY0, CY1, CZ = 0.0, 0.75, 0.85
-box('CounterBody', -2.75, 0.85, CY0 + 0.05, CY1, 0, CZ - 0.06, 'Counter', r=0.02)
-box('CounterTop', -2.8, 0.9, CY0 - 0.02, CY1, CZ - (0.11 if WC else 0.07), CZ, 'CounterTop' if WC else 'Counter', r=0.025)   # a thick top slab
-for i, (x0, x1) in enumerate(((-2.6, -2.0), (-1.9, -1.4), (-1.3, -0.8))):
+CX0, CX1 = -2.95, 0.08      # the counter ends where the four-block stove begins (the view's left edge is at about -3)
+box('CounterBody', CX0, CX1, CY0 + 0.05, CY1, 0, CZ - 0.06, 'Counter', r=0.02)
+box('CounterTop', CX0 - 0.05, CX1 + 0.05, CY0 - 0.02, CY1, CZ - (0.11 if WC else 0.07), CZ, 'CounterTop' if WC else 'Counter', r=0.025)   # a thick top slab
+for i, (x0, x1) in enumerate(((-2.82, -2.38), (-2.29, -1.85), (-1.76, -1.32))):
     box(f'Door{i}', x0, x1, CY0 + 0.02, CY0 + 0.05, 0.12, CZ - 0.16, 'Counter', r=0.01)
-box('Drawer1', -0.65, 0.65, CY0 + 0.02, CY0 + 0.05, 0.45, CZ - 0.16, 'Counter', r=0.01)
-box('Drawer2', -0.65, 0.65, CY0 + 0.02, CY0 + 0.05, 0.12, 0.4, 'Counter', r=0.01)
-TRAYS = [(-2.62, -2.07), (-2.0, -1.45), (-1.38, -0.83)]
+box('Drawer1', -1.18, -0.06, CY0 + 0.02, CY0 + 0.05, 0.45, CZ - 0.16, 'Counter', r=0.01)
+box('Drawer2', -1.18, -0.06, CY0 + 0.02, CY0 + 0.05, 0.12, 0.4, 'Counter', r=0.01)
+TRAYS = [(-2.86, -2.4), (-2.33, -1.87), (-1.8, -1.34)]
 for i, (x0, x1) in enumerate(TRAYS):   # 放置区: three small trays
     y0, y1 = 0.18, 0.6
     box(f'Tray{i}', x0, x1, y0, y1, CZ, CZ + 0.012, 'TrayWood', r=0.006, outline=0.003)
     for (a0, a1, b0, b1) in ((x0, x1, y0, y0 + 0.03), (x0, x1, y1 - 0.03, y1), (x0, x0 + 0.03, y0, y1), (x1 - 0.03, x1, y0, y1)):
         box(f'TrayRim{i}{a0}{b0}', a0, a1, b0, b1, CZ, CZ + 0.035, 'TrayWood', r=0.01, outline=0.003)
-BX0, BX1, BY0, BY1 = -0.65, 0.78, 0.14, 0.66      # 食材与调味: the big tray
+BX0, BX1, BY0, BY1 = -1.22, -0.02, 0.14, 0.66     # 食材与调味: the big tray
 box('Board', BX0, BX1, BY0, BY1, CZ, CZ + 0.012, 'TrayWood', r=0.006, outline=0.003)
 for (a0, a1, b0, b1) in ((BX0, BX1, BY0, BY0 + 0.03), (BX0, BX1, BY1 - 0.03, BY1), (BX0, BX0 + 0.03, BY0, BY1), (BX1 - 0.03, BX1, BY0, BY1)):
     box(f'BoardRim{a0}{b0}', a0, a1, b0, b1, CZ, CZ + 0.035, 'TrayWood', r=0.01, outline=0.003)
 if WC:
-    image_card('Towel', 'towel', -2.72, -2.38, -0.035, 0.28, CZ + 0.02)
+    image_card('Towel', 'towel', -2.92, -2.58, -0.035, 0.28, CZ + 0.02)
 else:
-    box('Towel', -2.86, -2.62, -0.02, 0.02, 0.35, CZ - 0.02, 'Cloth', r=0.008)
+    box('Towel', -3.06, -2.82, -0.02, 0.02, 0.35, CZ - 0.02, 'Cloth', r=0.008)
 
-# ---------------------------------------------------------------- stove (灶台)
-SX0, SX1, SY0, SY1, SZ = 0.95, 2.3, 0.0, 1.0, 0.95
-for (a0, a1, b0, b1, y0) in ((SX0 + 0.02, 1.3, 0, SZ, SY0 + 0.02), (1.95, SX1 - 0.02, 0, SZ, SY0 + 0.02),
-                              (1.3, 1.95, 3 * SZ / 6, SZ, SY0 + 0.02), (1.3, 1.95, 0, 3 * SZ / 6, SY0 + 0.32)):
-    box(f'StoveCore{a0}{b0}', a0, a1, y0, SY1, b0, b1, 'Mortar', r=0, outline=0.006)   # hollow behind the fire mouth
+# ---------------------------------------------------------------- stove (灶台): four blocks in a row
+SX0, SX1, SY0, SY1, SZ = 0.17, 2.25, 0.0, 1.0, 0.95   # its right end just inside the view's edge (about 2.3 at its front)
+NB = 4                          # one block per wok; the game opens one more with each 声望 upgrade
+BW = (SX1 - SX0) / NB
+WOK_R = 0.235                   # the wok's outer radius (the single big wok was 0.36)
+WS = WOK_R / 0.36               # the wok, its handles and the food in it, scaled from that one
+MW, MZ0 = 0.4, 0.2              # each fire mouth: its width and its foot
+MZ1 = MZ0 + MW * 210 / 250      # as tall for its width as the painted mouth (firemouth.png, 250 × 210)
+WOK_PROFILE = [(0.0, -0.02), (0.18, 0.0), (0.33, 0.1), (0.36, 0.15), (0.345, 0.155), (0.31, 0.11), (0.16, 0.02), (0.0, 0.0)]
+HANDLE_PROFILE = [(0.035, -0.012), (0.045, 0.0), (0.035, 0.012), (0.025, 0.0), (0.035, -0.012)]
+WOKS, FIRES = [], []
 rows, bh = 6, SZ / 6
-for r_ in range(rows):   # brick courses on the front and the top ring
-    z0 = r_ * bh
-    n = 4
-    off = 0.5 if r_ % 2 else 0
-    xs = sorted({SX0, SX1, *[SX0 + (k + off) * (SX1 - SX0) / n for k in range(n + 1) if SX0 < SX0 + (k + off) * (SX1 - SX0) / n < SX1]})
-    for a, b in zip(xs, xs[1:]):
-        if r_ < 3 and 1.3 < (a + b) / 2 < 1.95:
-            continue   # the fire mouth
-        box(f'Brick{r_}{a:.2f}', a + 0.006, b - 0.006, SY0, SY0 + 0.06, z0 + 0.006, z0 + bh - 0.006, 'Brick', r=0.02, outline=0.004)
-box('StoveTop', SX0, SX1, SY0, SY1, SZ - 0.02, SZ + 0.06, 'Brick', r=0.03)
-if not WC:
-    box('MouthBack', 1.35, 1.9, SY0 + 0.25, SY0 + 0.3, 0.0, 3 * bh, 'Ember', r=0, outline=0)
-for k in range(0 if WC else 4):
-    blob(f'Log{k}', (1.45 + k * 0.12, SY0 + 0.15, 0.08), 0.05, 'Ember', squash=(1.6, 0.8, 0.8))
-for k in range(0 if WC else 5):
-    blob(f'Flame{k}', (1.42 + k * 0.1, SY0 + 0.14, 0.2 + 0.05 * (k % 2)), 0.08, 'Fire', squash=(0.8, 0.5, 1.8), outline=0)
-if WC:   # the painted arched fire mouth with its fire, set into the brick face
-    image_card('FireMouth', 'firemouth', 1.2, 2.05, -0.004, 0.0, 0.66, glow=True)
-WOK = Vector(((SX0 + SX1) / 2, 0.5, SZ + 0.06))
-lathe('Wok', [(0.0, -0.02), (0.18, 0.0), (0.33, 0.1), (0.36, 0.15), (0.345, 0.155), (0.31, 0.11), (0.16, 0.02), (0.0, 0.0)],
-      WOK, 'Iron', n=28, outline=0.005)
-for s in (-1, 1):
-    lathe(f'WokHandle{s}', [(0.035, -0.012), (0.045, 0.0), (0.035, 0.012), (0.025, 0.0), (0.035, -0.012)],
-          WOK + Vector((s * 0.39, 0, 0.14)), 'Iron', n=12, M=Matrix.Rotation(math.pi / 2, 4, 'Y'))
+for k in range(NB):
+    x0, x1 = SX0 + k * BW, SX0 + (k + 1) * BW
+    cx = (x0 + x1) / 2
+    box(f'StoveCore{k}', x0 + 0.012, x1 - 0.012, SY0 + 0.02, SY1, 0, SZ, 'Mortar', r=0, outline=0.006)
+    for r_ in range(rows):   # brick courses on its front; the painted mouth covers their middle
+        z0 = r_ * bh
+        off = 0.5 if r_ % 2 else 0
+        xs = sorted({x0, x1, *[x0 + (j + off) * BW / 3 for j in range(4) if x0 < x0 + (j + off) * BW / 3 < x1]})
+        for a, b in zip(xs, xs[1:]):
+            if WC and MZ0 < z0 + bh / 2 < MZ1 and cx - MW / 2 < (a + b) / 2 < cx + MW / 2:
+                continue
+            box(f'Brick{k}_{r_}_{a:.2f}', a + 0.006, b - 0.006, SY0, SY0 + 0.06, z0 + 0.006, z0 + bh - 0.006, 'Brick', r=0.02, outline=0.004)
+    box(f'StoveTop{k}', x0 + 0.006, x1 - 0.006, SY0, SY1, SZ - 0.02, SZ + 0.06, 'Brick', r=0.03)   # each block its own top
+    if WC:   # the painted arched fire mouth with its fire (the game damps it on a block not open yet)
+        image_card(f'FireMouth{k}', 'firemouth', cx - MW / 2, cx + MW / 2, -0.004, MZ0, MZ1, glow=True, mat_name='FireMouth')
+    else:
+        box(f'MouthBack{k}', cx - MW / 2, cx + MW / 2, SY0 - 0.004, SY0 + 0.01, MZ0, MZ1, 'Ember', r=0, outline=0)
+        for j in range(3):
+            blob(f'Flame{k}_{j}', (cx - 0.1 + j * 0.1, SY0 - 0.01, MZ0 + 0.12 + 0.03 * (j % 2)), 0.06, 'Fire', squash=(0.8, 0.5, 1.8), outline=0)
+    w = Vector((cx, 0.5, SZ + 0.06))
+    WOKS.append(w)
+    FIRES.append((cx, -0.004, (MZ0 + MZ1) / 2))
+    lathe(f'Wok{k}', [(r * WS, z * WS) for r, z in WOK_PROFILE], w, 'Iron', n=28, outline=0.005)
+    for sd in (-1, 1):   # its ears front and back: side by side, ears to the sides would run into the next wok's
+        lathe(f'WokHandle{k}_{sd + 1}', [(a * WS, b * WS) for a, b in HANDLE_PROFILE], w + Vector((0, sd * 0.39 * WS, 0.14 * WS)),
+              'Iron', n=12, M=Matrix.Rotation(math.pi / 2, 4, 'X'))
+    if EXPORT or k > 0:   # a wooden lid on the wok (in the preview: on the blocks a new shop hasn't opened)
+        lathe(f'Lid{k}', [(0.0, 0.0), (WOK_R * 1.04, 0.0), (WOK_R * 1.0, 0.022), (WOK_R * 0.62, 0.062), (0.045, 0.078),
+                          (0.045, 0.1), (0.0, 0.1)], w + Vector((0, 0, 0.15 * WS)), 'LightWood', n=28, outline=0.004)
+WOK = WOKS[0]
 
 # ---------------------------------------------------------------- food from build_food.py
 
@@ -372,15 +388,18 @@ def place(key, pos, scale=1.0, rot=0.0):
 S = 2.0   # food is shown a little larger than life so it reads at phone size
 top = CZ + 0.012
 for i, (key, k) in enumerate((('flour', 0.75), ('greens', 1.0), ('pork', 1.0))):
-    place(key, (BX0 + 0.27 + i * 0.47, 0.56, top), S * k, rot=0.2)
+    place(key, (BX0 + 0.22 + i * 0.38, 0.56, top), S * k, rot=0.2)
 for i, (key, k) in enumerate((('salt', 1.1), ('oil', 1.0), ('scallion', 0.85), ('ginger', 1.0))):
-    place(key, (BX0 + 0.2 + i * 0.35, 0.24, top), S * k * 0.9, rot=0.3)
+    place(key, (BX0 + 0.16 + i * 0.29, 0.24, top), S * k * 0.9, rot=0.3)
 if EXPORT:
     for x0, x1 in TRAYS:
         place('D02', ((x0 + x1) / 2, 0.38, top), S)
 else:
     place('D02', ((TRAYS[0][0] + TRAYS[0][1]) / 2, 0.38, top), S)
-place('D01_wok', (WOK.x, WOK.y, WOK.z + 0.04), S * 1.2)
+place('D01_wok', (WOK.x, WOK.y, WOK.z + 0.04), S * 1.2 * WS)
+if EXPORT:   # every block's wok and fire mouth, left to right
+    MARKERS['woks'] = [{'id': f'wok{k}', 'pos': list(w + Vector((0, 0, 0.04))), 'scale': S * 1.2 * WS} for k, w in enumerate(WOKS)]
+    MARKERS['fires'] = [list(f) for f in FIRES]
 
 # ---------------------------------------------------------------- outlines, camera, render
 line = bpy.data.materials.new('T_Line')
@@ -437,12 +456,18 @@ if EXPORT:
         for m in MARKERS[group]:
             m['pos'] = U(m['pos'])
     MARKERS['wok']['pos'] = U(MARKERS['wok']['pos'])
-    MARKERS['fire'] = U(((1.2 + 2.05) / 2, -0.004, 0.33))
+    for m in MARKERS['woks']:
+        m['pos'] = U(m['pos'])
+    MARKERS['fires'] = [U(f) for f in MARKERS['fires']]
+    MARKERS['fire'] = U(((SX0 + SX1) / 2, -0.004, (MZ0 + MZ1) / 2))   # the middle of the stove's front
     MARKERS['camera'] = {'pos': U(cam.location), 'forward': U(fwd), 'up': U(up), 'focal': cam.data.lens, 'sensor': 36.0}
-    # materials: set pieces become C_<name>, the painted cards Card_<name>
+    # materials: set pieces become C_<name>, the painted cards Card_<name>: the set's own colours (the hall's Leaf takes
+    # its watercolour from here) and what its pieces wear, not every food colour made for the preview's dishes (Unity
+    # would make a material of each)
+    used = {sl.material for o in scene.objects if o.type == 'MESH' and not o.name.endswith('_line') for sl in o.material_slots}
     table = {}
     for mat in bpy.data.materials:
-        if not mat.name.startswith('W_'):
+        if not mat.name.startswith('W_') or (mat not in used and mat.name[2:] not in PALETTE):
             continue
         key = mat.name[2:]
         if key in PALETTE or key in MATS:

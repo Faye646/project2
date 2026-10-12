@@ -8,7 +8,7 @@ namespace BianHe
     /// <summary>
     /// Everything that outlives a screen: design data, stoves (they keep cooking while the player is
     /// back in the hall), the 放置区 trays, the guests of the day, money, experience, 自动做菜
-    /// counters, the business day and first-time achievements.
+    /// counters, the tables bought, the business day and first-time achievements.
     /// </summary>
     public class GameSession
     {
@@ -18,14 +18,17 @@ namespace BianHe
         public readonly CookBook Book = new() { Counting = false };   // 初始·1桌 is 第一关: nothing counts yet
         public readonly BusinessDay Day = new();
         public readonly Service Service;
-        public readonly List<Stove> Stoves = new();
-        public readonly int[] StovePrices = { 0, 50, 80, 80 };           // 第 2 口 50；第 3、4 口各 80 文
+        public readonly Premises Premises;                               // the tables bought and the 二楼
+        public readonly List<Stove> Stoves = new();                      // the stove's four blocks, open by 声望 (OpenStoves)
         public readonly HashSet<string> Achievements = new();
         public readonly HashSet<string> Flags = new();
         public int Xp;
         public int Cash;                                                 // 1/100 文
         public double Reputation = 1.0;                                  // 口碑系数; day 1 counts as 1
-        public int TablesInShop = 1;                                     // the shop's tables in use (GameFlow, by stage)
+        public int TablesInModel = 1;                                    // D_Table_1…n in the shop on show (GameFlow)
+
+        /// <summary>What was bought today, for the settlement page: (what, price in 1/100 文).</summary>
+        public readonly List<(string what, int price)> BoughtToday = new();
 
         /// <summary>放置区: finished dishes waiting to be carried out (null = empty tray).</summary>
         public readonly (Recipe dish, Quality q)?[] Trays = new (Recipe, Quality)?[TrayCount];
@@ -42,19 +45,71 @@ namespace BianHe
         {
             Data = GameData.Parse(Resources.Load<TextAsset>("GameData").text);
             Service = new Service(Data, new System.Random());
+            Premises = new Premises(Data);
             Cash = Data.StartCash;
-            for (int i = 0; i < 4; i++) Stoves.Add(new Stove(StoveTier.Basic, unlocked: i == 0));
+            for (int i = 0; i < CookRules.StoveBlocks; i++) Stoves.Add(new Stove(StoveTier.Basic, unlocked: false));
+            OpenStoves();
+        }
+
+        /// <summary>The stove's blocks open by 声望: one at 一级①, one more with each upgrade, all four from 二级 on.</summary>
+        public void OpenStoves()
+        {
+            int open = CookRules.StovesOpen(Data.Stages.IndexOf(Stage));
+            for (int i = 0; i < Stoves.Count; i++) Stoves[i].Unlocked = i < open;
         }
 
         public IEnumerable<Recipe> OpenRecipes() =>
             Data.Recipes.Where(r => r.ShopLevel == 1 && r.IsOpen(Xp, Flags));
 
+        /// <summary>The tables guests may sit at today, 0-based (the shop's D_Table_&lt;t+1&gt;): bought, open, and in the shop on show.</summary>
+        public List<int> SeatTables() =>
+            Premises.OpenTables(Day.Day).Where(n => n <= TablesInModel).Select(n => n - 1).ToList();
+
         public void OpenShop()
         {
             long now = NowMs;
             Day.Open(now);
-            Service.StartDay(now, Stage, TablesInShop, OpenRecipes(), Reputation);
+            Service.StartDay(now, Stage, SeatTables(), OpenRecipes(), Reputation);
         }
+
+        /// <summary>The next morning: an upgrade at the last settlement opens its stove block now.</summary>
+        public void NextDay()
+        {
+            Day.NextDay();
+            OpenStoves();
+            BoughtToday.Clear();
+        }
+
+        // ------------------------------------------------------------------ 添置桌椅
+
+        /// <summary>The next table or the 二楼, and whether the stage allows it yet (null: nothing left, or the 二楼 opens tomorrow).</summary>
+        public Offer NextOffer => Premises.Next(Stage, Day.Day);
+
+        /// <summary>Something can be bought this very moment: the stage allows it, the money is there, it isn't 打烊结算.</summary>
+        public bool CanBuyNow => NextOffer is { Allowed: true } o && Cash >= o.Price && Day.Phase != DayPhase.Settlement;
+
+        /// <summary>
+        /// Buys the next table or the 二楼 with 雅间一. A table stands at once and, while the shop is open, takes the next
+        /// guests; the 二楼 is built now and opens tomorrow. False, and nothing changes, if it isn't the next thing for sale,
+        /// the stage doesn't allow it yet, the money isn't there, or the day is being settled.
+        /// </summary>
+        public bool Buy(Offer o)
+        {
+            var next = NextOffer;
+            if (o == null || next == null || next.Kind != o.Kind || next.Table != o.Table || !next.Allowed ||
+                Cash < next.Price || Day.Phase == DayPhase.Settlement) return false;
+            Cash -= next.Price;
+            Premises.Buy(next, Day.Day);
+            BoughtToday.Add((OfferName(next), next.Price));
+            if (Day.Phase == DayPhase.Service && next.Kind == OfferKind.Table && next.Table <= TablesInModel)
+                Service.OpenTable(next.Table - 1);
+            return true;
+        }
+
+        /// <summary>What an offer is called on the page and in the settlement: 第 2 张桌, 扩建二楼与雅间, 雅间二.</summary>
+        public string OfferName(Offer o) =>
+            o.Kind == OfferKind.Expansion ? "扩建二楼与雅间" :
+            Premises.Place(o.Table) == "雅间二" ? "雅间二" : $"第 {o.Table} 张桌";
 
         /// <summary>Per frame while open: guests arrive, wait, eat and pay; the day ends by itself once
         /// the door has shut and the last table has paid.</summary>
@@ -97,7 +152,7 @@ namespace BianHe
 
         /// <summary>出锅 but not yet 装盘: the finished dish in each stove's wok (null = none), and when it came out.
         /// The stove is free again, but nothing new goes into its wok until this is plated.</summary>
-        public readonly (Recipe dish, Quality q, long atMs)?[] InWok = new (Recipe, Quality, long)?[4];
+        public readonly (Recipe dish, Quality q, long atMs)?[] InWok = new (Recipe, Quality, long)?[CookRules.StoveBlocks];
 
         /// <summary>自动装盘 (the player's switch): a finished dish goes onto a free tray by itself, AutoPlateMs after 出锅.</summary>
         public bool AutoPlate;

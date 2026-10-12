@@ -89,16 +89,6 @@ namespace BianHe
             doorBubble = MakeBubble("DoorBubble", doorSpots[0] + Vector3.up * 2.1f);
         }
 
-        /// <summary>Only the first n tables (and their stools) stand in the shop: those it has bought.</summary>
-        public void ShowTables(int n)
-        {
-            for (int i = 0; i < tables.Count; i++)
-            {
-                tables[i].Table.gameObject.SetActive(i < n);
-                foreach (var s in tables[i].Stools) s.gameObject.SetActive(i < n);
-            }
-        }
-
         void Clear()
         {
             foreach (var d in dolls.Values)

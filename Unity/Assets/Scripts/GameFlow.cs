@@ -16,11 +16,14 @@ namespace BianHe
     /// camera draws nothing, so the two screens never overlap. The hall HUD runs the business day:
     /// 开门前 → 营业 (6 minutes) → 打烊结算 → next day.
     ///
-    /// The shop grows with the 声望 stage: shops[0] is 初始·1桌, shops[1…5] the shop at 一级 … 五级 (build_shop.py), each
-    /// with as many of its tables as the stage allows; the day after an upgrade opens in the new shop.
+    /// The shop grows with the 声望 stage: shops[0] is 初始·1桌, shops[1…5] the shop at 一级 … 五级 (build_shop.py); the day
+    /// after an upgrade opens in the new shop. Its tables are bought one at a time, and the 二楼 with the 雅间 is paid for
+    /// once (《玩法与数值》04 桌椅与扩建; Premises): the 添置 page, or a tap on the next table standing as a sketch.
     ///
     /// Run a player with  -shots &lt;folder&gt;  to save the demo screenshots there and quit;  -stage &lt;id&gt;  (1_1, 1_2, 1_3, 2 … 5)
-    /// starts at that stage;  -shopshot &lt;folder&gt;  photographs that stage's shop with every table taken, then quits.
+    /// starts at that stage, with every table it allows bought;  -own &lt;n&gt;  makes it the first n tables instead (6 and up:
+    /// the 二楼 among them, open);  -cash &lt;文&gt;  sets the money;  -shopshot &lt;folder&gt;  photographs that stage's shop with
+    /// every table taken, then quits;  -buyshots &lt;folder&gt;  photographs buying the next table or the 二楼, then quits.
     /// </summary>
     public class GameFlow : MonoBehaviour
     {
@@ -35,6 +38,7 @@ namespace BianHe
         CookStation station;
         Canvas hud;
         GuestViews guests;
+        ShopFloor floor;
         Text titleText, statusText, noticeText;
         float noticeUntil;
         Text dayText;
@@ -46,6 +50,15 @@ namespace BianHe
         Vector3 homeCenter;
         float homeSize;
         int shopIndex = -1;
+        bool building;              // a bought table popping in or the 二楼 going up: hands off meanwhile
+        int panelCash;              // the money the 添置 page last showed
+
+        // 添置桌椅: the button under 全景 (a dot on it when something can be bought now) and its page
+        RectTransform buyButton, shopPanel;
+        GameObject buyDot;
+        Text panelSummary, offerName, offerDetail, offerPrice, offerHint, offerButtonText, upstairsNote;
+        Button offerButton;
+        readonly List<(int table, Image cell, Text label)> mapCells = new();
 
         void Start()
         {
@@ -55,16 +68,28 @@ namespace BianHe
 
             session = new GameSession();
             var args = System.Environment.GetCommandLineArgs();
-            int si = System.Array.IndexOf(args, "-stage");
-            if (si >= 0 && si + 1 < args.Length)
+            string Arg(string name)
             {
-                var stage = session.Data.Stages.FirstOrDefault(x => x.Id == args[si + 1]);
-                if (stage != null) session.Xp = stage.Xp;
-                else Debug.LogError($"GameFlow: no stage '{args[si + 1]}'");
+                int k = System.Array.IndexOf(args, name);
+                return k >= 0 && k + 1 < args.Length ? args[k + 1] : null;
             }
+            if (Arg("-stage") is { } stageId)
+            {
+                var stage = session.Data.Stages.FirstOrDefault(x => x.Id == stageId);
+                if (stage != null)
+                {
+                    session.Xp = stage.Xp;
+                    session.Premises.Grant(stage.TableCap, session.Day.Day);   // as if every table it allows were bought
+                }
+                else Debug.LogError($"GameFlow: no stage '{stageId}'");
+            }
+            if (int.TryParse(Arg("-own"), out int own)) session.Premises.Grant(own, session.Day.Day);
+            if (int.TryParse(Arg("-cash"), out int cash)) session.Cash = cash * 100;
+            session.OpenStoves();   // the stove blocks of the stage started at
             if (shops == null || shops.Length == 0) shops = new[] { level };
 
             guests = new GameObject("Guests").AddComponent<GuestViews>();
+            floor = new GameObject("ShopFloor").AddComponent<ShopFloor>();
             session.Service.Notice += Notice;
 
             cooking = new GameObject("Cooking").AddComponent<CookingScreen>();
@@ -76,10 +101,10 @@ namespace BianHe
             ApplyStage();
             BuildHud();
 
-            int i = System.Array.IndexOf(args, "-shots");
-            if (i >= 0 && i + 1 < args.Length) StartCoroutine(TakeShots(args[i + 1]));
-            int ss = System.Array.IndexOf(args, "-shopshot");
-            if (ss >= 0 && ss + 1 < args.Length) StartCoroutine(ShopShot(args[ss + 1]));
+            if (Arg("-shots") is { } shots) StartCoroutine(TakeShots(shots));
+            if (Arg("-shopshot") is { } shopShots) StartCoroutine(ShopShot(shopShots));
+            if (Arg("-buyshots") is { } buyShots) StartCoroutine(BuyShots(buyShots));
+            if (Arg("-stoveshots") is { } stoveShots) StartCoroutine(StoveShots(stoveShots));
             if (System.Array.IndexOf(args, "-video") >= 0) StartCoroutine(PlayForVideo());
             int w = System.Array.IndexOf(args, "-wok");
             if (w >= 0 && w + 1 < args.Length)
@@ -89,20 +114,24 @@ namespace BianHe
         /// <summary>Which shop a stage keeps: 初始·1桌 for 一级①, the 一级 shop for ②③, then one per level.</summary>
         static int ShopFor(StageInfo s) => s.Id switch { "1_1" => 0, "1_2" or "1_3" => 1, "2" => 2, "3" => 3, "4" => 4, "5" => 5, _ => 0 };
 
-        /// <summary>The shop for the current stage on show, with as many tables as the stage allows (until tables are
-        /// bought one by one, a stage comes with all of them).</summary>
+        /// <summary>The shop for the current stage on show, with the tables bought standing in it and the next one for sale
+        /// as a sketch; the camera framed on it afresh when the shop changed.</summary>
         void ApplyStage()
         {
-            UseShop(ShopFor(session.Stage));
-            session.TablesInShop = Mathf.Max(1, Mathf.Min(session.Stage.TableCap, guests.TableCount));
-            guests.ShowTables(session.TablesInShop);
+            bool changed = UseShop(ShopFor(session.Stage));
+            session.TablesInModel = guests.TableCount;
+            ShowFloor();
+            FitRig(changed);
         }
 
-        void UseShop(int idx)
+        /// <summary>The shop's furniture as bought, and the next thing for sale.</summary>
+        void ShowFloor() => floor.Show(session.Premises, session.NextOffer, session.Day.Day);
+
+        bool UseShop(int idx)
         {
             idx = Mathf.Clamp(idx, 0, shops.Length - 1);
             while (idx > 0 && shops[idx] == null) idx--;
-            if (idx == shopIndex) return;
+            if (idx == shopIndex) return false;
             shopIndex = idx;
             for (int k = 0; k < shops.Length; k++)
                 if (shops[k]) shops[k].gameObject.SetActive(k == idx);
@@ -115,12 +144,13 @@ namespace BianHe
                 station.Setup(rig.Cam);
             }
             if (!st) Debug.LogError($"GameFlow: no '{stationName}' under {level.name}");
-            guests.Setup(level, rig.Cam);
-            FitRig();
+            guests.Setup(level, rig.Cam);   // (everything in the new shop still stands: its tables are measured whole)
+            floor.Setup(level, rig.Cam);
+            return true;
         }
 
-        /// <summary>Clamp and zoom limits from the level's bounds, then show the whole shop.</summary>
-        void FitRig()
+        /// <summary>Clamp and zoom limits from what of the shop stands (a sketch included), and with `frame` the whole of it on show.</summary>
+        void FitRig(bool frame)
         {
             var b = new Bounds(level.position, Vector3.zero);
             var parts = level.GetComponentsInChildren<Renderer>();
@@ -154,7 +184,24 @@ namespace BianHe
             var fwd = rot * Vector3.forward;
             float t = (rig.groundHeight - c.y) / fwd.y;
             homeCenter = c + fwd * t;
-            rig.Frame(homeCenter, homeSize);
+            if (frame) rig.Frame(homeCenter, homeSize);
+        }
+
+        /// <summary>Where the camera's pivot goes, and how much it shows, for this box to fill the view (times `margin`).</summary>
+        (Vector3 center, float size) FrameOf(Bounds b, float margin)
+        {
+            var rot = Quaternion.Euler(rig.pitch, rig.yaw, 0);
+            var inv = Quaternion.Inverse(rot);
+            float w = 0, h = 0;
+            for (int k = 0; k < 8; k++)
+            {
+                var corner = new Vector3((k & 1) == 0 ? b.min.x : b.max.x, (k & 2) == 0 ? b.min.y : b.max.y, (k & 4) == 0 ? b.min.z : b.max.z);
+                var v = inv * (corner - b.center);
+                w = Mathf.Max(w, Mathf.Abs(v.x));
+                h = Mathf.Max(h, Mathf.Abs(v.y));
+            }
+            var fwd = rot * Vector3.forward;
+            return (b.center + fwd * ((rig.groundHeight - b.center.y) / fwd.y), Mathf.Max(h, w / ((float)Screen.width / Screen.height)) * margin);
         }
 
         void BuildHud()
@@ -171,7 +218,7 @@ namespace BianHe
             notice.anchorMin = notice.anchorMax = new Vector2(0.5f, 0);
             notice.pivot = new Vector2(0.5f, 0);
             notice.anchoredPosition = new Vector2(0, 120);   // just above the hint bar, clear of the table bubble
-            notice.sizeDelta = new Vector2(820, 80);
+            notice.sizeDelta = new Vector2(1200, 80);
             UIKit.Panel(notice, new Color(UIKit.Ink.r, UIKit.Ink.g, UIKit.Ink.b, 0.88f), false);
             noticeText = UIKit.Label(notice, "", 32, Color.white);
             notice.gameObject.SetActive(false);
@@ -196,6 +243,17 @@ namespace BianHe
             home.sizeDelta = new Vector2(200, 96);
             UIKit.Button(home, "全景", 40, UIKit.Paper, UIKit.Ink, () => rig.Frame(homeCenter, homeSize));
 
+            // 添置桌椅, under 全景: a dot on it when something can be bought this moment
+            buyButton = UIKit.Rect(root, "Buy", new Vector2(1, 1), new Vector2(1, 1));
+            buyButton.pivot = new Vector2(1, 1);
+            buyButton.anchoredPosition = new Vector2(-32, -136);
+            buyButton.sizeDelta = new Vector2(200, 96);
+            UIKit.Button(buyButton, "添置", 40, UIKit.Paper, UIKit.Ink, OpenShopPanel);
+            var dot = UIKit.Img(buyButton, "Dot", UIKit.Circle, UIKit.Fire, new Vector2(1, 1), new Vector2(1, 1));
+            dot.rectTransform.sizeDelta = new Vector2(30, 30);
+            dot.rectTransform.anchoredPosition = new Vector2(-10, -10);
+            buyDot = dot.gameObject;
+
             var hint = UIKit.Rect(root, "Hint", new Vector2(0.5f, 0), new Vector2(0.5f, 0));
             hint.pivot = new Vector2(0.5f, 0);
             hint.anchoredPosition = new Vector2(0, 28);
@@ -205,7 +263,7 @@ namespace BianHe
 
             // 打烊结算 panel
             settlement = UIKit.Rect(root, "Settlement", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
-            settlement.sizeDelta = new Vector2(1000, 700);
+            settlement.sizeDelta = new Vector2(1000, 820);
             UIKit.Panel(settlement, UIKit.Paper);
             var sTitle = UIKit.Rect(settlement, "Title", new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, -110), new Vector2(0, -20));
             UIKit.Label(sTitle, "打烊结算", 52, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
@@ -216,12 +274,203 @@ namespace BianHe
             next.pivot = new Vector2(0.5f, 0);
             next.anchoredPosition = new Vector2(0, 40);
             next.sizeDelta = new Vector2(300, 90);
-            UIKit.Button(next, "下一天", 40, UIKit.Accent, Color.white, () =>
-            {
-                session.Day.NextDay();
-                ApplyStage();   // an upgrade opens the next day in the bigger shop
-            });
+            UIKit.Button(next, "下一天", 40, UIKit.Accent, Color.white, NextDay);
             settlement.gameObject.SetActive(false);
+
+            BuildShopPanel(root);
+        }
+
+        /// <summary>
+        /// 下一天: an upgrade at the settlement opens it in the bigger shop, with one more block of the stove; a 二楼 built
+        /// yesterday opens to guests. What is new is said once.
+        /// </summary>
+        void NextDay()
+        {
+            session.NextDay();
+            ApplyStage();
+            var p = session.Premises;
+            var before = session.StageBefore;
+            bool up = before != null && before != session.Stage;
+            var stages = session.Data.Stages;
+            int stoves = CookRules.StovesOpen(stages.IndexOf(session.Stage));
+            var news = new List<string>();
+            if (p.Expanded && p.ExpansionDay == session.Day.Day - 1) news.Add("二楼和雅间开张了，客人可以上楼了");
+            if (up && stoves > CookRules.StovesOpen(stages.IndexOf(before))) news.Add($"灶台第 {stoves} 口锅开了");
+            if (up && session.NextOffer is { Allowed: true } o && p.Next(before, session.Day.Day) is not { Allowed: true })
+                news.Add($"可以添置{session.OfferName(o)}了（{o.Price / 100} 文）");
+            if (news.Count > 0) Notice(string.Join("；", news));
+        }
+
+        // ------------------------------------------------------------------ 添置桌椅
+
+        /// <summary>
+        /// The 添置 page: what can be bought next (a table, or the 二楼 with 雅间一), its price, and why it can't be bought
+        /// yet if it can't; under it every table of the shop by floor, those bought filled in.
+        /// </summary>
+        void BuildShopPanel(Transform root)
+        {
+            shopPanel = UIKit.Rect(root, "Shop", Vector2.zero, Vector2.one);
+            var dim = UIKit.Rect(shopPanel, "Dim", Vector2.zero, Vector2.one);   // a tap beside the page closes it
+            var dimImg = dim.gameObject.AddComponent<Image>();
+            dimImg.color = new Color(0.16f, 0.1f, 0.05f, 0.35f);
+            var dimBtn = dim.gameObject.AddComponent<Button>();
+            dimBtn.transition = Selectable.Transition.None;
+            dimBtn.onClick.AddListener(CloseShopPanel);
+
+            var page = UIKit.Rect(shopPanel, "Page", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+            page.sizeDelta = new Vector2(1120, 840);
+            UIKit.Panel(page, UIKit.Paper);
+            var title = UIKit.Rect(page, "Title", new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, -104), new Vector2(0, -18));
+            UIKit.Label(title, "添置桌椅", 52, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
+            var summary = UIKit.Rect(page, "Summary", new Vector2(0, 1), new Vector2(1, 1), new Vector2(50, -164), new Vector2(-50, -104));
+            panelSummary = UIKit.Label(summary, "", 32, UIKit.InkSoft);
+
+            // the next thing for sale: what it is on the left; its price, the button and what stands in the way on the right
+            var card = UIKit.Rect(page, "Offer", new Vector2(0, 1), new Vector2(1, 1), new Vector2(50, -424), new Vector2(-50, -184));
+            UIKit.Panel(card, UIKit.Card, false);
+            offerName = UIKit.Label(UIKit.Rect(card, "Name", new Vector2(0, 0.62f), new Vector2(0.64f, 1), new Vector2(24, 0), new Vector2(0, -8)),
+                                    "", 44, UIKit.Ink, TextAnchor.MiddleLeft, FontStyle.Bold);
+            offerDetail = UIKit.Label(UIKit.Rect(card, "Detail", new Vector2(0, 0), new Vector2(0.64f, 0.62f), new Vector2(24, 14), new Vector2(0, 0)),
+                                      "", 30, UIKit.InkSoft, TextAnchor.UpperLeft);
+            offerDetail.lineSpacing = 1.15f;
+            offerPrice = UIKit.Label(UIKit.Rect(card, "Price", new Vector2(0.64f, 0.66f), new Vector2(1, 1)), "", 46, UIKit.Ink, TextAnchor.MiddleCenter, FontStyle.Bold);
+            var btn = UIKit.Rect(card, "Buy", new Vector2(0.68f, 0.26f), new Vector2(0.96f, 0.64f));
+            offerButton = UIKit.Button(btn, "买下", 40, UIKit.Accent, Color.white, BuyNext);
+            var cb = offerButton.colors;
+            cb.disabledColor = Color.white;   // its colour is set by hand (grey when it can't be bought)
+            offerButton.colors = cb;
+            offerButtonText = btn.GetComponentInChildren<Text>();
+            offerHint = UIKit.Label(UIKit.Rect(card, "Hint", new Vector2(0.62f, 0), new Vector2(1, 0.26f)), "", 28, UIKit.Fire);
+
+            // every table of the shop, by floor: bought (green), for sale now (blue), the rest (grey)
+            var rows = new[] { ("一楼", new[] { 1, 2, 3, 4 }), ("二楼", new[] { 5, 7, 8, 9, 10, 11 }), ("雅间", new[] { 6, 12 }) };
+            for (int r = 0; r < rows.Length; r++)
+            {
+                float y = -452 - r * 82;
+                var label = UIKit.Place(page, "Row" + r, 50, -y, 130, 66);
+                UIKit.Label(label, rows[r].Item1, 34, UIKit.Ink, TextAnchor.MiddleLeft, FontStyle.Bold);
+                var tables = rows[r].Item2;
+                for (int i = 0; i < tables.Length; i++)
+                {
+                    var cell = UIKit.Place(page, $"Table{tables[i]}", 180 + i * 80, -y, 66, 66);
+                    var img = UIKit.Panel(cell, UIKit.Locked, false);
+                    mapCells.Add((tables[i], img, UIKit.Label(cell, tables[i].ToString(), 32, UIKit.InkSoft, TextAnchor.MiddleCenter, FontStyle.Bold)));
+                }
+                if (r == 1)
+                    upstairsNote = UIKit.Label(UIKit.Place(page, "UpNote", 180 + tables.Length * 80 + 10, -y, 380, 66), "", 28, UIKit.InkSoft, TextAnchor.MiddleLeft);
+            }
+
+            var close = UIKit.Rect(page, "Close", new Vector2(0.5f, 0), new Vector2(0.5f, 0));
+            close.pivot = new Vector2(0.5f, 0);
+            close.anchoredPosition = new Vector2(0, 30);
+            close.sizeDelta = new Vector2(240, 84);
+            UIKit.Button(close, "关上", 36, UIKit.Paper, UIKit.Ink, CloseShopPanel);
+            shopPanel.gameObject.SetActive(false);
+        }
+
+        void OpenShopPanel()
+        {
+            if (building || cooking.IsOpen || session.Day.Phase == DayPhase.Settlement) return;
+            RefreshShopPanel();
+            panelCash = session.Cash;
+            shopPanel.gameObject.SetActive(true);
+        }
+
+        void CloseShopPanel() => shopPanel.gameObject.SetActive(false);
+
+        void RefreshShopPanel()
+        {
+            var p = session.Premises;
+            int day = session.Day.Day;
+            var stage = session.Stage;
+            var o = session.NextOffer;
+            var open = p.OpenTables(day).ToList();
+            panelSummary.text = $"钱 {session.Cash / 100} 文　·　现有 {open.Count} 张桌，「{StageShort(stage)}」最多 {stage.TableCap} 张";
+            if (o == null)
+            {
+                bool soon = p.Expanded && !p.ExpansionOpen(day);
+                offerName.text = soon ? "二楼和雅间修好了" : "桌椅都添齐了";
+                offerDetail.text = soon ? "明天开张，客人就能上楼了。\n二楼再添桌，等开张以后。"
+                                        : $"一楼 4 张，二楼 6 张，雅间 2 间，\n一共 {p.Bought.Count} 张桌。";
+                offerPrice.text = offerHint.text = "";
+                offerButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                string where = p.Place(o.Table);
+                offerName.text = o.Kind == OfferKind.Expansion ? "扩建二楼与雅间"
+                               : where == "雅间二" ? "雅间二（第 12 张桌）" : $"第 {o.Table} 张桌（{where}）";
+                offerDetail.text = o.Kind == OfferKind.Expansion ? "二楼散座和雅间一，各摆一张桌，连楼梯。\n今天修好，明天开张。"
+                                 : where == "雅间二" ? "二楼的第二间雅间，配四把凳子。\n买下就摆好，马上能坐客人。"
+                                 : $"摆在{(where == "一楼" ? "一楼大堂" : "二楼散座")}，配四把凳子。\n买下就摆好，马上能坐客人。";
+                offerPrice.text = $"{o.Price / 100} 文";
+                bool money = session.Cash >= o.Price;
+                bool ok = o.Allowed && money && session.Day.Phase != DayPhase.Settlement;
+                offerButton.gameObject.SetActive(true);
+                offerButton.interactable = ok;
+                offerButton.image.color = ok ? UIKit.Accent : UIKit.Locked;
+                offerButtonText.text = o.Kind == OfferKind.Expansion ? "扩建" : "买下";
+                offerButtonText.color = ok ? Color.white : UIKit.InkSoft;
+                offerHint.text = !o.Allowed ? $"升到「{StageShort(o.NeedsStage)}」才能{(o.Kind == OfferKind.Expansion ? "扩建" : "添")}"
+                               : !money ? $"还差 {(o.Price - session.Cash + 99) / 100} 文" : "";
+                offerHint.color = o.Allowed ? UIKit.Fire : UIKit.InkSoft;
+            }
+            foreach (var (table, cell, label) in mapCells)
+            {
+                bool bought = p.Bought.Contains(table), seated = open.Contains(table);
+                bool forSale = o is { Allowed: true } && o.Tables.Contains(table);
+                cell.color = seated ? UIKit.Good : bought ? Color.Lerp(UIKit.Good, UIKit.Paper, 0.55f) : forSale ? UIKit.Accent : UIKit.Locked;
+                label.color = seated || forSale ? Color.white : bought ? UIKit.Ink : UIKit.InkSoft;
+            }
+            var expansionStage = session.Data.Stages.FirstOrDefault(s => s.Id == session.Data.Premises.ExpansionMinStage);
+            bool expansionLater = session.Data.Stages.IndexOf(stage) < session.Data.Stages.IndexOf(expansionStage);
+            upstairsNote.text = p.Expanded ? (p.ExpansionOpen(day) ? "" : "明天开张")
+                              : expansionLater ? $"「{StageShort(expansionStage)}」起可以扩建" : "一楼 4 张桌买齐后可以扩建";
+            if (o is { Kind: OfferKind.Expansion }) upstairsNote.text = "";
+        }
+
+        static string StageShort(StageInfo s) => s == null ? "" : s.Name.Split(' ')[0];
+
+        /// <summary>买下 on the 添置 page: pays and puts it in, the table popping into place or the 二楼 going up.</summary>
+        void BuyNext()
+        {
+            var o = session.NextOffer;
+            if (building || !session.Buy(o))
+            {
+                RefreshShopPanel();
+                return;
+            }
+            CloseShopPanel();
+            StartCoroutine(o.Kind == OfferKind.Expansion ? BuildExpansion(o) : PlaceTable(o));
+        }
+
+        /// <summary>A bought table pops into place, then the next one for sale (if any) shows as a sketch.</summary>
+        IEnumerator PlaceTable(Offer o)
+        {
+            building = true;
+            floor.Show(session.Premises, null, session.Day.Day);   // the bought one stands, no sketch meanwhile
+            yield return floor.PopIn(o.Table);
+            building = false;
+            ShowFloor();
+            FitRig(false);
+            Notice($"{session.OfferName(o)}摆好了{(session.Day.Phase == DayPhase.Service ? "，马上能坐客人" : "")}");
+        }
+
+        /// <summary>The 二楼 goes up with the camera on it, then a sign over it says it opens tomorrow; back to the whole shop.</summary>
+        IEnumerator BuildExpansion(Offer o)
+        {
+            building = true;
+            rig.InputEnabled = false;
+            var (center, size) = FrameOf(floor.ExpansionBounds(o.Tables), 1.25f);
+            yield return Glide(center, Mathf.Clamp(size, rig.minSize, homeSize), 0.8f);
+            yield return floor.Build(o.Tables);
+            ShowFloor();
+            Notice("二楼和雅间修好了，明天开张");
+            yield return new WaitForSecondsRealtime(1.2f);
+            FitRig(false);
+            yield return Glide(homeCenter, homeSize, 0.9f);
+            rig.InputEnabled = true;
+            building = false;
         }
 
         void OnDayButton()
@@ -239,6 +488,7 @@ namespace BianHe
 
         void Notice(Party party, string msg)
         {
+            if (msg.Contains("没有空桌") && session.CanBuyNow) msg += "（点「添置」加桌）";
             noticeText.text = msg;
             noticeText.transform.parent.gameObject.SetActive(true);
             noticeUntil = Time.time + 3f;
@@ -284,6 +534,16 @@ namespace BianHe
             }
             bool settling = day.Phase == DayPhase.Settlement;
             dayButton.gameObject.SetActive(!settling);
+            var offer = session.NextOffer;
+            bool affordable = offer != null && session.Cash >= offer.Price;
+            buyButton.gameObject.SetActive(!settling && !building);
+            buyDot.SetActive(offer is { Allowed: true } && affordable);
+            floor.SetAffordable(affordable);
+            if (shopPanel.gameObject.activeSelf)
+            {
+                if (settling || building) CloseShopPanel();
+                else if (session.Cash != panelCash) { panelCash = session.Cash; RefreshShopPanel(); }   // a bill came in
+            }
             if (settling && !settlement.gameObject.activeSelf) settlementText.text = SettlementText();
             settlement.gameObject.SetActive(settling);
             if (settling) noticeText.transform.parent.gameObject.SetActive(false);
@@ -305,7 +565,19 @@ namespace BianHe
                 $"收入 {sv.Revenue / 100} 文　经验 +{sv.Xp}（共 {session.Xp}）",
                 $"明天口碑系数 {session.Reputation:0.00}",
             };
-            if (session.Stage != session.StageBefore) lines.Add($"升到「{session.Stage.Name}」！");
+            if (session.BoughtToday.Count > 0)
+                lines.Add("今天添置：" + string.Join("、", session.BoughtToday.Select(b => $"{b.what} {b.price / 100} 文")));
+            if (session.Premises.ExpansionDay == day.Day) lines.Add("二楼和雅间明天开张");
+            if (session.Stage != session.StageBefore)
+            {
+                lines.Add($"升到「{session.Stage.Name}」！");
+                var stages = session.Data.Stages;
+                int stoves = CookRules.StovesOpen(stages.IndexOf(session.Stage));
+                if (stoves > CookRules.StovesOpen(stages.IndexOf(session.StageBefore))) lines.Add($"明天灶台多开一口锅（共 {stoves} 口）");
+                if (session.Premises.Next(session.Stage, day.Day + 1) is { Allowed: true } o &&
+                    session.Premises.Next(session.StageBefore, day.Day + 1) is not { Allowed: true })
+                    lines.Add($"明天可以添置{session.OfferName(o)}（{o.Price / 100} 文）");
+            }
             if (session.NewlyOpened.Count > 0) lines.Add("新菜：" + string.Join("、", session.NewlyOpened.Select(r => r.Name)));
             if (day.Day % 10 == 0) lines.Add("今天发工钱");
             return string.Join("\n", lines);
@@ -313,10 +585,12 @@ namespace BianHe
 
         void OnTap(Vector2 screen)
         {
-            if (cooking.IsOpen || session.Day.Phase == DayPhase.Settlement) return;
+            if (cooking.IsOpen || building || session.Day.Phase == DayPhase.Settlement) return;
             var ray = rig.Cam.ScreenPointToRay(screen);
             if (Physics.Raycast(ray, out var hit, 500f) && station && hit.collider.GetComponentInParent<CookStation>() == station)
                 StartCoroutine(OpenCooking());
+            else if (floor.HitSale(screen))   // the table (or the 二楼) for sale, or its price tag
+                OpenShopPanel();
         }
 
         IEnumerator OpenCooking()
@@ -511,7 +785,7 @@ namespace BianHe
             yield return new WaitForSecondsRealtime(1.5f);
             yield return Shot($"shop_{id}_empty");
             OnDayButton();                                      // 开门营业
-            for (int k = 0; k < session.TablesInShop; k++) session.Service.ArriveNow(GameSession.NowMs);
+            for (int k = 0; k < session.Service.Tables.Count; k++) session.Service.ArriveNow(GameSession.NowMs);
             yield return new WaitForSecondsRealtime(0.6f);      // seated, orders taken
             foreach (var p in session.Service.Parties.Where(p => p.State == PartyState.Waiting && p.Table % 2 == 0).ToList())
                 foreach (var pl in p.Plates.Where(x => !x.Served).ToList())
@@ -530,23 +804,122 @@ namespace BianHe
             if (any)
             {
                 b.Expand(new Vector3(2.4f, 4.0f, 2.4f));   // the stools round the tables, and the bubbles over them
-                var rot = Quaternion.Euler(rig.pitch, rig.yaw, 0);
-                var inv = Quaternion.Inverse(rot);
-                float w = 0, h = 0;
-                for (int k = 0; k < 8; k++)
-                {
-                    var corner = new Vector3((k & 1) == 0 ? b.min.x : b.max.x, (k & 2) == 0 ? b.min.y : b.max.y, (k & 4) == 0 ? b.min.z : b.max.z);
-                    var v = inv * (corner - b.center);
-                    w = Mathf.Max(w, Mathf.Abs(v.x));
-                    h = Mathf.Max(h, Mathf.Abs(v.y));
-                }
-                var fwd = rot * Vector3.forward;
+                var (center, size) = FrameOf(b, 1f);
                 float minSize = rig.minSize;
                 rig.minSize = 0.5f;
-                rig.Frame(b.center + fwd * ((rig.groundHeight - b.center.y) / fwd.y), Mathf.Max(h, w / ((float)Screen.width / Screen.height)));
+                rig.Frame(center, size);
                 yield return new WaitForSecondsRealtime(0.5f);
                 yield return Shot($"shop_{id}_tables");
                 rig.minSize = minSize;
+            }
+            Application.Quit();
+        }
+
+        /// <summary>
+        /// -buyshots: buying the next thing for sale, photographed (buy_&lt;stage&gt;_…): the shop with it standing as a sketch
+        /// under its price (1_sale), the 添置 page (2_page), then a table popping into place (3_pop, 4_bought), or the 二楼
+        /// going up (3_build_a…c, 4_built with its sign), the day's settlement (5_settle), the next morning with the 二楼
+        /// open (6_next_day) and a party at every table, upstairs too (7_guests). Then it quits.
+        /// </summary>
+        IEnumerator BuyShots(string dir)
+        {
+            Directory.CreateDirectory(dir);
+            string id = session.Stage.Id;
+            IEnumerator Shot(string name)
+            {
+                yield return new WaitForEndOfFrame();
+                ScreenCapture.CaptureScreenshot(Path.Combine(dir, $"buy_{id}_{name}.png"));
+                yield return new WaitForSecondsRealtime(0.2f);
+            }
+            yield return new WaitForSecondsRealtime(1.5f);
+            yield return Shot("1_sale");
+            OpenShopPanel();
+            yield return new WaitForSecondsRealtime(0.3f);
+            yield return Shot("2_page");
+            var o = session.NextOffer;
+            if (o is not { Allowed: true } || session.Cash < o.Price)
+            {
+                Debug.LogError("BuyShots: nothing can be bought now");
+                Application.Quit();
+                yield break;
+            }
+            BuyNext();
+            if (o.Kind == OfferKind.Table)
+            {
+                yield return new WaitForSecondsRealtime(0.22f);
+                yield return Shot("3_pop");
+                while (building) yield return null;
+                yield return new WaitForSecondsRealtime(0.5f);
+                yield return Shot("4_bought");
+                Application.Quit();
+                yield break;
+            }
+            foreach (var (wait, name) in new[] { (1.5f, "3_build_a"), (0.7f, "3_build_b"), (0.9f, "3_build_c") })
+            {
+                yield return new WaitForSecondsRealtime(wait);
+                yield return Shot(name);
+            }
+            while (building) yield return null;
+            yield return new WaitForSecondsRealtime(0.3f);
+            yield return Shot("4_built");
+            OnDayButton();                                      // 开门营业, and 提前打烊 at once: the day's settlement
+            session.CloseShop();
+            yield return new WaitForSecondsRealtime(0.5f);
+            yield return Shot("5_settle");
+            NextDay();
+            yield return new WaitForSecondsRealtime(0.6f);
+            yield return Shot("6_next_day");
+            OnDayButton();
+            for (int k = 0; k < session.Service.Tables.Count; k++) session.Service.ArriveNow(GameSession.NowMs);
+            yield return new WaitForSecondsRealtime(0.6f);
+            foreach (var p in session.Service.Parties.Where(p => p.State == PartyState.Waiting && p.Table % 2 == 0).ToList())
+                foreach (var pl in p.Plates.Where(x => !x.Served).ToList())
+                    session.Service.Serve(p, pl, Quality.Perfect, GameSession.NowMs);
+            yield return new WaitForSecondsRealtime(1.0f);
+            yield return Shot("7_guests");
+            Application.Quit();
+        }
+
+        /// <summary>
+        /// -stoveshots: the cooking screen at the stage it was started at (-stage), photographed (stove_&lt;stage&gt;_…): the
+        /// stove with the blocks that stage has open, the rest with their lids on (1_open); a dish cooking in every open wok
+        /// (2_cooking); the first one out and waiting for 装盘 while the others cook (3_out); the second wok picked (4_picked).
+        /// Then it quits.
+        /// </summary>
+        IEnumerator StoveShots(string dir)
+        {
+            Directory.CreateDirectory(dir);
+            string id = session.Stage.Id;
+            IEnumerator Shot(string name)
+            {
+                yield return new WaitForEndOfFrame();
+                ScreenCapture.CaptureScreenshot(Path.Combine(dir, $"stove_{id}_{name}.png"));
+                yield return new WaitForSecondsRealtime(0.25f);
+            }
+            yield return new WaitForSecondsRealtime(1.2f);
+            yield return OpenCooking();
+            cooking.DemoQuiet = true;
+            cooking.DemoChoose("D01");
+            yield return new WaitForSecondsRealtime(0.8f);
+            yield return Shot("1_open");
+            var dishes = new[] { "D01", "D02", "D03", "D10" };
+            int open = Mathf.Min(session.Stoves.Count(x => x.Unlocked), cooking.DemoBlocks);
+            for (int k = open - 1; k >= 0; k--)   // the first wok last, so that it is the picked one
+            {
+                cooking.DemoCookOn(k, dishes[k % dishes.Length]);
+                yield return new WaitForSecondsRealtime(0.4f);
+            }
+            yield return new WaitForSecondsRealtime(0.8f);
+            yield return Shot("2_cooking");
+            while (!cooking.NeedleInGold()) yield return null;
+            cooking.DemoTakeOut();                                  // the first wok: out, waiting for 装盘
+            yield return new WaitForSecondsRealtime(0.8f);
+            yield return Shot("3_out");
+            if (open > 1)
+            {
+                cooking.DemoCookOn(1);
+                yield return new WaitForSecondsRealtime(0.4f);
+                yield return Shot("4_picked");
             }
             Application.Quit();
         }

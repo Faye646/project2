@@ -23,6 +23,13 @@ namespace BianHe.Core
         public const int GraceMs = 3000;      // added to the recipe's cook time to make the time limit
         public const int MaxAutoStoves = 2;
 
+        /// <summary>The stove (灶台) in four blocks, a wok each (the user's rule, in place of buying stoves).</summary>
+        public const int StoveBlocks = 4;
+
+        /// <summary>How many blocks are open at a 声望 stage (0 = 一级①): one, and one more with each upgrade, so all four
+        /// from 二级 on.</summary>
+        public static int StovesOpen(int stageIndex) => Math.Max(1, Math.Min(StoveBlocks, stageIndex + 1));
+
         /// <summary>When the dish burns: start + base time × (1 − speed-up) + 3 s.</summary>
         public static long BurnAt(long startMs, int baseMs, float speedup = 0f)
         {
