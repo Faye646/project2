@@ -1,0 +1,114 @@
+{
+ "flour": {
+  "count": 1,
+  "size": 0.064
+ },
+ "rice": {
+  "count": 1,
+  "size": 0.0676
+ },
+ "rice_prep": {
+  "count": 1,
+  "size": 0.0662
+ },
+ "pork": {
+  "count": 3,
+  "size": 0.0372
+ },
+ "chicken": {
+  "count": 4,
+  "size": 0.0275
+ },
+ "duck": {
+  "count": 3,
+  "size": 0.0459
+ },
+ "egg": {
+  "count": 2,
+  "size": 0.058
+ },
+ "kidney": {
+  "count": 3,
+  "size": 0.0533
+ },
+ "fish": {
+  "count": 1,
+  "size": 0.2907
+ },
+ "mandarin_fish": {
+  "count": 1,
+  "size": 0.2805
+ },
+ "crab": {
+  "count": 1,
+  "size": 0.1641
+ },
+ "fish_head": {
+  "count": 1,
+  "size": 0.1852
+ },
+ "wing": {
+  "count": 3,
+  "size": 0.064
+ },
+ "radish": {
+  "count": 3,
+  "size": 0.0361
+ },
+ "gourd": {
+  "count": 3,
+  "size": 0.0407
+ },
+ "greens": {
+  "count": 3,
+  "size": 0.0939
+ },
+ "tofu": {
+  "count": 3,
+  "size": 0.027
+ },
+ "bamboo": {
+  "count": 3,
+  "size": 0.0554
+ },
+ "perilla": {
+  "count": 3,
+  "size": 0.094
+ },
+ "mushroom": {
+  "count": 3,
+  "size": 0.052
+ },
+ "skin": {
+  "count": 3,
+  "size": 0.0708
+ },
+ "pickle_base": {
+  "count": 1,
+  "size": 0.0553
+ },
+ "sauerkraut": {
+  "count": 3,
+  "size": 0.0526
+ },
+ "pancake": {
+  "count": 2,
+  "size": 0.0844
+ },
+ "seafood": {
+  "count": 4,
+  "size": 0.0253
+ },
+ "tomato": {
+  "count": 3,
+  "size": 0.0618
+ },
+ "chili": {
+  "count": 3,
+  "size": 0.1366
+ },
+ "potato": {
+  "count": 3,
+  "size": 0.0365
+ }
+}

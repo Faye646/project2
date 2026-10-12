@@ -1,0 +1,471 @@
+{
+ "faces": 65435,
+ "tris": 117890,
+ "parts": {
+  "D_Plinth": {
+   "faces": 738,
+   "quads": 594,
+   "tris": 1332
+  },
+  "D_Floor": {
+   "faces": 810,
+   "quads": 810,
+   "tris": 1620
+  },
+  "D_Walls": {
+   "faces": 6065,
+   "quads": 4689,
+   "tris": 10874
+  },
+  "D_Screens": {
+   "faces": 1113,
+   "quads": 789,
+   "tris": 1902
+  },
+  "D_Cabinet": {
+   "faces": 235,
+   "quads": 207,
+   "tris": 462
+  },
+  "D_Table_1": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_1_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_1_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_1_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_1_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_2": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_2_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_2_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_2_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_2_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_3": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_3_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_3_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_3_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_3_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_4": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_4_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_4_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_4_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_4_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Walkway": {
+   "faces": 903,
+   "quads": 711,
+   "tris": 1614
+  },
+  "D_Path": {
+   "faces": 208,
+   "quads": 144,
+   "tris": 352
+  },
+  "C_Plinth": {
+   "faces": 270,
+   "quads": 270,
+   "tris": 540
+  },
+  "C_Floor": {
+   "faces": 324,
+   "quads": 324,
+   "tris": 648
+  },
+  "C_Walls": {
+   "faces": 885,
+   "quads": 685,
+   "tris": 1590
+  },
+  "K_Plinth": {
+   "faces": 1122,
+   "quads": 810,
+   "tris": 1932
+  },
+  "K_Floor": {
+   "faces": 1053,
+   "quads": 1053,
+   "tris": 2106
+  },
+  "K_Walls": {
+   "faces": 3358,
+   "quads": 2602,
+   "tris": 6040
+  },
+  "K_ZaoTai": {
+   "faces": 1578,
+   "quads": 1370,
+   "tris": 2992
+  },
+  "K_CaiJia": {
+   "faces": 1596,
+   "quads": 1186,
+   "tris": 2872
+  },
+  "K_TanGui": {
+   "faces": 540,
+   "quads": 497,
+   "tris": 1092
+  },
+  "K_AnTai": {
+   "faces": 1233,
+   "quads": 906,
+   "tris": 2202
+  },
+  "K_CaiTai": {
+   "faces": 313,
+   "quads": 208,
+   "tris": 530
+  },
+  "K_MuTong": {
+   "faces": 210,
+   "quads": 208,
+   "tris": 444
+  },
+  "K_ShiTai": {
+   "faces": 59,
+   "quads": 51,
+   "tris": 110
+  },
+  "K_Stand": {
+   "faces": 313,
+   "quads": 208,
+   "tris": 530
+  },
+  "K_ShuiCao": {
+   "faces": 59,
+   "quads": 51,
+   "tris": 110
+  },
+  "K_Path": {
+   "faces": 104,
+   "quads": 72,
+   "tris": 176
+  },
+  "U_Base": {
+   "faces": 988,
+   "quads": 932,
+   "tris": 1920
+  },
+  "U_Slab": {
+   "faces": 80,
+   "quads": 72,
+   "tris": 152
+  },
+  "U_Floor": {
+   "faces": 1305,
+   "quads": 1305,
+   "tris": 2610
+  },
+  "U_Walls": {
+   "faces": 7353,
+   "quads": 5673,
+   "tris": 13146
+  },
+  "U_Railings": {
+   "faces": 2135,
+   "quads": 1535,
+   "tris": 3670
+  },
+  "U_Screens": {
+   "faces": 535,
+   "quads": 379,
+   "tris": 914
+  },
+  "D_Stairs": {
+   "faces": 1278,
+   "quads": 930,
+   "tris": 2208
+  },
+  "D_Table_5": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_5_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_5_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_5_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_5_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_7": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_7_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_7_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_7_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_7_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_8": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_8_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_8_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_8_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_8_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_9": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_9_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_9_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_9_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_9_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_10": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_10_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_10_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_10_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_10_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_11": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_11_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_11_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_11_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_11_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "Y_Screens": {
+   "faces": 2140,
+   "quads": 1516,
+   "tris": 3656
+  },
+  "Y_Side_1": {
+   "faces": 246,
+   "quads": 202,
+   "tris": 468
+  },
+  "Y_Side_2": {
+   "faces": 246,
+   "quads": 202,
+   "tris": 468
+  },
+  "D_Table_6": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_6_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_6_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_6_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_6_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Table_12": {
+   "faces": 818,
+   "quads": 598,
+   "tris": 1436
+  },
+  "D_Stool_12_1": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_12_2": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_12_3": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  },
+  "D_Stool_12_4": {
+   "faces": 338,
+   "quads": 256,
+   "tris": 612
+  }
+ }
+}

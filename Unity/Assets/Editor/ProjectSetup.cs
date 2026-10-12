@@ -79,7 +79,10 @@ namespace BianHe.EditorTools
             Set("m_MSAA", p => p.intValue = 4);
             Set("m_MainLightShadowsSupported", p => p.boolValue = true);
             Set("m_MainLightShadowmapResolution", p => p.intValue = 2048);
-            Set("m_ShadowDistance", p => p.floatValue = 45f);
+            // as far as the cameras see: their far planes bound it (the hall's follows its zoom, CameraRig; the
+            // kitchen's is a few metres), and the shadows fade out only in the last 5% of it
+            Set("m_ShadowDistance", p => p.floatValue = 100f);
+            Set("m_CascadeBorder", p => p.floatValue = 0.05f);
             Set("m_ShadowCascadeCount", p => p.intValue = 1);
             Set("m_SoftShadowsSupported", p => p.boolValue = true);
             so.ApplyModifiedPropertiesWithoutUndo();
@@ -104,7 +107,11 @@ namespace BianHe.EditorTools
         const string DishIconDir = "Assets/Resources/Food3D";
 
         static IEnumerable<string> ModelPaths() =>
-            new[] { ModelPath, CookSetPath }.Concat(Directory.GetFiles(DishDir, "*.fbx").Select(f => f.Replace('\\', '/')));
+            new[] { ModelPath, CookSetPath }.Concat(ShopPaths().Where(File.Exists))
+                .Concat(Directory.GetFiles(DishDir, "*.fbx").Select(f => f.Replace('\\', '/')));
+
+        /// <summary>The shop as it grows, 一级 … 五级 (WhiteModel/build_shop.py → SM_Shop&lt;n&gt;.fbx).</summary>
+        static IEnumerable<string> ShopPaths() => Enumerable.Range(1, 5).Select(n => $"Assets/Art/Models/SM_Shop{n}.fbx");
 
         static void SetupMaterials()
         {
@@ -133,7 +140,17 @@ namespace BianHe.EditorTools
                 // thin parts (lattice bars, planks) get thinner lines than the big masses
                 mat.SetFloat("_OutlineWidth", p.Name is "Leaf" or "Flower" or "Veg" or "Chili" or "Scallion" ? 1.8f : 2.2f);
                 mat.enableInstancing = true;
-                ApplyWatercolor(mat, p.Name);
+                // food (palette_food.json): fuller colour and its own gloss, on top of the watercolor look; a food
+                // colour the cook set doesn't list yet (no C_<key> in cook_set.json) gets the cook set's food look
+                bool food = palettePath.EndsWith("palette_food.json");
+                ApplyWatercolor(mat, p.Name, fallback: food ? FoodWatercolor(p.Value) : null);
+                mat.SetFloat("_Vivid", food ? (float?)p.Value["vivid"] ?? 1f : 0f);
+                mat.SetFloat("_Gloss", food ? (float?)p.Value["gloss"] ?? 0f : 0f);
+                mat.SetFloat("_VertexTint", food ? (float?)p.Value["vtint"] ?? 0f : 0f);   // fish and crab: painted gradients
+                SetDetail(mat, food ? p.Value["detail"] as JObject : null);
+                SetGlass(mat, food ? p.Value["glass"] as JObject : null);
+                // small things (grains of rice) get a thinner ink line, else each reads as a dark-rimmed chip
+                if (food && p.Value["outline"] != null) mat.SetFloat("_OutlineWidth", (float)p.Value["outline"]);
                 EditorUtility.SetDirty(mat);
                 mats[p.Name] = mat;
             }
@@ -176,8 +193,9 @@ namespace BianHe.EditorTools
 
         /// <summary>
         /// Renders each food model (Resources/FoodModels/SM_&lt;id&gt;.fbx: dishes, ingredients, seasonings)
-        /// with the toon shader into a transparent 512² image, Resources/Food3D/&lt;id&gt;.png, seen from the
-        /// front and a little left, about 32° from above, like the art. The UI shows these instead of flat pictures.
+        /// with the toon shader into a transparent 512² image, Resources/Food3D/&lt;id&gt;.png, seen straight from
+        /// the front and 35° from above, the view the art is drawn from (the models are matched to it 1:1). The UI
+        /// shows these instead of flat pictures.
         /// </summary>
         [MenuItem("BianHe/Bake 3D Food Images")]
         public static void BakeDishIcons()
@@ -190,6 +208,8 @@ namespace BianHe.EditorTools
             light.intensity = 1.2f;
             light.shadows = LightShadows.None;
             lightGo.transform.rotation = Quaternion.LookRotation(-new Vector3(-0.3f, 0.52f, -0.8f).normalized);
+            var toIconLight = new Vector3(-0.3f, 0.52f, -0.8f).normalized;   // the painted light is this one too
+            Shader.SetGlobalVector("_ShadeLightDir", new Vector4(toIconLight.x, toIconLight.y, toIconLight.z, 1f));
             var camGo = new GameObject("IconCam");
             var cam = camGo.AddComponent<Camera>();
             camGo.AddComponent<UniversalAdditionalCameraData>();
@@ -209,8 +229,8 @@ namespace BianHe.EditorTools
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(model);
                 var b = new Bounds(go.transform.position, Vector3.zero);
                 foreach (var r in go.GetComponentsInChildren<Renderer>()) b.Encapsulate(r.bounds);
-                // Blender view (az 20°, el 32°): Unity (x, height, z) = Blender (x, y, z)
-                float az = 20f * Mathf.Deg2Rad, el = 32f * Mathf.Deg2Rad;
+                // the art's view (az 0°, el 35°): Unity (x, height, z) = Blender (x, y, z)
+                float az = 0f, el = 35f * Mathf.Deg2Rad;
                 var view = new Vector3(Mathf.Sin(az) * Mathf.Cos(el), Mathf.Sin(el), -Mathf.Cos(az) * Mathf.Cos(el));
                 var target = b.center;
                 camGo.transform.position = target + view * 2f;
@@ -221,6 +241,20 @@ namespace BianHe.EditorTools
                 RenderTexture.active = rt;
                 var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
                 tex.ReadPixels(new Rect(0, 0, size, size), 0, 0);
+                // the render blends over a clear, transparent background, so where the model only partly covers
+                // a pixel (its antialiased rim, clear glass) the colour is premultiplied by its coverage: divide it
+                // back out (in linear light, where the blending happened; the texture holds sRGB), so the image's
+                // straight alpha shows that colour, not a darkened one
+                var px = tex.GetPixels();
+                for (int k = 0; k < px.Length; k++)
+                {
+                    float a = px[k].a;
+                    if (a <= 0f || a >= 1f) continue;
+                    var c = px[k].linear;
+                    px[k] = new Color(Mathf.Min(1f, c.r / a), Mathf.Min(1f, c.g / a), Mathf.Min(1f, c.b / a)).gamma;
+                    px[k].a = a;
+                }
+                tex.SetPixels(px);
                 tex.Apply();
                 RenderTexture.active = prev;
                 var id = Path.GetFileNameWithoutExtension(path).Substring(3);   // SM_D01 → D01
@@ -244,11 +278,11 @@ namespace BianHe.EditorTools
         /// Materials listed in wc_materials.json (written by build_level1.py --wc) switch to
         /// BianHe/WatercolorLit: painted patch, saturation/value, dappled light, flat colours.
         /// </summary>
-        static void ApplyWatercolor(Material mat, string name, JObject entry = null)
+        static void ApplyWatercolor(Material mat, string name, JObject entry = null, JObject fallback = null)
         {
             if (wcTable == null && File.Exists(WcTablePath)) wcTable = JObject.Parse(File.ReadAllText(WcTablePath));
             if (cookTable == null && File.Exists(CookSetJson)) cookTable = (JObject)JObject.Parse(File.ReadAllText(CookSetJson))["materials"];
-            var e = entry ?? wcTable?[name] ?? cookTable?["C_" + name];
+            var e = entry ?? wcTable?[name] ?? cookTable?["C_" + name] ?? fallback;
             var shader = Shader.Find("BianHe/WatercolorLit");
             if (e == null || shader == null) return;
             mat.shader = shader;
@@ -268,6 +302,50 @@ namespace BianHe.EditorTools
             mat.SetTexture("_NoiseTex", AssetDatabase.LoadAssetAtPath<Texture2D>($"{TextureDir}/wc_noise.png"));
             mat.SetColor("_OutlineColor", new Color(0.42f, 0.27f, 0.19f));
             mat.SetFloat("_OutlineWidth", 1.6f);
+        }
+
+        /// <summary>The watercolor entry build_cook_view.py writes for a food colour (kind food, no painted patch).</summary>
+        static JObject FoodWatercolor(JToken p) => new JObject
+        {
+            ["lit"] = p["lit"], ["shade"] = p["shade"], ["scale"] = 1.0, ["sat"] = 1.28, ["val"] = 1.08,
+            ["kind"] = "food", ["dappled"] = false, ["emissive"] = false,
+        };
+
+        /// <summary>
+        /// Clear glass (GLASS in food_models/core.py, the "glass" of a palette_food.json entry: how opaque it is facing
+        /// the eye and at its edges, its highlights, the ink line inside its rim, its place among the transparent
+        /// things): BianHe/WatercolorGlass, with the colours the watercolor set. Without an entry the material is left
+        /// as it is.
+        /// </summary>
+        static void SetGlass(Material mat, JObject g)
+        {
+            if (g == null) return;
+            var shader = Shader.Find("BianHe/WatercolorGlass");
+            if (shader == null) { Debug.LogWarning("[BianHe] BianHe/WatercolorGlass not found"); return; }
+            mat.shader = shader;
+            mat.SetFloat("_Alpha", (float)g["alpha"]);
+            mat.SetFloat("_EdgeAlpha", (float)g["edge"]);
+            mat.SetFloat("_Gloss", (float?)g["gloss"] ?? 1f);
+            mat.SetFloat("_RimInk", (float?)g["rim"] ?? 1f);
+            mat.renderQueue = 3000 + ((int?)g["order"] ?? 0);   // the far side first: its order is lower
+        }
+
+        /// <summary>
+        /// The meat's painted surface (DETAIL in food_models/core.py, the "detail" of a palette_food.json entry):
+        /// a tileable texture (food_textures.py) box-projected on the model, its pattern tinting the colour and its
+        /// height bumping the light. Without an entry everything is zero, which leaves the material as it was.
+        /// </summary>
+        static void SetDetail(Material mat, JObject d)
+        {
+            var tex = d == null ? null : AssetDatabase.LoadAssetAtPath<Texture2D>($"{TextureDir}/{(string)d["tex"]}.png");
+            if (d != null && tex == null) Debug.LogWarning($"[BianHe] {mat.name}: detail texture {(string)d["tex"]} not found");
+            var color = Color.white;
+            if (tex != null) ColorUtility.TryParseHtmlString((string)d["color"], out color);
+            mat.SetTexture("_DetailTex", tex);
+            mat.SetFloat("_DetailScale", tex != null ? (float)d["scale"] : 20f);
+            mat.SetColor("_DetailColor", color);
+            mat.SetFloat("_DetailAmount", tex != null ? (float)d["amount"] : 0f);
+            mat.SetFloat("_BumpAmount", tex != null ? (float)d["bump"] : 0f);
         }
 
         /// <summary>Adds URP's SSAO to the renderer (pigment pooling in corners), if this URP exposes it.</summary>
@@ -326,10 +404,14 @@ namespace BianHe.EditorTools
             light.color = new Color(1f, 0.97f, 0.9f);
             light.intensity = 1.2f;
             light.shadows = LightShadows.Soft;
-            light.shadowStrength = 1f;
+            light.shadowStrength = 0.7f;   // cast shadows a painted shade darker, as a cartoon's, not black
             light.shadowBias = 0.05f;
             light.shadowNormalBias = 0.3f;
-            lightGo.transform.rotation = Quaternion.LookRotation(-toLight);
+            // the painted light stays where it was (ShadeLight: the light steps and glints); the sun casts the shadows
+            // from high above, from the painted light's side, so that each falls under what casts it and a little
+            // behind: under the tables and the stools, round the wok's foot, in both the hall's view and the kitchen's
+            lightGo.transform.rotation = ShadeLight.ShadowSun(new Vector3(-toLight.x, 0f, -toLight.z), 72f);
+            lightGo.AddComponent<ShadeLight>().toLight = toLight;
 
             RenderSettings.ambientMode = AmbientMode.Flat;
             RenderSettings.ambientLight = new Color(0.8f, 0.78f, 0.72f);
@@ -341,12 +423,12 @@ namespace BianHe.EditorTools
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = UIKit.Hex("#f4ecd9");   // paper, as behind the level art
             cam.nearClipPlane = 1f;
-            cam.farClipPlane = 160f;
+            cam.farClipPlane = 60f;
             camGo.AddComponent<UniversalAdditionalCameraData>();
             var rig = camGo.AddComponent<CameraRig>();
             rig.yaw = yaw;
             rig.pitch = 30f;
-            rig.distance = 70f;
+            rig.distance = 25f;   // orthographic, so only near enough to be inside the shadow distance (was 70: no shadows)
             rig.groundHeight = 0.45f;
 
             var cookModel = AssetDatabase.LoadAssetAtPath<GameObject>(CookSetPath);
@@ -359,10 +441,23 @@ namespace BianHe.EditorTools
                 cookSet = cs.transform;
             }
 
+            // the bigger shops, put away until their stage comes (GameFlow shows one at a time)
+            var shops = new List<Transform> { level.transform };
+            foreach (var path in ShopPaths())
+            {
+                var shopModel = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (shopModel == null) { shops.Add(null); continue; }
+                var shop = (GameObject)PrefabUtility.InstantiatePrefab(shopModel);
+                shop.name = Path.GetFileNameWithoutExtension(path).Replace("SM_", "");
+                shop.SetActive(false);
+                shops.Add(shop.transform);
+            }
+
             var flowGo = new GameObject("GameFlow");
             var flow = flowGo.AddComponent<GameFlow>();
             flow.rig = rig;
             flow.level = level.transform;
+            flow.shops = shops.ToArray();
             flow.cookSet = cookSet;
 
             Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));

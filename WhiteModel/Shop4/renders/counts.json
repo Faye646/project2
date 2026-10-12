@@ -1,0 +1,24 @@
+{
+ "level": 4,
+ "tables": 8,
+ "tables_by_group": {
+  "Hall": 4,
+  "Upstairs": 3,
+  "Yajian": 1
+ },
+ "table_names": [
+  "D_Table_1",
+  "D_Table_2",
+  "D_Table_3",
+  "D_Table_4",
+  "D_Table_5",
+  "D_Table_6",
+  "D_Table_7",
+  "D_Table_8"
+ ],
+ "stools": 32,
+ "woks": 3,
+ "queue": 4,
+ "walkways_under_0.5m": [],
+ "tris": 100298
+}

@@ -1,182 +1,350 @@
 {
  "D01": {
-  "faces": 492,
-  "tris": 768
- },
- "D02": {
-  "faces": 408,
-  "tris": 696
- },
- "D03": {
-  "faces": 500,
-  "tris": 752
+  "faces": 6244,
+  "tris": 6772
  },
  "D01_wok": {
-  "faces": 396,
-  "tris": 600
+  "faces": 5343,
+  "tris": 5343
+ },
+ "D05": {
+  "faces": 7353,
+  "tris": 7839
+ },
+ "D05_wok": {
+  "faces": 6759,
+  "tris": 6759
+ },
+ "D10": {
+  "faces": 6803,
+  "tris": 7955
+ },
+ "D10_wok": {
+  "faces": 5111,
+  "tris": 5381
+ },
+ "D12": {
+  "faces": 6872,
+  "tris": 7512
+ },
+ "D12_wok": {
+  "faces": 6035,
+  "tris": 6115
+ },
+ "D14": {
+  "faces": 6671,
+  "tris": 7683
+ },
+ "D14_wok": {
+  "faces": 6143,
+  "tris": 6723
+ },
+ "D18": {
+  "faces": 7410,
+  "tris": 7818
+ },
+ "D18_wok": {
+  "faces": 7050,
+  "tris": 7178
+ },
+ "D22": {
+  "faces": 4643,
+  "tris": 7902
+ },
+ "D22_wok": {
+  "faces": 4115,
+  "tris": 6942
+ },
+ "D19": {
+  "faces": 7366,
+  "tris": 7798
+ },
+ "D19_wok": {
+  "faces": 4239,
+  "tris": 4239
+ },
+ "D02": {
+  "faces": 6358,
+  "tris": 7238
+ },
+ "D03": {
+  "faces": 5241,
+  "tris": 6637
  },
  "D02_wok": {
-  "faces": 296,
-  "tris": 486
+  "faces": 5638,
+  "tris": 5830
  },
  "D03_wok": {
-  "faces": 388,
-  "tris": 542
+  "faces": 4329,
+  "tris": 4861
  },
- "flour": {
-  "faces": 190,
-  "tris": 344
+ "D04": {
+  "faces": 6643,
+  "tris": 7683
  },
- "greens": {
-  "faces": 220,
-  "tris": 370
+ "D04_wok": {
+  "faces": 5689,
+  "tris": 5881
+ },
+ "D09": {
+  "faces": 6060,
+  "tris": 7068
+ },
+ "D09_wok": {
+  "faces": 5196,
+  "tris": 5388
+ },
+ "D11": {
+  "faces": 6845,
+  "tris": 7925
+ },
+ "D11_wok": {
+  "faces": 5818,
+  "tris": 6010
+ },
+ "D16": {
+  "faces": 6626,
+  "tris": 7586
+ },
+ "D16_wok": {
+  "faces": 5810,
+  "tris": 6002
+ },
+ "D17": {
+  "faces": 4642,
+  "tris": 7556
+ },
+ "D17_wok": {
+  "faces": 3826,
+  "tris": 5972
+ },
+ "D20": {
+  "faces": 4328,
+  "tris": 5288
+ },
+ "D20_wok": {
+  "faces": 3512,
+  "tris": 3704
+ },
+ "D20_spicy": {
+  "faces": 6533,
+  "tris": 7493
+ },
+ "D20_spicy_wok": {
+  "faces": 5717,
+  "tris": 5909
+ },
+ "D23": {
+  "faces": 5804,
+  "tris": 7824
+ },
+ "D23_wok": {
+  "faces": 4944,
+  "tris": 6156
+ },
+ "D06": {
+  "faces": 5614,
+  "tris": 7950
+ },
+ "D06_wok": {
+  "faces": 4686,
+  "tris": 6238
+ },
+ "D07": {
+  "faces": 7462,
+  "tris": 7982
+ },
+ "D07_wok": {
+  "faces": 6942,
+  "tris": 6982
+ },
+ "D08": {
+  "faces": 6315,
+  "tris": 6939
+ },
+ "D08_wok": {
+  "faces": 5675,
+  "tris": 5715
+ },
+ "D13": {
+  "faces": 5153,
+  "tris": 5953
+ },
+ "D13_wok": {
+  "faces": 4337,
+  "tris": 4377
+ },
+ "D15": {
+  "faces": 6072,
+  "tris": 6696
+ },
+ "D15_wok": {
+  "faces": 5448,
+  "tris": 5496
+ },
+ "D21": {
+  "faces": 4201,
+  "tris": 7856
+ },
+ "D21_wok": {
+  "faces": 2024,
+  "tris": 3960
  },
  "pork": {
-  "faces": 228,
-  "tris": 368
- },
- "salt": {
-  "faces": 186,
-  "tris": 332
- },
- "oil": {
-  "faces": 184,
-  "tris": 332
- },
- "scallion": {
-  "faces": 284,
-  "tris": 488
- },
- "ginger": {
-  "faces": 226,
-  "tris": 344
+  "faces": 2950,
+  "tris": 5804
  },
  "chicken": {
-  "faces": 332,
-  "tris": 592
+  "faces": 2688,
+  "tris": 5280
  },
  "duck": {
-  "faces": 488,
-  "tris": 772
+  "faces": 6380,
+  "tris": 7292
  },
  "kidney": {
-  "faces": 304,
-  "tris": 508
+  "faces": 2016,
+  "tris": 3936
  },
  "wing": {
-  "faces": 442,
-  "tris": 676
+  "faces": 6758,
+  "tris": 7862
  },
  "tofu": {
-  "faces": 274,
-  "tris": 520
+  "faces": 1302,
+  "tris": 2484
  },
  "skin": {
-  "faces": 456,
-  "tris": 904
+  "faces": 3256,
+  "tris": 6416
  },
  "fish": {
-  "faces": 372,
-  "tris": 622
+  "faces": 3474,
+  "tris": 6788
  },
  "mandarin_fish": {
-  "faces": 486,
-  "tris": 702
+  "faces": 4226,
+  "tris": 7604
  },
  "fish_head": {
-  "faces": 378,
-  "tris": 640
+  "faces": 3657,
+  "tris": 7122
  },
  "crab": {
-  "faces": 472,
-  "tris": 800
+  "faces": 4088,
+  "tris": 7904
  },
- "rice": {
-  "faces": 476,
-  "tris": 764
+ "greens": {
+  "faces": 7884,
+  "tris": 7884
  },
- "rice_prep": {
-  "faces": 493,
-  "tris": 880
+ "scallion": {
+  "faces": 6040,
+  "tris": 7495
  },
- "pickle_base": {
-  "faces": 480,
-  "tris": 868
- },
- "seafood": {
-  "faces": 469,
-  "tris": 816
- },
- "starch": {
-  "faces": 410,
-  "tris": 720
- },
- "sauerkraut": {
-  "faces": 472,
-  "tris": 832
- },
- "stock": {
-  "faces": 406,
-  "tris": 696
- },
- "pancake": {
-  "faces": 492,
-  "tris": 900
- },
- "egg": {
-  "faces": 472,
-  "tris": 872
+ "ginger": {
+  "faces": 7764,
+  "tris": 7764
  },
  "radish": {
-  "faces": 420,
-  "tris": 732
+  "faces": 7058,
+  "tris": 7128
  },
  "gourd": {
-  "faces": 332,
-  "tris": 466
+  "faces": 3258,
+  "tris": 6516
  },
  "bamboo": {
-  "faces": 390,
-  "tris": 704
+  "faces": 3856,
+  "tris": 7648
  },
  "perilla": {
-  "faces": 397,
-  "tris": 728
+  "faces": 7885,
+  "tris": 7885
  },
  "mushroom": {
-  "faces": 396,
-  "tris": 648
+  "faces": 3512,
+  "tris": 7024
  },
  "tomato": {
-  "faces": 434,
-  "tris": 670
+  "faces": 3692,
+  "tris": 7384
  },
  "chili": {
-  "faces": 342,
-  "tris": 654
+  "faces": 3362,
+  "tris": 6724
  },
  "potato": {
-  "faces": 211,
-  "tris": 312
+  "faces": 7768,
+  "tris": 7768
  },
  "garlic": {
-  "faces": 404,
-  "tris": 728
+  "faces": 7722,
+  "tris": 7722
+ },
+ "flour": {
+  "faces": 1276,
+  "tris": 2408
+ },
+ "rice": {
+  "faces": 4604,
+  "tris": 7924
+ },
+ "rice_prep": {
+  "faces": 6218,
+  "tris": 7578
+ },
+ "pickle_base": {
+  "faces": 5252,
+  "tris": 7214
+ },
+ "seafood": {
+  "faces": 5542,
+  "tris": 7028
+ },
+ "starch": {
+  "faces": 3784,
+  "tris": 7308
+ },
+ "pancake": {
+  "faces": 6903,
+  "tris": 7599
+ },
+ "egg": {
+  "faces": 2592,
+  "tris": 4704
+ },
+ "salt": {
+  "faces": 2612,
+  "tris": 5080
+ },
+ "oil": {
+  "faces": 2818,
+  "tris": 5536
+ },
+ "sauerkraut": {
+  "faces": 6946,
+  "tris": 7906
+ },
+ "stock": {
+  "faces": 3128,
+  "tris": 5888
  },
  "sugar": {
-  "faces": 340,
-  "tris": 616
+  "faces": 3332,
+  "tris": 6496
  },
  "vinegar": {
-  "faces": 424,
-  "tris": 786
+  "faces": 3984,
+  "tris": 7640
  },
  "wine": {
-  "faces": 432,
-  "tris": 824
+  "faces": 4070,
+  "tris": 7900
  },
  "cola": {
-  "faces": 360,
-  "tris": 660
+  "faces": 4200,
+  "tris": 7940
  }
 }

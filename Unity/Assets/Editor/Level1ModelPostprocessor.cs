@@ -14,7 +14,7 @@ namespace BianHe.EditorTools
     {
         const float Quantize = 1e-4f;
 
-        public override uint GetVersion() => 2;   // 2: outline normals from the geometry
+        public override uint GetVersion() => 4;   // 2: outline normals from the geometry; 3: food meshes readable; 4: shops readable
 
         /// <summary>The level model and the food models.</summary>
         static bool IsOurs(string path) => path.StartsWith("Assets/Art/Models/") || path.StartsWith("Assets/Resources/FoodModels/");
@@ -30,7 +30,10 @@ namespace BianHe.EditorTools
             importer.importLights = false;
             importer.importAnimation = false;
             importer.animationType = ModelImporterAnimationType.None;
-            importer.isReadable = false;
+            // the food is fitted into the wok, the trays and onto the table at run time from its vertices and the table's
+            // (CookingScreen, GuestViews), so those meshes stay readable
+            importer.isReadable = assetPath.StartsWith("Assets/Resources/FoodModels/") || assetPath.EndsWith("SM_Level1.fbx") ||
+                                  assetPath.StartsWith("Assets/Art/Models/SM_Shop");
             importer.meshCompression = ModelImporterMeshCompression.Off;
         }
 

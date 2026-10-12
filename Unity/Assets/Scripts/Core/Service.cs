@@ -198,6 +198,12 @@ namespace BianHe.Core
             }
         }
 
+        /// <summary>A party comes in at once (if the day's plan has room left): for the shop's photographs.</summary>
+        public void ArriveNow(long nowMs)
+        {
+            if (stage != null && arrived < planned) SpawnParty(nowMs);
+        }
+
         int FreeTable()
         {
             for (int t = 0; t < tables; t++)
@@ -268,16 +274,21 @@ namespace BianHe.Core
             if (q == Quality.Burnt) { Wasted++; return false; }
             var target = Pending().FirstOrDefault(x => x.plate.Dish.Id == dish.Id);
             if (target.plate == null) { Wasted++; return false; }
-            target.plate.Served = true;
-            target.plate.Quality = q;
-            var p = target.party;
-            if (p.AllServed)
+            Serve(target.party, target.plate, q, now);
+            return true;
+        }
+
+        /// <summary>One plate set before its guest; the party starts eating once everything is on the table.</summary>
+        public void Serve(Party p, Plate plate, Quality q, long now)
+        {
+            plate.Served = true;
+            plate.Quality = q;
+            if (p.State == PartyState.Waiting && p.AllServed)
             {
                 p.State = PartyState.Dining;
                 p.DiningEndsMs = now + ServiceRules.DiningMs(p.HardestDifficulty);
                 Say(p, $"{p.Table + 1} 号桌菜上齐了，开吃");
             }
-            return true;
         }
 
         void Checkout(Party p)

@@ -1,0 +1,18 @@
+{
+ "level": 2,
+ "tables": 4,
+ "tables_by_group": {
+  "Hall": 4
+ },
+ "table_names": [
+  "D_Table_1",
+  "D_Table_2",
+  "D_Table_3",
+  "D_Table_4"
+ ],
+ "stools": 16,
+ "woks": 5,
+ "queue": 4,
+ "walkways_under_0.5m": [],
+ "tris": 59808
+}

@@ -16,12 +16,17 @@ namespace BianHe
     /// camera draws nothing, so the two screens never overlap. The hall HUD runs the business day:
     /// 开门前 → 营业 (6 minutes) → 打烊结算 → next day.
     ///
-    /// Run a player with  -shots &lt;folder&gt;  to save the demo screenshots there and quit.
+    /// The shop grows with the 声望 stage: shops[0] is 初始·1桌, shops[1…5] the shop at 一级 … 五级 (build_shop.py), each
+    /// with as many of its tables as the stage allows; the day after an upgrade opens in the new shop.
+    ///
+    /// Run a player with  -shots &lt;folder&gt;  to save the demo screenshots there and quit;  -stage &lt;id&gt;  (1_1, 1_2, 1_3, 2 … 5)
+    /// starts at that stage;  -shopshot &lt;folder&gt;  photographs that stage's shop with every table taken, then quits.
     /// </summary>
     public class GameFlow : MonoBehaviour
     {
         public CameraRig rig;
-        public Transform level;
+        public Transform level;     // the shop on show (one of shops)
+        public Transform[] shops;   // 初始, 一级 … 五级 (missing ones null: the nearest lower one stands in)
         public Transform cookSet;   // the 3D kitchen counter set the cooking screen looks at
         public string stationName = "K_AnTai";
 
@@ -40,6 +45,7 @@ namespace BianHe
         int sceneMask;
         Vector3 homeCenter;
         float homeSize;
+        int shopIndex = -1;
 
         void Start()
         {
@@ -48,18 +54,18 @@ namespace BianHe
                 new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
 
             session = new GameSession();
-
-            var st = FindDeep(level, stationName);
-            if (st != null)
+            var args = System.Environment.GetCommandLineArgs();
+            int si = System.Array.IndexOf(args, "-stage");
+            if (si >= 0 && si + 1 < args.Length)
             {
-                station = st.gameObject.AddComponent<CookStation>();
-                station.Setup(rig.Cam);
+                var stage = session.Data.Stages.FirstOrDefault(x => x.Id == args[si + 1]);
+                if (stage != null) session.Xp = stage.Xp;
+                else Debug.LogError($"GameFlow: no stage '{args[si + 1]}'");
             }
-            else Debug.LogError($"GameFlow: no '{stationName}' under {level.name}");
+            if (shops == null || shops.Length == 0) shops = new[] { level };
 
             guests = new GameObject("Guests").AddComponent<GuestViews>();
-            guests.Setup(level, rig.Cam);
-            session.Service.Notice += (party, msg) => Notice(msg);
+            session.Service.Notice += Notice;
 
             cooking = new GameObject("Cooking").AddComponent<CookingScreen>();
             cooking.Build(session, cookSet);
@@ -67,38 +73,84 @@ namespace BianHe
 
             rig.Tapped += OnTap;
             sceneMask = rig.Cam.cullingMask;
-            FitRig();
+            ApplyStage();
             BuildHud();
 
-            var args = System.Environment.GetCommandLineArgs();
             int i = System.Array.IndexOf(args, "-shots");
             if (i >= 0 && i + 1 < args.Length) StartCoroutine(TakeShots(args[i + 1]));
+            int ss = System.Array.IndexOf(args, "-shopshot");
+            if (ss >= 0 && ss + 1 < args.Length) StartCoroutine(ShopShot(args[ss + 1]));
+            if (System.Array.IndexOf(args, "-video") >= 0) StartCoroutine(PlayForVideo());
+            int w = System.Array.IndexOf(args, "-wok");
+            if (w >= 0 && w + 1 < args.Length)
+                StartCoroutine(WokShots(args[w + 1], w + 2 < args.Length && !args[w + 2].StartsWith("-") ? args[w + 2] : "D08"));
+        }
+
+        /// <summary>Which shop a stage keeps: 初始·1桌 for 一级①, the 一级 shop for ②③, then one per level.</summary>
+        static int ShopFor(StageInfo s) => s.Id switch { "1_1" => 0, "1_2" or "1_3" => 1, "2" => 2, "3" => 3, "4" => 4, "5" => 5, _ => 0 };
+
+        /// <summary>The shop for the current stage on show, with as many tables as the stage allows (until tables are
+        /// bought one by one, a stage comes with all of them).</summary>
+        void ApplyStage()
+        {
+            UseShop(ShopFor(session.Stage));
+            session.TablesInShop = Mathf.Max(1, Mathf.Min(session.Stage.TableCap, guests.TableCount));
+            guests.ShowTables(session.TablesInShop);
+        }
+
+        void UseShop(int idx)
+        {
+            idx = Mathf.Clamp(idx, 0, shops.Length - 1);
+            while (idx > 0 && shops[idx] == null) idx--;
+            if (idx == shopIndex) return;
+            shopIndex = idx;
+            for (int k = 0; k < shops.Length; k++)
+                if (shops[k]) shops[k].gameObject.SetActive(k == idx);
+            level = shops[idx];
+            var st = FindDeep(level, stationName);
+            station = st ? st.GetComponent<CookStation>() : null;
+            if (st && !station)
+            {
+                station = st.gameObject.AddComponent<CookStation>();
+                station.Setup(rig.Cam);
+            }
+            if (!st) Debug.LogError($"GameFlow: no '{stationName}' under {level.name}");
+            guests.Setup(level, rig.Cam);
+            FitRig();
         }
 
         /// <summary>Clamp and zoom limits from the level's bounds, then show the whole shop.</summary>
         void FitRig()
         {
             var b = new Bounds(level.position, Vector3.zero);
-            foreach (var r in level.GetComponentsInChildren<Renderer>()) b.Encapsulate(r.bounds);
+            var parts = level.GetComponentsInChildren<Renderer>();
+            foreach (var r in parts) b.Encapsulate(r.bounds);
             rig.bounds = new Rect(b.min.x, b.min.z, b.size.x, b.size.z);
 
-            // size that fits all eight corners of the bounds in view
+            // the shop as the camera sees it: the corners of each part's box in view space (not the corners of the
+            // whole shop's box, whose empty corners would push an L-shaped shop off the middle of the screen)
             var rot = Quaternion.Euler(rig.pitch, rig.yaw, 0);
             var inv = Quaternion.Inverse(rot);
-            float w = 0, h = 0;
-            var c = b.center;
-            for (int k = 0; k < 8; k++)
+            float x0 = float.MaxValue, x1 = float.MinValue, y0 = float.MaxValue, y1 = float.MinValue;
+            foreach (var r in parts)
             {
-                var corner = new Vector3((k & 1) == 0 ? b.min.x : b.max.x, (k & 2) == 0 ? b.min.y : b.max.y, (k & 4) == 0 ? b.min.z : b.max.z);
-                var v = inv * (corner - c);
-                w = Mathf.Max(w, Mathf.Abs(v.x));
-                h = Mathf.Max(h, Mathf.Abs(v.y));
+                var rb = r.bounds;
+                for (int k = 0; k < 8; k++)
+                {
+                    var corner = new Vector3((k & 1) == 0 ? rb.min.x : rb.max.x, (k & 2) == 0 ? rb.min.y : rb.max.y, (k & 4) == 0 ? rb.min.z : rb.max.z);
+                    var v = inv * corner;
+                    x0 = Mathf.Min(x0, v.x); x1 = Mathf.Max(x1, v.x);
+                    y0 = Mathf.Min(y0, v.y); y1 = Mathf.Max(y1, v.y);
+                }
             }
+            if (x0 > x1) { x0 = x1 = y0 = y1 = 0; }
             float aspect = (float)Screen.width / Screen.height;
-            homeSize = Mathf.Max(h, w / aspect) * 1.06f;
+            // room above and below for the HUD (the title and the day's bar at the top, the hint at the bottom)
+            homeSize = Mathf.Max((y1 - y0) / 2 * 1.3f, (x1 - x0) / 2 / aspect * 1.08f);
             rig.maxSize = homeSize * 1.15f;
             rig.minSize = 1.8f;
-            // pivot on the ground plane under the bounds' centre, along the view ray
+            // pivot on the ground plane where the view ray through the middle of all that meets it
+            var c = rot * new Vector3((x0 + x1) / 2, (y0 + y1) / 2, Vector3.Dot(inv * b.center, Vector3.forward));
             var fwd = rot * Vector3.forward;
             float t = (rig.groundHeight - c.y) / fwd.y;
             homeCenter = c + fwd * t;
@@ -164,7 +216,11 @@ namespace BianHe
             next.pivot = new Vector2(0.5f, 0);
             next.anchoredPosition = new Vector2(0, 40);
             next.sizeDelta = new Vector2(300, 90);
-            UIKit.Button(next, "下一天", 40, UIKit.Accent, Color.white, () => session.Day.NextDay());
+            UIKit.Button(next, "下一天", 40, UIKit.Accent, Color.white, () =>
+            {
+                session.Day.NextDay();
+                ApplyStage();   // an upgrade opens the next day in the bigger shop
+            });
             settlement.gameObject.SetActive(false);
         }
 
@@ -179,12 +235,19 @@ namespace BianHe
             }
         }
 
-        void Notice(string msg)
+        void Notice(string msg) => Notice(null, msg);
+
+        void Notice(Party party, string msg)
         {
             noticeText.text = msg;
             noticeText.transform.parent.gameObject.SetActive(true);
             noticeUntil = Time.time + 3f;
-            if (msg.Contains("结账")) guests.Flash(msg.Substring(msg.IndexOf("结账")));
+            if (party != null && msg.Contains("结账"))   // the bill over the table that paid: 结账 N 文
+            {
+                var bill = msg.Substring(msg.IndexOf("结账"));
+                int cut = bill.IndexOf(" · ");
+                guests.Flash(party.Table, cut > 0 ? bill.Substring(0, cut) : bill);
+            }
         }
 
         void Update()
@@ -193,6 +256,7 @@ namespace BianHe
             long now = GameSession.NowMs;
             var day = session.Day;
             session.Tick();
+            session.TickKitchen();
             guests.Sync(session.Service, now);
             if (noticeText.transform.parent.gameObject.activeSelf && Time.time > noticeUntil)
                 noticeText.transform.parent.gameObject.SetActive(false);
@@ -224,7 +288,8 @@ namespace BianHe
             settlement.gameObject.SetActive(settling);
             if (settling) noticeText.transform.parent.gameObject.SetActive(false);
 
-            station?.SetAlert(session.AnyStoveCooking() ? "锅里有菜！" : session.AnyTrayWaiting ? "有菜待端" : null);
+            station?.SetAlert(session.AnyStoveCooking() ? "锅里有菜！" : session.AnyWokDone ? "可以装盘" :
+                              session.AnyTrayWaiting ? "有菜待端" : null);
         }
 
         string SettlementText()
@@ -284,7 +349,207 @@ namespace BianHe
             return null;
         }
 
+        // ------------------------------------------------------------------ the demo video
+
+        /// <summary>The camera eased from where it is to a new centre and size over `seconds`.</summary>
+        IEnumerator Glide(Vector3 center, float size, float seconds)
+        {
+            Vector3 c0 = rig.Pivot;
+            float s0 = rig.Cam.orthographicSize;
+            for (float t = 0; t < seconds; t += Time.unscaledDeltaTime)
+            {
+                float e = Mathf.SmoothStep(0f, 1f, t / seconds);
+                rig.Frame(Vector3.Lerp(c0, center, e), Mathf.Lerp(s0, size, e));
+                yield return null;
+            }
+            rig.Frame(center, size);
+        }
+
+        /// <summary>
+        /// Run a player with  -video  to play the demo by itself for a screen recording (about a minute and a half),
+        /// then quit: the shop opens and the first table orders; in the kitchen each ordered dish is cooked the
+        /// player's way (its raw ingredients tapped into the wok one by one, tossed, 出锅 in the gold, 装盘 to a
+        /// tray) and carried out; the table eating in the hall; then back in the kitchen a run of the other dishes
+        /// (raw ingredients tossed, 出锅 in the gold, the finished dish in the wok, plated onto the trays); and the
+        /// whole shop again.
+        /// </summary>
+        IEnumerator PlayForVideo()
+        {
+            var table = FindDeep(level, "D_Table_1");
+            var atTable = table.position + new Vector3(-0.5f, 0, -0.8f);
+            yield return new WaitForSecondsRealtime(3.0f);              // the whole shop
+            OnDayButton();                                              // 开门营业
+            yield return Glide(atTable, 3.2f, 2.5f);
+            yield return new WaitForSecondsRealtime(4.0f);              // the guests come in and sit down
+            yield return OpenCooking();
+            yield return new WaitForSecondsRealtime(1.5f);
+            // the orders, cooked the player's way and carried out
+            while (cooking.DemoSelectPending() != null)
+            {
+                yield return new WaitForSecondsRealtime(0.6f);
+                foreach (var id in cooking.DemoNeeds())
+                {
+                    cooking.DemoTap(id);                                // dropped into the wok
+                    yield return new WaitForSecondsRealtime(0.35f);
+                }
+                yield return new WaitForSecondsRealtime(1.8f);          // tossed about
+                while (!cooking.NeedleInGold()) yield return null;
+                cooking.DemoTakeOut();                                  // 出锅: the finished dish in the wok
+                yield return new WaitForSecondsRealtime(1.3f);
+                cooking.DemoPlate();                                    // 装盘
+                yield return new WaitForSecondsRealtime(1.0f);
+                cooking.DemoServeAll();                                 // carried to the table
+                yield return new WaitForSecondsRealtime(0.4f);
+            }
+            // the table eating, their dishes in front of them, and close up on the table
+            yield return new WaitForSecondsRealtime(1.0f);
+            cooking.Close();
+            rig.Frame(atTable, 3.2f);
+            yield return new WaitForSecondsRealtime(0.8f);
+            float minSize = rig.minSize;
+            rig.minSize = 0.5f;
+            // the pivot moved back along the view so that the table top (0.78 m up) sits in the middle of it
+            var f = rig.Cam.transform.forward;
+            var fh = new Vector3(f.x, 0, f.z);
+            float tanPitch = -f.y / Mathf.Max(fh.magnitude, 1e-4f);
+            var tableTop = table.position + fh.normalized * (0.78f / Mathf.Max(tanPitch, 0.1f));
+            yield return Glide(tableTop, 0.62f, 3.0f);
+            yield return new WaitForSecondsRealtime(3.5f);
+            yield return Glide(table.position + new Vector3(-0.2f, 0, -0.3f), 2.3f, 2.0f);
+            rig.minSize = minSize;
+            // back in the kitchen, the other dishes: raw ingredients tossed, 出锅 in the gold, plated; now and then
+            // close up on the wok (raw → the finished dish) and on the trays (the plated dishes)
+            yield return OpenCooking();
+            cooking.DemoQuiet = true;
+            yield return new WaitForSecondsRealtime(1.0f);
+            var dishes = new[] { "D10", "D07", "D19", "D18", "D12", "D14", "D15", "D13", "D22" };
+            for (int k = 0; k < dishes.Length; k++)
+            {
+                bool closeUp = k % 3 == 1;                              // the middle dish of each three, in the wok
+                cooking.DemoShowcase(dishes[k]);
+                if (closeUp) yield return cooking.DemoCloseUp(cooking.DemoWok + Vector3.up * 0.05f, 1.35f, 1.2f);
+                yield return new WaitForSecondsRealtime(closeUp ? 2.2f : 2.0f);   // tossed about
+                while (!cooking.NeedleInGold()) yield return null;
+                cooking.DemoTakeOut();
+                yield return new WaitForSecondsRealtime(closeUp ? 2.0f : 1.4f);
+                if (closeUp) yield return cooking.DemoCloseUp(Vector3.zero, 0f, 1.0f);
+                cooking.DemoPlate();
+                yield return new WaitForSecondsRealtime(1.0f);
+                if (cooking.DemoTraysFull())                            // three plated: close up on them
+                {
+                    yield return cooking.DemoCloseUp(cooking.DemoTrays + Vector3.up * 0.06f, 1.45f, 1.4f);
+                    yield return new WaitForSecondsRealtime(3.0f);
+                    yield return cooking.DemoCloseUp(Vector3.zero, 0f, 1.2f);
+                    cooking.DemoClearTrays();
+                    yield return new WaitForSecondsRealtime(0.4f);
+                }
+            }
+            yield return new WaitForSecondsRealtime(1.0f);
+            cooking.DemoClearTrays();
+            cooking.Close();                                            // the whole shop again
+            rig.Frame(table.position + new Vector3(-0.2f, 0, -0.3f), 2.3f);
+            yield return Glide(homeCenter, homeSize, 3.0f);
+            yield return new WaitForSecondsRealtime(2.0f);
+            Application.Quit();
+        }
+
         // ------------------------------------------------------------------ automated screenshots
+
+        /// <summary>
+        /// Run a player with  -wok &lt;dir&gt; [D08,D07,…]  to look at the raw pieces in the wok: each listed dish is cooked
+        /// at once (its raw ingredients straight in) and seen close up while they are tossed, a picture every 0.17 s
+        /// for a toss and a half (wok_&lt;dish&gt;_&lt;k&gt;.png), then the finished dish in the wok (wok_&lt;dish&gt;_done.png);
+        /// then it quits.
+        /// </summary>
+        IEnumerator WokShots(string dir, string dishes)
+        {
+            Directory.CreateDirectory(dir);
+            yield return new WaitForSecondsRealtime(1.0f);
+            yield return OpenCooking();
+            cooking.DemoQuiet = true;
+            yield return new WaitForSecondsRealtime(0.8f);
+            foreach (var id in dishes.Split(','))
+            {
+                cooking.DemoShowcase(id);
+                yield return cooking.DemoCloseUp(cooking.DemoWok + Vector3.up * 0.05f, 1.0f, 0.6f);
+                yield return new WaitForSecondsRealtime(0.6f);
+                for (int k = 0; k < 8; k++)
+                {
+                    yield return new WaitForEndOfFrame();
+                    ScreenCapture.CaptureScreenshot(Path.Combine(dir, $"wok_{id}_{k}.png"));
+                    yield return new WaitForSecondsRealtime(0.17f);
+                }
+                while (!cooking.NeedleInGold()) yield return null;
+                cooking.DemoTakeOut();
+                yield return new WaitForSecondsRealtime(1.0f);
+                yield return new WaitForEndOfFrame();
+                ScreenCapture.CaptureScreenshot(Path.Combine(dir, $"wok_{id}_done.png"));
+                yield return new WaitForSecondsRealtime(0.4f);
+                cooking.DemoPlate();
+                yield return new WaitForSecondsRealtime(1.2f);
+                cooking.DemoClearTrays();
+                yield return cooking.DemoCloseUp(Vector3.zero, 0f, 0.3f);
+            }
+            Application.Quit();
+        }
+
+        /// <summary>
+        /// -shopshot: the shop of the stage it was started at (-stage), photographed empty, then with a party at every
+        /// table (every other table served, its dishes on the table; the rest waiting), whole and close on the tables:
+        /// shop_&lt;stage&gt;_empty / shop_&lt;stage&gt; / shop_&lt;stage&gt;_tables.png. Then it quits.
+        /// </summary>
+        IEnumerator ShopShot(string dir)
+        {
+            Directory.CreateDirectory(dir);
+            string id = session.Stage.Id;
+            IEnumerator Shot(string name)
+            {
+                yield return new WaitForEndOfFrame();
+                ScreenCapture.CaptureScreenshot(Path.Combine(dir, name + ".png"));
+                yield return new WaitForSecondsRealtime(0.4f);
+            }
+            yield return new WaitForSecondsRealtime(1.5f);
+            yield return Shot($"shop_{id}_empty");
+            OnDayButton();                                      // 开门营业
+            for (int k = 0; k < session.TablesInShop; k++) session.Service.ArriveNow(GameSession.NowMs);
+            yield return new WaitForSecondsRealtime(0.6f);      // seated, orders taken
+            foreach (var p in session.Service.Parties.Where(p => p.State == PartyState.Waiting && p.Table % 2 == 0).ToList())
+                foreach (var pl in p.Plates.Where(x => !x.Served).ToList())
+                    session.Service.Serve(p, pl, Quality.Perfect, GameSession.NowMs);
+            yield return new WaitForSecondsRealtime(1.0f);
+            yield return Shot($"shop_{id}");
+            // close on the tables
+            var b = new Bounds();
+            bool any = false;
+            foreach (var t in level.GetComponentsInChildren<Transform>().Where(x => x.name.StartsWith("D_Table_")))
+                foreach (var r in t.GetComponentsInChildren<Renderer>())
+                {
+                    if (!any) { b = r.bounds; any = true; }
+                    else b.Encapsulate(r.bounds);
+                }
+            if (any)
+            {
+                b.Expand(new Vector3(2.4f, 4.0f, 2.4f));   // the stools round the tables, and the bubbles over them
+                var rot = Quaternion.Euler(rig.pitch, rig.yaw, 0);
+                var inv = Quaternion.Inverse(rot);
+                float w = 0, h = 0;
+                for (int k = 0; k < 8; k++)
+                {
+                    var corner = new Vector3((k & 1) == 0 ? b.min.x : b.max.x, (k & 2) == 0 ? b.min.y : b.max.y, (k & 4) == 0 ? b.min.z : b.max.z);
+                    var v = inv * (corner - b.center);
+                    w = Mathf.Max(w, Mathf.Abs(v.x));
+                    h = Mathf.Max(h, Mathf.Abs(v.y));
+                }
+                var fwd = rot * Vector3.forward;
+                float minSize = rig.minSize;
+                rig.minSize = 0.5f;
+                rig.Frame(b.center + fwd * ((rig.groundHeight - b.center.y) / fwd.y), Mathf.Max(h, w / ((float)Screen.width / Screen.height)));
+                yield return new WaitForSecondsRealtime(0.5f);
+                yield return Shot($"shop_{id}_tables");
+                rig.minSize = minSize;
+            }
+            Application.Quit();
+        }
 
         IEnumerator TakeShots(string dir)
         {
@@ -313,10 +578,16 @@ namespace BianHe
                 yield return new WaitForSecondsRealtime(1.0f);
                 while (cooking.NeedleInGold()) yield return null;   // wait for the next pass through the gold
                 if (n == 0) yield return Shot("4_cooking");
+                if (n == 0) yield return Shot("4b_cooking");   // the raw ingredients a moment later, mid-toss
                 while (!cooking.NeedleInGold()) yield return null;
                 cooking.DemoTakeOut();
-                yield return new WaitForSecondsRealtime(0.3f);
-                if (n == 0) yield return Shot("5_out_of_the_wok");
+                yield return new WaitForSecondsRealtime(0.6f);
+                if (n == 0) yield return Shot("5_out_of_the_wok");    // the finished dish in the wok
+                cooking.DemoPlate();
+                yield return new WaitForSecondsRealtime(0.25f);
+                if (n == 0) yield return Shot("5a_plating");           // flying to its tray
+                yield return new WaitForSecondsRealtime(0.5f);
+                if (n == 0) yield return Shot("5b_plated");
                 cooking.DemoServeAll();
                 yield return new WaitForSecondsRealtime(0.2f);
                 n++;

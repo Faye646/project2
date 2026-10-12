@@ -10,6 +10,19 @@
 | --- | --- |
 | `汴河两岸_完整设计文档.pdf` | 全部设计合成一份，带目录和书签：项目概述，玩法与数值（含名流家宴、正店比拼），菜谱与食材，剧情与对话，美术资产，技术方案，经营数值核算，待定事项与文件说明 |
 | `汴河两岸_菜品与家宴数据.json` | 程序数据（schema 1.3）：23 道菜、食材、调料、酒、家宴、时令、预约、点单选项、改良版、新菜反应、验货、经营数值、名流各自的条件、正店比拼和成就；菜品 ID 固定，和总文档一致，改过的键名见文件末尾的 change_log |
+| `Unity/` | 可以玩的手机版 demo：开店、做菜、端菜、结账，店面从初始一路升到五级，见「Unity demo」 |
+| `WhiteModel/StyleTest/` | 进度图：`游戏实拍_截图.png`（游戏里实拍）、`全部菜品原料调料_总图.png`（全部菜、原料和调料，原图对照游戏里的样子），以及各次修改的描线图和前后对比 |
+
+## 目录
+
+| 路径 | 内容 |
+| --- | --- |
+| `设计源文件/` | 总文档和四份分册的源文本（`*.src.txt`）、生成脚本 `build_docs.py`、经营模拟 `economy_sim.py` |
+| `原始PDF/` | 原来的 PDF，留作对照（见下） |
+| `新建文件夹/` | 菜、食材、调料的原图，3D 模型照着它们一比一还原 |
+| `WhiteModel/` | Blender 脚本和它们导出的模型：店面场景（`build_level1.py`、`build_shop.py`），菜、食材和调料（`build_food.py`、`food_models/`），做饭界面的 3D 案台（`build_cook_view.py`），纹璃宫灯（`build_wenli_gongdeng.py`），画风样张（`style_test.py`） |
+| `Unity/` | 手机版 demo 的 Unity 工程（URP）；打包结果输出到 `Builds/`，不进仓库 |
+| `纹璃宫灯_1_白模.png`、`纹璃宫灯_3_水彩.png` | 纹璃宫灯的过程图（Blender 截图） |
 
 ## 原始PDF/
 
@@ -22,15 +35,6 @@
 | `技术(1)` | 手机厨房技术"掌厨镜"和"试味回路"；验货已改为玩家做，内容并入总文档第六部分 |
 | `大纲` | 项目提案：饭馆经营、卷轴地图、博物馆互动三部分和八周计划；并入总文档第一部分 |
 | `机制(1)`、`剧情流程+对话总和`、`汴河两岸_菜单食材与经营细则`、`资产` | 早期稿，已被取代 |
-
-## 目录
-
-- `设计源文件/`：总文档和四份分册的源文本（`*.src.txt`）、生成脚本 `build_docs.py`、经营模拟 `economy_sim.py`。
-- `WhiteModel/`：纹璃宫灯白模，包括生成脚本、`.blend` 和 `.fbx`（高模、约 3000 面、500 面定稿）、预览渲染、水彩脚本和过程图截图脚本。
-- `纹璃宫灯_1_白模.png`、`纹璃宫灯_3_水彩.png`：纹璃宫灯的过程图（Blender 截图）。
-- `WhiteModel/build_level1.py`、`WhiteModel/Level1/`：初始关卡（一级·1 桌）的场景白模。
-- `WhiteModel/build_food.py`、`WhiteModel/Food/`：开局 3 道菜，和设计数据里除 6 种酒以外的全部 38 样食材、调料的 3D 白模，另有一个通用的青瓷酒壶 `wine`（按 `酒_待定.png` 做，等每种酒有了图再分开）。每件 ≤500 面。Unity 里放在 `Resources/FoodModels`，一键设置时套上水彩材质，渲成 `Resources/Food3D` 的立体图给界面用。原图和游戏里样子的对照见 `WhiteModel/Food/新食材对照.png`。
-- `Unity/`：手机版 demo 的 Unity 工程（见下面「Unity demo」）。打包结果输出到 `Builds/`，不进仓库。
 
 ## 修改设计文档
 
@@ -56,7 +60,183 @@ python build_docs.py ../原始PDF wanfa caipu juqing zichan          # 四份分
 
 GPT 整理的三份专题稿没有源文本。9 月 26 日删学徒时，是直接在这三份 PDF 和《技术(1)》上替换了相关的句子，版式不变；之后的设计改动只进总文档和 JSON。
 
-## 白模与三渲二
+## Unity demo
+
+用 Unity 6000.5.3f1（URP）打开 `Unity/`，运行 `Scenes/Level1`。改了模型或颜色以后，跑一次菜单 BianHe ▸ Setup Level1：重建材质、场景、渲染管线和打包设置，并重新烘焙界面用的菜品立体图。
+
+### 怎么玩
+
+- 前堂：单指拖动，双指缩放，「全景」复位。「开门营业」后客人按当前声望阶段的节奏来，有空桌就入座点菜，营业 6 分钟后打烊结算。每张桌子上方有一个气泡（等菜几份和剩下的耐心、催单、用餐中、结账），门口排队的客人另有一个气泡。耐心用完会催单，再过 15 秒离店。
+- 做菜：点「案台」进入做饭界面（3D 案台场景）。
+  1. 选菜，点亮起来的食材和调味，生原料一样样掉进锅里。
+  2. 放齐就开火，原料在锅里上下翻炒，在空中翻面。
+  3. 指针在金色里时点「出锅」，锅里的原料变成成品。
+  4. 点「装盘」，或者打开「自动装盘」（出锅一秒多后自己装），菜飞到放置区的空托盘上。
+  5. 点托盘，把菜端给客人。
+- 出锅判定、自动做的计数、评价概率和经验都按总文档第二部分和 JSON 里的 `rules.service`。
+- 店面随声望升级：打烊结算时升了级，第二天开门就是新店面。还没有买桌子和扩建二楼的界面，升到哪一级就给齐那一级的桌子。
+
+| 声望阶段 | 累计经验 | 店面 | 桌子 | 每天客人上限 |
+| --- | --- | --- | --- | --- |
+| 一级① 初出茅庐 | 0 | 初始·1 桌 | 1 | 12 |
+| 一级② | 60 | 一级店面 | 2 | 18 |
+| 一级③ | 150 | 一级店面 | 3 | 24 |
+| 二级 市井买卖 | 300 | 二级店面 | 4 | 36 |
+| 三级 小有名气 | 650 | 三级店面（有二楼和雅间） | 6 | 54 |
+| 四级 声名鹊起 | 1200 | 四级店面 | 8 | 72 |
+| 五级 名动一方 | 2100 | 五级店面 | 12 | 96 |
+
+### 画面
+
+- 画风（老师认可的 C 版）：3D 模型 + 从手绘图截取的贴图 + 水彩式分层光影，着色器 `Assets/Art/Shaders/WatercolorLit.shader`（Blender 端是 `WhiteModel/wc_materials.py`）。可乐瓶是透明玻璃，用 `WatercolorGlass.shader`。
+- 影子是卡通投影：只落在地面、凳面、桌面、灶台这类朝上的面上，平涂一种偏冷的深色，边缘干净。投影用的太阳在高处（仰角 72°），和画面受光在同一侧，影子落在东西正下方、稍偏后。画面的明暗方向另由太阳上的 `ShadeLight` 交给着色器，不跟着太阳走。前堂摄像机的近、远裁剪面随缩放收紧（`CameraRig`），阴影贴图只盖住看得见的范围，边缘更清楚。纸片人客人脚下是一块圆形的影子。
+- 摆放不穿模（`Assets/Scripts/FoodFit.cs`；食物模型按可读网格导入，运行时量顶点）：
+  - 锅里：生原料按大小在锅底排一圈，靠着锅的弧度斜放；翻面时跳得够高，转起来碰不到锅和旁边的原料。出锅后的成品缩进锅内，再按锅底的弧度弯曲贴合。
+  - 放置区：菜放大或缩小到正好填满自己的格子，不碰格子边。
+  - 案板：食材前后两排，各占一格。
+  - 餐桌：端上桌的菜转向镜头（菜是照原图的视角建的，从侧面看会像被拉变形），在点菜的客人面前一字排开，互相不重叠，也不碰茶杯。
+
+### 代码
+
+| 文件（`Unity/Assets/`） | 做什么 |
+| --- | --- |
+| `Scripts/Core/` | 规则，不依赖 Unity，可单测：营业日 `BusinessDay`、客人与评价 `Service`、灶台与出锅判定 `Stove`、`CookRules`，自动做的计数 `CookBook`，读设计数据 `GameData` |
+| `Scripts/GameFlow.cs` | 整体流程：前堂和做饭界面的切换、营业按钮和结算、按声望换店面、自动截图和演示模式 |
+| `Scripts/GameSession.cs` | 跨界面的状态：钱、经验、灶台、锅里的菜、放置区、当天的客人 |
+| `Scripts/CookingScreen.cs` | 做饭界面：3D 案台、选菜、食材板、锅里翻炒、出锅、装盘、火候表 |
+| `Scripts/GuestViews.cs` | 前堂的纸片人客人、每张桌子的气泡、端上桌的菜 |
+| `Scripts/FoodFit.cs` | 量食物模型，把它放进锅、格子和桌面而不穿模 |
+| `Scripts/CameraRig.cs` | 前堂摄像机：拖动、缩放、裁剪面、描边粗细 |
+| `Scripts/ShadeLight.cs` | 把画面受光的方向和投影用的太阳分开 |
+| `Scripts/CookStation.cs` | 前堂里可以点的案台和它头上的提示 |
+| `Scripts/UIKit.cs`、`Scripts/JObjectLite.cs` | 界面小工具；读 `cook_set.json` |
+| `Editor/ProjectSetup.cs` | 一键设置：材质、场景、渲染管线、菜品立体图、打包 |
+| `Editor/Level1ModelPostprocessor.cs` | 导入模型：给描边用的平滑法线，店面和食物的网格保持可读 |
+| `Art/Shaders/` | `WatercolorLit`（水彩光影、卡通投影、食物的光泽和细节纹理）、`WatercolorGlass`（透明玻璃）、`PaintedCard`（案台场景里的手绘卡片） |
+
+字体是 Noto Sans SC 的子集（SIL OFL，见 `Assets/Resources/Fonts/`），加了新文字后用 `Unity/Tools/build_font.py` 重新生成。
+
+### 测试、截图与打包
+
+菜单 BianHe 里也有这些：
+
+```
+Unity -batchmode -projectPath Unity -runTests -testPlatform EditMode            # 规则单测
+Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.SetupAll        # 同菜单 Setup Level1
+Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildAndroid    # Builds/BianHe_Level1.apk
+Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildWebGL      # Builds/WebGL，手机浏览器（含 iPhone Safari）可玩
+Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildWindows    # Builds/Windows
+Builds/Windows/BianHe.exe -shots <文件夹>                       # 自动玩一桌客人并截图
+Builds/Windows/BianHe.exe -stage 2 -shopshot <文件夹>           # 从某个声望阶段开始（1_1、1_2、1_3、2…5），给那一级的店面坐满客人拍照
+Builds/Windows/BianHe.exe -wok <文件夹> D08,D07                 # 直接做这几道菜，拍锅里翻炒和出锅的特写
+python Unity/Tools/record_video.py <视频.mp4>                  # 自动演示并录屏（-video：开店、做菜、上桌、锅里和放置区特写），约两分钟
+python Unity/Tools/webgl_touch_test.py http://127.0.0.1:8765/ <文件夹>   # 模拟 iPhone 触屏测网页版
+```
+
+iOS 原生包需要 Mac 和 Xcode：在 Unity Hub 给这个版本加装 iOS Build Support，打出 Xcode 工程后在 Mac 上签名安装。iOS 的包名和系统版本已经写在 Setup 里。
+
+## 店面白模（初始到五级）
+
+前堂和后厨的白模都是 Blender 脚本照布局图搭的。墙、栏杆、台阶、灯笼、门帘、方桌、方凳这些共用零件，以及统计、导出和渲染，都在 `WhiteModel/level_kit.py`。建模规范（圆角、全四边面、Weighted Normals、删掉看不见的面等）见总文档第五部分 03 节。
+
+| 等级 | 布局图 | 桌子 | 脚本和白模 | 三角面 |
+| --- | --- | --- | --- | --- |
+| 初始·1 桌 | 老师给的 `初始1桌布局.jpg` | 1 | `build_level1.py` → `WhiteModel/Level1/SM_Level1.fbx` | 3.7 万 |
+| 一级 | `初出茅庐·三桌食堂-2.png` | 大堂 3 | `build_shop.py --level 1` → `WhiteModel/Shop1/SM_Shop1.fbx` | 5.5 万 |
+| 二级 | `餐厅增添第四张方桌-8.png` | 大堂 4 | `--level 2` → `Shop2/SM_Shop2.fbx` | 6.0 万 |
+| 三级 | `水彩餐厅六桌布局改造-11.png` | 一楼 4、二楼 1、雅间 1 | `--level 3` → `Shop3/SM_Shop3.fbx` | 9.6 万 |
+| 四级 | `扩建双层餐厅八桌水彩图-12.png` | 一楼 4、二楼 3、雅间 1 | `--level 4` → `Shop4/SM_Shop4.fbx` | 10.0 万 |
+| 五级 | `楼上公共餐厅新增两桌-15.png` | 一楼 4、二楼 6、雅间 2 | `--level 5` → `Shop5/SM_Shop5.fbx` | 11.8 万 |
+
+- 同一级的其他几张布局图是早期版本，桌数和标题对不上，没有用。
+- 游戏认这些名字：`K_AnTai`（案台，点它进做饭界面）、`K_ZaoTai`（灶台）、`D_Table_<n>` 和每张桌的四个凳子 `D_Stool_<n>_<k>`（初始关卡是 `D_Stool_1…4`）、`Spot_Queue_1…4`（门外排队的位置）；分组是 `Kitchen`、`Corridor`、`Hall`、`Upstairs`、`Yajian`。
+- 桌子按设计里买桌子的顺序编号：1–4 在一楼，5 和 7–11 在二楼，6 是雅间一，12 是雅间二。
+- 二楼照布局图的剖面画法，放在一楼大堂的后上方，从游戏视角两层的桌子都看得见。
+- 桌子都是 1 米的方桌配 4 个凳子（布局图里画成长桌的也一样，游戏里一桌坐 4 人），桌凳之间至少留 0.5 米过道。花草、盆栽和树都没放，等花草的美术。
+- 和布局图不一样的地方：
+  - 二级的厨房和大堂在图里只挨着一个角，没有路走，加了一条 2 米的走廊，大堂比图里靠前一点。
+  - 四级的楼梯底端往右挪了约 2 米：照图里的位置，那段楼梯太陡。
+  - 五级灶台后面的架子简化成一排矮柜，雅间正面用实墙，没用格栅，都是为了控制面数。
+
+改了店面以后：
+
+```
+blender -b --factory-startup --python WhiteModel/build_level1.py -- WhiteModel/Level1
+blender -b --factory-startup --python WhiteModel/build_shop.py -- --level 2      # 1–5 = 一级…五级，写到 WhiteModel/Shop<n>/
+python WhiteModel/shop_compare.py --level 2                                       # 布局图和白模并排：WhiteModel/Shop<n>/renders/compare.png
+blender -b WhiteModel/Shop2/SM_Shop2.blend --python WhiteModel/check_shop.py      # 穿模、悬空检查
+copy WhiteModel\Level1\SM_Level1.fbx Unity\Assets\Art\Models\
+copy WhiteModel\Shop2\SM_Shop2.fbx Unity\Assets\Art\Models\
+Unity 菜单 BianHe ▸ Setup Level1        # 材质、场景、渲染管线和打包设置
+```
+
+## 菜、食材和调料
+
+### 模型
+
+- 设计数据里全部 23 道菜，另有酸菜鱼辣味版 `D20_spicy`（松鼠鳜鱼淀粉脆皮版的原图和原版一样，共用 `D18`）。每道菜有装盘和锅里（`_wok`）两个版本。
+- 除 6 种酒以外的全部 38 样食材、调料，另有一个通用的青瓷酒壶 `wine`（按 `酒_待定.png` 做，等每种酒有了图再分开）。
+- 一共 87 个模型（`SM_<id>`）。每件都按原图一比一还原形状和摆放（从原图的视角：正前方、俯角 35°），全部圆角、平滑，不留尖角和棱面，每件 ≤8000 个三角面。
+- 建模代码在 `WhiteModel/food_models/`：`core.py` 是共用部分（调色板与光泽、网格构建、碗盘、酱汁、配菜、鱼身、麻袋竹筐、对位工具），其余每个文件一组：`bowls`、`plates`、`stirfry`（菜），`meat_fish`、`produce`、`sacks`、`jars`（食材、调料），`wok_raw`（锅里的生原料）。`WhiteModel/build_food.py` 负责构建、导出和预览，输出到 `WhiteModel/Food/`。
+- Unity 里放在 `Assets/Resources/FoodModels`；一键设置时套上水彩材质，并从原图的视角渲成 `Resources/Food3D` 的立体图给界面用。
+
+### 照原图描线（勾勒）
+
+大部分菜和食材的形状是从原图上描出来的：每个描线脚本在 `新建文件夹/` 的原图上把每一块描出轮廓、分出颜色，按原图的视角反投成 3D，结果写进 `food_models/traced_<id>.json`（颜色分区另存 `_paint.npz` 或 `_paint.png`），建模代码读它来建。加 `--sheet <图.png>` 会画一张描线图，例如 `WhiteModel/StyleTest/番茄炒蛋_鸡蛋勾勒.png`、`酒蟹_勾勒.png`、`煎鱼饭_勾勒.png`、`松鼠鳜鱼_勾勒.png`、`两熟紫苏鱼_勾勒.png`、`酸菜鱼_勾勒.png`。
+
+| 脚本（`WhiteModel/`） | 描的是 |
+| --- | --- |
+| `trace_d01.py`、`d03`、`d04`、`d05`、`d06`、`d07`、`d08` | 胡饼、馄饨、瓜齑萝卜、水晶脍、番茄炒蛋、宫保鸡丁、可乐鸡翅 |
+| `trace_d10.py`、`d12`、`d13`、`d14`、`d15`、`d16`、`d18`、`d19` | 煎鱼饭、两熟紫苏鱼、土豆炖肉、玉板鲊、荔枝腰子、文思豆腐、松鼠鳜鱼、北京烤鸭 |
+| `trace_d20.py`（加 `--spicy` 是辣味版）、`trace_d23.py` | 酸菜鱼、酒蟹 |
+| `trace_noodles.py D02`、`D09`、`D11` | 菜面、插肉面、冷淘 |
+| `trace_duck.py`、`wing`、`greens`、`perilla`、`radish`、`potato`、`ginger`、`scallion`、`garlic` | 鸭、鸡翅、时蔬、紫苏、萝卜、土豆、姜、葱、蒜 |
+| `trace_rice_prep.py`、`pickle_base`、`seafood`、`pancake`、`sauerkraut` | 米料备料、盐渍辅料包、干贝海味包、薄饼备料、酸菜 |
+| `trace_common.py`、`trace_kit_plates.py`、`trace_heap.py`、`trace_veg.py`、`trace_packs.py` | 共用工具：原图的相机、分块、按轮廓建面、颜色分区，盘装菜、堆起来的菜、蔬菜和包装食材各自的做法 |
+
+没有列出的（麻婆豆腐、佛跳墙、剁椒鱼头和其余食材、调料）是照原图对位建的（`art_match.py`）。
+
+### 颜色和质感
+
+- 食物另加光泽和更浓的颜色：每种颜色的强弱在 `core.py` 的 `GLOSS`、`VIVID` 里调，反光点的大小在 `WatercolorLit.shader` 里调。
+- 细节纹理和凹凸：`WhiteModel/food_textures.py` 生成 32 张无缝贴图（`Unity/Assets/Art/Textures/food_*.png`），有猪肉的肥瘦花纹、肉的肌理、禽皮和猪皮的毛孔、腰子的斑驳、炒蛋的褶皱、番茄籽、鱼鳞、煎鱼皮、蟹壳的斑驳、剁椒的颗粒、油炸面衣、胡饼的焦斑和气孔、可乐气泡、米粒、面条、叶脉、竹编、木纹、布纹、纸褶、陶土、土豆皮、姜皮、蒜皮等。哪种颜色用哪张、多密、多深在 `core.py` 的 `DETAIL` 里调（模型没有 UV，着色器在物体空间里三向投射）。
+- 渐变和晕染画在顶点颜色上（`Part.tint`，接受晕染的颜色列在 `core.py` 的 `VTINT`）：鱼头顶的深灰、蟹腿节边的棕黄、鳜鱼的斑点、煎鱼背上的焦色、紫苏叶边的绿。
+- 可乐瓶是透明玻璃：哪些颜色是玻璃、多透、高光多强列在 `core.py` 的 `GLASS`。米粒这类小颗粒的描边细一些，列在 `OUTLINE`。
+
+### 锅里的生原料
+
+`WhiteModel/food_models/wok_raw.py` 把 28 样主料做成实心的生原料块：面团、米饭、肉块、鸡丁、鸡蛋、鸡翅、整条鱼、整只蟹、番茄块、辣椒、菜叶等，按真实尺寸建，从哪面看都是真的，在锅里翻面不会像纸片。`WhiteModel/build_raw.py` 生成 `RAW_<id>.fbx`，每样进锅几块、多大写在 `raw_pieces.json`。游戏里小块放大 2.6 倍，整鱼、整蟹放大 1.3 倍。
+
+### 检查和对照
+
+- `check_backfaces.py`：Unity 剔除背面，翻面和漏缝都要在 0.5% 以下。
+- `check_vessels.py`：菜不能从盘碗的外壁、底下穿出来。
+- `art_views.py` 和 `art_match.py`：从原图的视角渲染，再和原图对位（重合度 IoU、红线轮廓、厘米网格）。
+- `preview_wc.py`：不开 Unity，按水彩着色器的算法（顶点晕染、细节纹理和凹凸、四档光影、反光、描边）渲出接近游戏图标的预览。
+- 对照图：`WhiteModel/Food/新菜品对照.png`、`新食材对照.png`（原图对照模型），`WhiteModel/StyleTest/全部菜品原料调料_总图.png`（原图对照游戏里的样子），以及各次修改的前后对比（`StyleTest/*_前后对比.png`、`*_重做*.png`）。
+
+改了菜、食材或调料的模型以后（`--only` 只重建列出的几样，不加就全部重建）：
+
+```
+python WhiteModel/trace_d06.py --sheet WhiteModel/StyleTest/番茄炒蛋_鸡蛋勾勒.png   # 只在原图或描法变了时重描；番茄炒蛋约 4 分钟，其余几秒到半分钟
+python WhiteModel/trace_d20.py --spicy --sheet WhiteModel/StyleTest/酸菜鱼辣味版_勾勒.png   # 酸菜鱼辣味版；其余描线脚本的用法写在各自开头
+blender -b --factory-startup --python WhiteModel/build_food.py -- WhiteModel/Food --only rice,egg
+blender -b --factory-startup --python WhiteModel/preview_wc.py -- WhiteModel/Food previews rice,egg   # 不开 Unity 的图标预览（接近水彩着色器）
+blender -b --factory-startup --python WhiteModel/build_raw.py -- WhiteModel/Food   # 锅里的生原料 RAW_<id>.fbx 和 raw_pieces.json（--only id,id 只重建几样）
+blender -b --factory-startup --python WhiteModel/check_backfaces.py -- WhiteModel/Food rice,egg
+blender -b --factory-startup --python WhiteModel/check_vessels.py -- WhiteModel/Food
+blender -b --factory-startup --python WhiteModel/art_views.py -- WhiteModel/Food views rice "0,35"   # 从原图的视角渲染
+python WhiteModel/art_match.py 新建文件夹/米.png views rice match_rice.png   # 和原图对位
+copy WhiteModel\Food\SM_rice.fbx Unity\Assets\Resources\FoodModels\
+copy WhiteModel\Food\RAW_rice.fbx Unity\Assets\Resources\FoodModels\
+copy WhiteModel\Food\raw_pieces.json Unity\Assets\Resources\
+copy WhiteModel\Food\palette_food.json Unity\Assets\Art\
+blender -b --factory-startup --python WhiteModel/build_cook_view.py -- --export WhiteModel/CookView/export
+copy WhiteModel\CookView\export\cook_set.json Unity\Assets\Resources\   # 新颜色的水彩参数在这里，漏了就还是旧的卡通材质
+Unity 菜单 BianHe ▸ Setup Level1        # 生成材质，重新烘焙 Food3D 图标
+```
+
+## 纹璃宫灯（白模与三渲二）
 
 需要 Blender 5.2；水彩脚本另需 Python 3 和 Pillow、numpy。在仓库根目录运行：
 
@@ -73,51 +253,6 @@ blender --factory-startup -p 0 0 2560 1440 --no-window-focus WhiteModel/SM_Wenli
 
 三渲二那张过程图会在图像编辑器里打开老师给的参考图 `例子尝试.jpg`。参考图不在仓库里，所以上面只拍白模和水彩两张。
 
-建模规范（圆角、全四边面、Weighted Normals、删掉看不见的面等）见总文档第五部分 03 节。
-
-## Unity demo（初始·1桌）
-
-用 Unity 6000.5.3f1（URP）打开 `Unity/`，运行 `Scenes/Level1`。
-
-- 前堂：单指拖动，双指缩放，「全景」复位；「开门营业」后工人按一级①的节奏来，每天最多 12 人，平均 90 秒一组。客人入座点菜，耐心用完会催单，再过 15 秒离店。
-- 画风（老师认可）：3D 模型 + 从手绘图截取的贴图 + 水彩式分层光影（`Assets/Art/Shaders/WatercolorLit.shader`，Blender 端是 `WhiteModel/wc_materials.py`）。
-- 点案台进入做饭界面（3D 案台场景 `CookSet.fbx`，由 `build_cook_view.py --export WhiteModel/CookView/export` 导出）：选菜 → 点灶台 → 到点再点一次出炉。出炉判定、自动做计数、评价概率和经验都按总文档第二部分和 JSON 里的 `rules.service`。出炉的菜自动端给点了这道菜的桌；这一步以后改成玩家或小二端菜。
-- 规则代码在 `Assets/Scripts/Core/`（不依赖 Unity，可单测）；界面和场景在 `Assets/Scripts/`。
-- 字体是 Noto Sans SC 的子集（SIL OFL，见 `Assets/Resources/Fonts/`），加了新文字后用 `Unity/Tools/build_font.py` 重新生成。
-
-改了白模以后：
-
-```
-blender -b --factory-startup --python WhiteModel/build_level1.py -- WhiteModel/Level1
-copy WhiteModel\Level1\SM_Level1.fbx Unity\Assets\Art\Models\
-Unity 菜单 BianHe ▸ Setup Level1        # 材质、场景、渲染管线和打包设置
-```
-
-改了菜、食材或调料的模型以后（`--only` 只重建列出的几样，不加就全部重建）：
-
-```
-blender -b --factory-startup --python WhiteModel/build_food.py -- WhiteModel/Food --only rice,egg
-blender -b --factory-startup --python WhiteModel/check_backfaces.py -- WhiteModel/Food rice,egg   # Unity 剔除背面，翻面和漏缝都要在 0.5% 以下
-copy WhiteModel\Food\SM_rice.fbx Unity\Assets\Resources\FoodModels\
-copy WhiteModel\Food\palette_food.json Unity\Assets\Art\
-blender -b --factory-startup --python WhiteModel/build_cook_view.py -- --export WhiteModel/CookView/export
-copy WhiteModel\CookView\export\cook_set.json Unity\Assets\Resources\   # 新颜色的水彩参数在这里，漏了就还是旧的卡通材质
-Unity 菜单 BianHe ▸ Setup Level1        # 生成材质，重新烘焙 Food3D 图标
-```
-
-测试与打包（菜单 BianHe 里也有）：
-
-```
-Unity -batchmode -projectPath Unity -runTests -testPlatform EditMode            # 规则单测
-Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildAndroid   # Builds/BianHe_Level1.apk
-Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildWebGL     # Builds/WebGL，手机浏览器（含 iPhone Safari）可玩
-Unity -batchmode -quit -projectPath Unity -executeMethod BianHe.EditorTools.ProjectSetup.BuildWindows   # Builds/Windows
-Builds/Windows/BianHe.exe -shots <文件夹>                                         # 自动玩一桌客人并截图
-python Unity/Tools/webgl_touch_test.py http://127.0.0.1:8765/ <文件夹>            # 模拟 iPhone 触屏测网页版
-```
-
-iOS 原生包需要 Mac 和 Xcode：在 Unity Hub 给这个版本加装 iOS Build Support，打出 Xcode 工程后在 Mac 上签名安装。iOS 的包名和系统版本已经写在 Setup 里。
-
 ## 资料来源
 
 - 孟元老《东京梦华录》卷二、卷三、卷四、卷八，维基文库。
@@ -129,5 +264,5 @@ iOS 原生包需要 Mac 和 Xcode：在 Unity Hub 给这个版本加装 iOS Buil
 ## 说明
 
 - 历史资料和游戏虚构分开标注。菜名、酒名等的出处见总文档第三部分；正店比拼、排名、皇帝微服、名流到店、名流家宴和他们的台词都是游戏虚构。游戏设定在嘉祐年间，而《东京梦华录》追记的是北宋末年的汴京，引用时作为"北宋汴京的通用参照"。
-- 老师提供的参考图版权不明，参考图本身以及带参考图的对比图、截图都不放进公开仓库。
-- 待定：八周原型具体交付哪些内容（见总文档第八部分）。定下来后再更新 `大纲`。
+- 老师提供的参考图版权不明，参考图本身以及带参考图的对比图、截图都不放进公开仓库。店面升级的布局图（上面表里的 png）和带布局图的对照图（`WhiteModel/Shop<n>/renders/compare.png`、`WhiteModel/StyleTest/店面升级_初始到五级_对照.png`）暂时也只留在本地。
+- 八周计划已经定了（总文档第一部分 06）：试玩版做到二级，升三级后的第二天打缩小版正店比拼。`原始PDF/大纲` 还是原来的提案，没有跟着改。

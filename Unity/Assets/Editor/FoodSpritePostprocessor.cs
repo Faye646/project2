@@ -15,10 +15,22 @@ namespace BianHe.EditorTools
             {
                 var t = (TextureImporter)assetImporter;
                 t.textureType = TextureImporterType.Default;
-                t.wrapMode = TextureWrapMode.Mirror;
-                t.sRGBTexture = !assetPath.EndsWith("wc_noise.png");
+                // the meat's detail textures (food_textures.py) are seamless data, R pattern and G height:
+                // repeated, linear, and kept as uncompressed RG so the bump has no block steps
+                bool detail = System.IO.Path.GetFileName(assetPath).StartsWith("food_");
+                t.wrapMode = detail ? TextureWrapMode.Repeat : TextureWrapMode.Mirror;
+                t.sRGBTexture = !detail && !assetPath.EndsWith("wc_noise.png");
                 t.mipmapEnabled = true;
-                t.maxTextureSize = 1024;
+                t.maxTextureSize = detail ? 512 : 1024;
+                if (detail)
+                {
+                    t.filterMode = FilterMode.Trilinear;
+                    foreach (var platform in new[] { "Standalone", "Android", "iPhone", "WebGL" })
+                        t.SetPlatformTextureSettings(new TextureImporterPlatformSettings
+                        {
+                            name = platform, overridden = true, maxTextureSize = 512, format = TextureImporterFormat.RG16,
+                        });
+                }
                 return;
             }
             bool food = assetPath.StartsWith("Assets/Resources/Food/") || assetPath.StartsWith("Assets/Resources/Food3D/");

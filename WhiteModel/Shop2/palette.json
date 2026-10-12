@@ -1,0 +1,104 @@
+{
+ "toon": {
+  "Timber": {
+   "lit": "#c0823f",
+   "shade": "#8d5a2b",
+   "emission": 0.0
+  },
+  "Wood": {
+   "lit": "#dba35c",
+   "shade": "#b27a3b",
+   "emission": 0.0
+  },
+  "WoodFloor": {
+   "lit": "#d9a05e",
+   "shade": "#b67d42",
+   "emission": 0.0
+  },
+  "Plaster": {
+   "lit": "#f4e2ae",
+   "shade": "#dcc38d",
+   "emission": 0.0
+  },
+  "Paper": {
+   "lit": "#fff4d6",
+   "shade": "#f0dcae",
+   "emission": 0.25
+  },
+  "Stone": {
+   "lit": "#ece0c9",
+   "shade": "#cdbd9f",
+   "emission": 0.0
+  },
+  "Tile": {
+   "lit": "#c8c3b2",
+   "shade": "#a9a391",
+   "emission": 0.0
+  },
+  "Brick": {
+   "lit": "#bdb5a6",
+   "shade": "#968e80",
+   "emission": 0.0
+  },
+  "Cloth": {
+   "lit": "#5d88b6",
+   "shade": "#416992",
+   "emission": 0.0
+  },
+  "Cushion": {
+   "lit": "#bccca2",
+   "shade": "#96a87d",
+   "emission": 0.0
+  },
+  "Leaf": {
+   "lit": "#8fae5e",
+   "shade": "#63813d",
+   "emission": 0.0
+  },
+  "Flower": {
+   "lit": "#f2d262",
+   "shade": "#d2ab41",
+   "emission": 0.0
+  },
+  "Veg": {
+   "lit": "#a8c95f",
+   "shade": "#7d9d3f",
+   "emission": 0.0
+  },
+  "Chili": {
+   "lit": "#d9573b",
+   "shade": "#a8392a",
+   "emission": 0.0
+  },
+  "Ceramic": {
+   "lit": "#e6ebec",
+   "shade": "#bcc6cb",
+   "emission": 0.0
+  },
+  "Glaze": {
+   "lit": "#6f8497",
+   "shade": "#50647a",
+   "emission": 0.0
+  },
+  "Iron": {
+   "lit": "#55504b",
+   "shade": "#35312e",
+   "emission": 0.0
+  },
+  "Water": {
+   "lit": "#8cc2d8",
+   "shade": "#6399b4",
+   "emission": 0.0
+  },
+  "Fire": {
+   "lit": "#ffb347",
+   "shade": "#ff8a2a",
+   "emission": 1.0
+  },
+  "Straw": {
+   "lit": "#dcc07a",
+   "shade": "#b89a55",
+   "emission": 0.0
+  }
+ }
+}

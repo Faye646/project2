@@ -19,7 +19,7 @@ namespace BianHe
         [Header("View")]
         public float yaw = 45f;
         public float pitch = 30f;
-        public float distance = 60f;
+        public float distance = 25f;
         public float groundHeight = 0.45f;
 
         [Header("Zoom (orthographic size)")]
@@ -64,6 +64,9 @@ namespace BianHe
 
         void OnEnable() => EnhancedTouchSupport.Enable();
         void OnDisable() => EnhancedTouchSupport.Disable();
+
+        /// <summary>Where the view is centred on the ground and how much it shows (the video's camera moves glide from it).</summary>
+        public Vector3 Pivot => pivot;
 
         /// <summary>Frames the whole shop: pivot at the centre of the bounds, zoomed out to fit.</summary>
         public void Frame(Vector3 center, float size)
@@ -231,6 +234,14 @@ namespace BianHe
             pivot.y = groundHeight;
             var rot = Quaternion.Euler(pitch, yaw, 0);
             transform.SetPositionAndRotation(pivot - rot * Vector3.forward * distance, rot);
+            // the view's depth kept tight round the shop (the ground at the view's top and bottom edges, and what
+            // stands on it up to 6 m, an upper floor's roof): the sun's shadow map spans only that, sharper the less it
+            // spans. The far plane reaches the view's farthest corner, since the shadows fade by distance from the camera.
+            float size = cam.orthographicSize, sin = Mathf.Sin(pitch * Mathf.Deg2Rad);
+            float along = size * Mathf.Cos(pitch * Mathf.Deg2Rad) / sin;
+            float deepest = distance + along + 3f, halfWide = size * cam.aspect;
+            cam.nearClipPlane = Mathf.Max(0.3f, distance - along - 6f / sin - 1f);
+            cam.farClipPlane = Mathf.Sqrt(deepest * deepest + halfWide * halfWide + size * size) / 0.95f + 0.5f;
             Shader.SetGlobalFloat(OutlineScaleId, Mathf.Clamp(Mathf.Sqrt(maxSize / cam.orthographicSize) * 0.85f, 0.9f, 1.8f));
         }
     }

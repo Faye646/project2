@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BianHe.Core;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,8 +13,10 @@ namespace BianHe
     /// three parts — 放置区 (trays for finished dishes), 食材与调味 (the board), 灶台 (wok, fire and
     /// the 火候 gauge) — with the chosen dish top left and 出锅 bottom right.
     ///
-    /// Play: pick a dish → tap what it needs on the board (it lights up) → the wok starts once everything
-    /// is in → tap 出锅 while the needle is in the gold band → tap the tray to carry the dish to its table.
+    /// Play: pick a dish → tap what it needs on the board (it lights up; the raw ingredients drop into the wok)
+    /// → the wok starts once everything is in, the raw ingredients tossed about in it → tap 出锅 while the
+    /// needle is in the gold band: they turn into the finished dish in the wok → 装盘 (the same button, or by
+    /// itself with 自动装盘 on) flies it onto a free tray → tap the tray to carry the dish to its table.
     /// The gauge shows CookRules: the needle swings over a gold band; within the time limit (cook time
     /// + 3 s) gold is 完美 and anywhere else 没熟, and after the limit it's 糊了. Stoves keep cooking
     /// while the screen is closed. The room, counter, trays, stove and wok are the painted layers
@@ -69,12 +72,24 @@ namespace BianHe
         readonly Dictionary<string, (Vector3 pos, float scale, float rot)> boardSpots = new();
         readonly List<(Vector3 pos, float scale)> traySpots = new();
         (Vector3 pos, float scale) wokSpot;
+        Vector3 camHome;   // where the cook camera stands (the video's close-ups move it and bring it back)
         readonly GameObject[] trayModels = new GameObject[GameSession.TrayCount];
         readonly string[] trayModelIds = new string[GameSession.TrayCount];
-        GameObject wokModel;
-        string wokModelId;
-        readonly List<GameObject> prepModels = new();
-        string prepKey = "";
+        // the wok: the raw ingredients (Resources/FoodModels/RAW_<id>, built by build_raw.py) dropped in, tossed about
+        // while the dish cooks, then the finished dish (SM_<dish>_wok) from 出锅 until 装盘 flies it to a tray
+        string rawKey = "";
+        float rawSince;
+        GameObject doneModel;
+        string doneModelId;
+        float doneSince;
+        Vector3 doneScale;
+        readonly float[] trayLandAt = new float[GameSession.TrayCount];
+        GameObject flying;
+        Vector3 flyFrom, flyTo, flyScale0, flyScale1;
+        float flyStart;
+        Text autoPlateText;
+        Image autoPlateBg;
+        const float FlySeconds = 0.55f;
 
         static readonly string[] SeasoningOrder = { "salt", "oil", "scallion", "ginger" };   // 糖 joins when a dish needs it
 
@@ -121,6 +136,7 @@ namespace BianHe
             toast = UIKit.Label(toastRt, "", 36, Color.white);
             toastRt.gameObject.SetActive(false);
 
+            session.Plated += OnPlated;
             canvas.gameObject.SetActive(false);
         }
 
@@ -144,6 +160,8 @@ namespace BianHe
             setCam = go.AddComponent<Camera>();
             go.AddComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
             go.transform.SetPositionAndRotation(o + cam.Vec("pos"), Quaternion.LookRotation(cam.Vec("forward"), cam.Vec("up")));
+            camHome = go.transform.position;
+            MeasureSet();
             setCam.usePhysicalProperties = true;
             setCam.focalLength = cam.Num("focal");
             setCam.sensorSize = new Vector2(cam.Num("sensor"), cam.Num("sensor") * 9f / 16f);
@@ -151,7 +169,7 @@ namespace BianHe
             setCam.clearFlags = CameraClearFlags.SolidColor;
             setCam.backgroundColor = UIKit.Hex("#3b2a1c");
             setCam.nearClipPlane = 0.05f;
-            setCam.farClipPlane = 30f;
+            setCam.farClipPlane = 9f;   // the set is within a few metres: the shadow map spans only that, sharp
             setCam.depth = 5;
             setCam.enabled = false;
         }
@@ -189,15 +207,6 @@ namespace BianHe
             go.transform.localScale = prefab.transform.localScale * scale;
             go.name = "Food_" + id;
             return go;
-        }
-
-        /// <summary>Shows exactly `id` at a spot, replacing whatever was there (null clears it).</summary>
-        void ShowAt(ref GameObject current, ref string currentId, string id, Vector3 pos, float scale)
-        {
-            if (currentId == id) return;
-            if (current) Destroy(current);
-            current = id == null ? null : SpawnFood(id, pos, scale, 0);
-            currentId = id;
         }
 
         // ------------------------------------------------------------------ layout
@@ -242,14 +251,17 @@ namespace BianHe
             var c = boardSpots.Values.Aggregate(Vector3.zero, (a, b) => a + b.pos) / Mathf.Max(1, boardSpots.Count);
             Pin(Plaque(art, "食材与调味", 0, 0), c + new Vector3(0, -0.2f, -0.52f), new Vector2(0.45f, 0.045f));
             // one spot on the board per ingredient/seasoning (cook_set.json); the 3D food sits there
-            var ids = session.OpenRecipes().SelectMany(r => r.Ingredients.Keys).Distinct().Concat(SeasoningOrder);
+            var ids = session.OpenRecipes().SelectMany(r => r.Ingredients.Keys).Distinct().Concat(SeasoningOrder).ToList();
+            var onBoard = new List<GameObject>();
             foreach (var id in ids)
             {
                 if (!boardSpots.TryGetValue(id, out var spot)) continue;
                 AddItem(art, id, Vector2.zero, Vector2.zero);
                 Pin((RectTransform)items[items.Count - 1].cg.transform, spot.pos + new Vector3(0, 0.1f, 0), new Vector2(0.16f, 0.14f));
-                SpawnFood(id, spot.pos, spot.scale, spot.rot);
+                var go = SpawnFood(id, spot.pos, spot.scale, spot.rot);
+                if (go) onBoard.Add(go);
             }
+            SettleOnBoard(onBoard);
         }
 
         void AddItem(RectTransform zone, string id, Vector2 a0, Vector2 a1)
@@ -329,11 +341,15 @@ namespace BianHe
             resultText = UIKit.Label(res, "", 56, UIKit.Hex("#d9861c"), TextAnchor.MiddleCenter, FontStyle.Bold);
             resultText.gameObject.AddComponent<Outline>().effectColor = new Color(1, 1, 1, 0.85f);
 
-            // 出锅 sticks to the screen corner so a wide phone never crops it
+            // 出锅 (then 装盘) sticks to the screen corner so a wide phone never crops it; 自动装盘 switch above it
             var btn = UIKit.Rect(root, "CookButton", new Vector2(0.79f, 0.03f), new Vector2(0.975f, 0.135f));
             var b = UIKit.Button(btn, "出锅", 52, Green, Color.white, TapCook);
             cookButton = (Image)b.targetGraphic;
             cookButtonText = btn.GetComponentInChildren<Text>();
+            var auto = UIKit.Rect(root, "AutoPlate", new Vector2(0.645f, 0.045f), new Vector2(0.775f, 0.115f));
+            var ab = UIKit.Button(auto, "自动装盘", 26, PlaqueWood, UIKit.Ink, () => session.AutoPlate = !session.AutoPlate);
+            autoPlateBg = (Image)ab.targetGraphic;
+            autoPlateText = auto.GetComponentInChildren<Text>();
         }
 
         void BuildTop(Transform root)
@@ -445,6 +461,7 @@ namespace BianHe
             var st = ActiveStove.State(GameSession.NowMs);
             if (selected == null) { ShowPicker(true); return; }
             if (st != StoveState.Idle) { Toast("锅里还有菜，先出锅", UIKit.Ink); return; }
+            if (session.InWok[stoveIndex] != null) { Toast("锅里的菜还没装盘", UIKit.Ink); return; }
             if (!Needs(selected).Contains(id)) { Toast($"{selected.Name}不用{session.Data.IngredientName(id)}", UIKit.Ink); return; }
             prep.Add(id);
             if (Needs(selected).All(prep.Contains))
@@ -455,8 +472,15 @@ namespace BianHe
             }
         }
 
+        /// <summary>The button under the wok: 出锅 while it cooks (judged by the needle; the dish stays in the wok,
+        /// finished), then 装盘 (onto a free tray).</summary>
         void TapCook()
         {
+            if (session.InWok[stoveIndex] != null)
+            {
+                if (!session.Plate(stoveIndex)) Toast("放置区满了，先把菜端出去", UIKit.Ink);
+                return;
+            }
             var s = ActiveStove;
             var st = s.State(GameSession.NowMs);
             if (st == StoveState.Idle || st == StoveState.Locked)
@@ -464,7 +488,6 @@ namespace BianHe
                 Toast(selected == null ? "先选一道菜" : "先把亮起来的食材和调味放进锅里", UIKit.Ink);
                 return;
             }
-            if (session.FreeTray() < 0) { Toast("放置区满了，先把菜端出去", UIKit.Ink); return; }
             var r = session.TakeOut(s);
             resultText.text = CookRules.Name(r.q) + (r.q == Quality.Perfect || r.q == Quality.Immortal ? "！" : "");
             resultText.color = r.q switch
@@ -510,7 +533,67 @@ namespace BianHe
             return true;
         }
 
+        /// <summary>For the video: choose the oldest ordered dish not already on a tray; null when there is none.</summary>
+        public Recipe DemoSelectPending()
+        {
+            var next = session.Service.Pending().FirstOrDefault(x => !session.Trays.Any(t => t?.dish == x.plate.Dish));
+            if (next.plate == null) return null;
+            Select(next.plate.Dish);
+            return selected;
+        }
+
+        /// <summary>For the video: what the chosen dish needs from the board, in order.</summary>
+        public List<string> DemoNeeds() => selected == null ? new List<string>() : Needs(selected).ToList();
+
+        /// <summary>For the video: tap one thing on the board (it drops into the wok).</summary>
+        public void DemoTap(string id) => TapItem(id);
+
+        /// <summary>For the video: cook any dish at once, its raw ingredients straight into the wok (most dishes'
+        /// ingredients have no place on this level's board), on a stove good enough for it.</summary>
+        public void DemoShowcase(string dishId)
+        {
+            var r = session.Data.Recipes.FirstOrDefault(x => x.Id == dishId);
+            if (r == null) return;
+            Select(r);
+            ShowPicker(false);   // as a card picked from it would
+            prep.Clear();
+            ActiveStove.Tier = StoveTier.Advanced;
+            ActiveStove.Start(r, GameSession.NowMs);
+        }
+
+        public bool DemoTraysFull() => session.FreeTray() < 0;
+
+        /// <summary>For the video's run of the other dishes: no 端给/没人点 labels and badges on the trays.</summary>
+        public bool DemoQuiet;
+
+        /// <summary>For the video: the wok, and the middle of the trays, on the counter set.</summary>
+        public Vector3 DemoWok => wokAxis;
+        public Vector3 DemoTrays => (traySpots[0].pos + traySpots[traySpots.Count - 1].pos) / 2;
+
+        /// <summary>For the video: the cook camera eased to `dist` metres from `target` along its own view (a close-up),
+        /// or back where it stands (dist ≤ 0), over `seconds`.</summary>
+        public System.Collections.IEnumerator DemoCloseUp(Vector3 target, float dist, float seconds)
+        {
+            var tr = setCam.transform;
+            Vector3 a = tr.position, b = dist <= 0 ? camHome : target - tr.forward * dist;
+            for (float t = 0; t < seconds; t += Time.unscaledDeltaTime)
+            {
+                tr.position = Vector3.Lerp(a, b, Mathf.SmoothStep(0f, 1f, t / seconds));
+                yield return null;
+            }
+            tr.position = b;
+        }
+
+        /// <summary>For the video: clear the trays quietly (the showcase dishes have nobody to go to).</summary>
+        public void DemoClearTrays()
+        {
+            for (int i = 0; i < GameSession.TrayCount; i++) session.Trays[i] = null;
+        }
+
         public void DemoTakeOut() => TapCook();
+
+        /// <summary>装盘 what is in the wok (the same button, once the dish is out).</summary>
+        public void DemoPlate() => TapCook();
 
         public void DemoServeAll()
         {
@@ -548,23 +631,29 @@ namespace BianHe
             foreach (var (id, img, ring, check, cg) in items)
             {
                 img.enabled = false;   // the 3D food on the board is the picture
-                bool need = needs.Contains(id), done = prep.Contains(id);
-                ring.enabled = need && !done;
+                bool need = needs.Contains(id), added = prep.Contains(id);
+                ring.enabled = need && !added;
                 ring.transform.localScale = Vector3.one * (1f + 0.04f * Mathf.Sin(t * 5f));
-                check.enabled = done;
-                cg.alpha = need ? (done ? 0.55f : 1f) : 0.55f;
+                check.enabled = added;
+                cg.alpha = need ? (added ? 0.55f : 1f) : 0.55f;
             }
 
             // trays: the 3D dish on each (burnt dishes stay as they were, darkened by the UI badge)
-            for (int i = 0; i < trays.Count; i++)
-                ShowAt(ref trayModels[i], ref trayModelIds[i], session.Trays[i]?.dish.Id, traySpots[i].pos, traySpots[i].scale * 0.85f);
+            for (int i = 0; i < trays.Count; i++)   // (not while the dish is still flying there from the wok)
+            {
+                var want = t < trayLandAt[i] ? null : session.Trays[i]?.dish.Id;
+                if (want == trayModelIds[i]) continue;
+                DestroyFood(trayModels[i]);
+                trayModels[i] = want == null ? null : SpawnOnTray(want, i);
+                trayModelIds[i] = want;
+            }
             for (int i = 0; i < trays.Count; i++)
             {
                 var (dish, label, badge, badgeText) = trays[i];
                 var tray = session.Trays[i];
                 dish.enabled = tray != null;
-                badge.enabled = badgeText.enabled = tray != null;
-                label.transform.parent.gameObject.SetActive(tray != null);
+                badge.enabled = badgeText.enabled = tray != null && !DemoQuiet;
+                label.transform.parent.gameObject.SetActive(tray != null && !DemoQuiet);
                 if (tray == null) continue;
                 var (rec, q) = tray.Value;
                 dish.sprite = DishSprite(rec.Id);
@@ -580,48 +669,24 @@ namespace BianHe
             int unlocked = session.Stoves.Count(x => x.Unlocked);
             stoveLabel.text = unlocked > 1 ? $"{CookRules.Name(s.Tier)}  {stoveIndex + 1}/{unlocked}" : "";
             bool cooking = st is StoveState.Cooking or StoveState.Burning;
-            // the wok shows what is being put in; once it cooks, the dish itself (its 锅中 render, no bowl),
-            // tossed about, browning and finally blackening when it burns
-            var contents = st == StoveState.Idle ? prep.ToList() : new List<string>();
-            for (int i = 0; i < wokItems.Count; i++)
-            {
-                var id = contents.ElementAtOrDefault(i);
-                wokItems[i].enabled = id != null;
-                if (id != null) wokItems[i].sprite = DishSprite(id) ?? UIKit.Circle;
-            }
-            foreach (var w in wokItems) w.enabled = false;
-            // 3D: what is being put in, then the dish tossing in the wok
-            var key = st == StoveState.Idle ? string.Join(",", contents) : "";
-            if (key != prepKey)
-            {
-                foreach (var m in prepModels) Destroy(m);
-                prepModels.Clear();
-                for (int k = 0; k < contents.Count; k++)
-                {
-                    var off = new Vector3((k - (contents.Count - 1) / 2f) * 0.13f, 0.02f, (k % 2) * 0.06f);
-                    var m = SpawnFood(contents[k], wokSpot.pos + off, 0.9f, k);
-                    if (m) prepModels.Add(m);
-                }
-                prepKey = key;
-            }
-            ShowAt(ref wokModel, ref wokModelId, cooking ? s.Dish.Id + "_wok" : null, wokSpot.pos, wokSpot.scale);
-            if (wokModel)
-                wokModel.transform.position = wokSpot.pos + new Vector3(0, Mathf.Abs(Mathf.Sin(t * 6f)) * 0.03f, 0);
+            var done = session.InWok[stoveIndex];
+            foreach (var w in wokItems) w.enabled = false;   // the food in the wok is 3D
             wokFood.enabled = false;
-            if (cooking)
-            {
-                wokFood.sprite = DishSprite(s.Dish.Id + "_wok") ?? DishSprite(s.Dish.Id);
-                float p = Mathf.Clamp01((now - s.StartMs) / (float)(s.BurnAtMs - s.StartMs));
-                wokFood.color = st == StoveState.Burning ? new Color(0.3f, 0.25f, 0.22f)
-                    : Color.Lerp(new Color(1f, 1f, 1f), new Color(0.93f, 0.85f, 0.72f), p);
-                wokFood.rectTransform.anchoredPosition = new Vector2(Mathf.Sin(t * 5f) * 4f, Mathf.Abs(Mathf.Sin(t * 6f)) * 6f);
-            }
+            // 3D: the raw ingredients dropping in as they are tapped, tossed about while the dish cooks; from 出锅
+            // the finished dish (its wok model) until 装盘 flies it to a tray
+            var raw = cooking ? s.Dish.Ingredients.Keys.ToList()
+                : st == StoveState.Idle && done == null && selected != null
+                    ? selected.Ingredients.Keys.Where(prep.Contains).ToList() : new List<string>();
+            UpdateRaw(raw, cooking, st == StoveState.Burning, t);
+            UpdateDone(done, t);
+            UpdateFlight();
             fireGlow.color = new Color(1f, 0.62f, 0.2f, cooking ? 0.14f + 0.06f * Mathf.Sin(t * 9f) : 0f);
             fireGlow.transform.localScale = Vector3.one * (cooking ? 1.1f + 0.08f * Mathf.Sin(t * 13f) : 1f);
+            bool puff = done != null && t - doneSince < 0.8f;   // a burst of steam as the dish comes out
             for (int i = 0; i < steam.Count; i++)
             {
-                float ph = (t * 0.6f + i / 3f) % 1f;
-                float a = !cooking ? 0 : st == StoveState.Burning ? 0.55f : 0.35f;
+                float ph = (t * (puff ? 1.4f : 0.6f) + i / 3f) % 1f;
+                float a = puff ? 0.6f : done != null ? 0.18f : !cooking ? 0 : st == StoveState.Burning ? 0.55f : 0.35f;
                 steam[i].color = st == StoveState.Burning ? new Color(0.35f, 0.33f, 0.32f, a * (1 - ph)) : new Color(1, 1, 1, a * (1 - ph));
                 steam[i].rectTransform.anchoredPosition = new Vector2(Mathf.Sin(t * 2 + i) * 6f, ph * 70f);
             }
@@ -629,12 +694,377 @@ namespace BianHe
             UpdateGauge(s, st, now);
             resultText.enabled = t < resultUntil;
 
-            cookButton.color = cooking ? Green : UIKit.Locked;
-            cookButtonText.text = "出锅";
+            cookButton.color = done != null ? Gold : cooking ? Green : UIKit.Locked;
+            cookButtonText.text = done != null ? "装盘" : "出锅";
+            autoPlateText.text = session.AutoPlate ? "自动装盘 ✓" : "自动装盘";
+            autoPlateBg.color = session.AutoPlate ? UIKit.Hex("#cfe3a8") : PlaqueWood;
+        }
+
+        // ------------------------------------------------------------------ the wok
+
+        /// <summary>The wok's inside as build_cook_view.py turns it, (distance from its axis, height over its bottom), in
+        /// metres for a wok 0.36 m across its outside radius; measured against the set's own wok (MeasureSet).</summary>
+        static readonly Vector2[] WokProfile = { new(0f, 0f), new(0.16f, 0.02f), new(0.31f, 0.11f), new(0.345f, 0.155f) };
+        const int MaxRawPieces = 9;   // pieces in the wok at once
+        Vector3 wokAxis;              // the middle of the wok's inside, at its bottom
+        float wokK = 1f;              // the set's wok over the one WokProfile describes
+        readonly List<Bounds> trayRooms = new();   // the inside of each tray, its floor at the bottom
+        Bounds boardRoom;
+        JObject rawPieces;            // Resources/raw_pieces.json (build_raw.py): per ingredient, its pieces
+
+        /// <summary>The wok and the trays measured from the set itself, so that the food is fitted into them.</summary>
+        void MeasureSet()
+        {
+            var rends = setRoot.GetComponentsInChildren<Renderer>(true);
+            Renderer Find(string n) => rends.FirstOrDefault(r => r.name == n);
+            var wok = Find("Wok");
+            if (wok)
+            {
+                var b = wok.bounds;
+                wokK = b.extents.x / 0.36f;
+                wokAxis = new Vector3(b.center.x, b.min.y + 0.02f * wokK, b.center.z);
+            }
+            else wokAxis = wokSpot.pos - Vector3.up * 0.04f;
+            for (int i = 0; i < GameSession.TrayCount; i++)
+            {
+                var tr = Find("Tray" + i);
+                trayRooms.Add(tr ? Room(tr.bounds, 0.04f) : new Bounds(traySpots[i].pos + Vector3.up * 0.25f, new Vector3(0.46f, 0.5f, 0.33f)));
+            }
+            var bd = Find("Board");
+            boardRoom = bd ? Room(bd.bounds, 0.035f) : new Bounds(Vector3.zero, Vector3.zero);
+            var json = Resources.Load<TextAsset>("raw_pieces");
+            rawPieces = json ? JObject.Parse(json.text) : new JObject();
+        }
+
+        /// <summary>The room inside a tray (its rims `rim` wide), its floor the tray's top.</summary>
+        static Bounds Room(Bounds tray, float rim) =>
+            new(new Vector3(tray.center.x, tray.max.y + 0.25f, tray.center.z),
+                new Vector3(tray.size.x - 2 * rim, 0.5f, tray.size.z - 2 * rim));
+
+        /// <summary>How high the wok's inside is this far from its axis, over its bottom.</summary>
+        float WokHeight(float r)
+        {
+            r = Mathf.Abs(r) / wokK;
+            for (int i = 1; i < WokProfile.Length; i++)
+                if (r <= WokProfile[i].x)
+                {
+                    var a = WokProfile[i - 1];
+                    var b = WokProfile[i];
+                    return Mathf.Lerp(a.y, b.y, (r - a.x) / (b.x - a.x)) * wokK;
+                }
+            return WokProfile[WokProfile.Length - 1].y * wokK;
+        }
+
+        /// <summary>
+        /// The ingredients on the board, each in its own place: the board split into its back row (the ingredients) and
+        /// its front row (the seasonings), each row into places halfway between neighbours; each item stands in the middle
+        /// of its place, made smaller only if it is bigger than its place, so that none goes into another or over the
+        /// board's rims.
+        /// </summary>
+        void SettleOnBoard(List<GameObject> gos)
+        {
+            if (boardRoom.size.x <= 0 || gos.Count == 0) return;
+            var at = gos.Select(g => g.transform.position).ToList();
+            float split = (at.Min(p => p.z) + at.Max(p => p.z)) / 2;            // between the two rows of spots
+            float mid = boardRoom.min.z + boardRoom.size.z * 0.45f;             // the back row gets a little more depth
+            for (int i = 0; i < gos.Count; i++)
+            {
+                bool back = at[i].z > split;
+                var row = Enumerable.Range(0, gos.Count).Where(j => (at[j].z > split) == back).Select(j => at[j].x).OrderBy(x => x).ToList();
+                int k = row.IndexOf(at[i].x);
+                float x0 = k == 0 ? boardRoom.min.x : (row[k - 1] + row[k]) / 2;
+                float x1 = k == row.Count - 1 ? boardRoom.max.x : (row[k] + row[k + 1]) / 2;
+                float z0 = back ? mid : boardRoom.min.z, z1 = back ? boardRoom.max.z : mid;
+                var cell = new Bounds(new Vector3((x0 + x1) / 2, boardRoom.min.y + 0.25f, (z0 + z1) / 2),
+                                      new Vector3((x1 - x0) * 0.94f, 0.5f, (z1 - z0) * 0.94f));
+                FoodFit.FitIn(gos[i], cell);
+            }
+        }
+
+        /// <summary>How many pieces of an ingredient go into the wok, and whether it goes in whole (a fish, a crab);
+        /// none for what has no piece of its own (the seasonings, cooked into the dish unseen).</summary>
+        (int count, bool whole) RawCount(string id)
+        {
+            var e = rawPieces[id];
+            if (e == null) return (Resources.Load<GameObject>("FoodModels/RAW_" + id) ? 3 : 0, false);
+            int n = e["count"] != null ? (int)e["count"] : 3;
+            float size = e["size"] != null ? (float)e["size"] : 0.05f;
+            return (Mathf.Max(1, n), n == 1 && size >= 0.15f);
+        }
+
+        /// <summary>A raw piece for the wok (Resources/FoodModels/RAW_&lt;id&gt;: one closed, solid piece, true to
+        /// size, its pivot at its foot), as big as it is.</summary>
+        GameObject SpawnRaw(string id)
+        {
+            var prefab = Resources.Load<GameObject>("FoodModels/RAW_" + id);
+            if (prefab == null) return null;
+            var go = Instantiate(prefab, wokAxis, prefab.transform.rotation, setRoot);
+            go.name = "Raw_" + id;
+            return go;
+        }
+
+        /// <summary>One raw piece in the wok: which it is, how big it is made, where it rests (on the wok's inside,
+        /// leaning with it), how high it stands (it turns about its middle in the air), the level axis it turns over
+        /// about and how far it swings out from it, and its seed (its hops are out of step with the others').</summary>
+        class RawPiece
+        {
+            public GameObject go;
+            public string id;
+            public int j;              // which of its ingredient's pieces
+            public bool whole;         // a whole fish or crab, in the middle
+            public float reach0;       // how far it reaches from its middle, as big as it is
+            public Vector3 scale0;     // its scale then
+            public float reach;        // how far it reaches in the wok
+            public Vector3 home;
+            public Quaternion pose;
+            public float half;
+            public Vector3 roll;
+            public float swing;
+            public int seed;
+        }
+
+        readonly List<RawPiece> raw = new();
+
+        /// <summary>
+        /// The raw ingredients laid out in the wok, each ingredient as its pieces (raw_pieces.json; at most
+        /// MaxRawPieces in all), each as big as it is, made larger so that it reads in the kitchen's view: a whole
+        /// fish or crab a little larger, in the middle; the small pieces (a chunk of pork, a chili, a leaf) two and a
+        /// half times, no bigger than the wok can toss, round it on a ring, each given room along the ring for its own
+        /// width, the ingredients mixed. If they would crowd past the wok's floor, all the small ones are made a little
+        /// smaller alike. Each rests on the wok's curved inside, leaning with it and lifted where the curve rises under
+        /// its ends, so that nothing goes through the wok or through another piece. Pieces already in the wok move
+        /// over as others come.
+        /// </summary>
+        void LayOutRaw(List<string> ids)
+        {
+            var want = ids.Select(id => (id, c: RawCount(id))).Where(w => w.c.count > 0)
+                          .Select(w => (w.id, n: w.c.count, w.c.whole)).ToList();
+            while (want.Sum(w => w.n) > MaxRawPieces && want.Any(w => w.n > 1))   // the most plentiful give way first
+            {
+                int k = want.FindIndex(w => w.n == want.Max(x => x.n));
+                want[k] = (want[k].id, want[k].n - 1, want[k].whole);
+            }
+            var old = raw.ToList();
+            raw.Clear();
+            foreach (var w in want)
+                for (int j = 0; j < w.n; j++)
+                {
+                    var p = old.FirstOrDefault(o => o.go && o.id == w.id && o.j == j);
+                    if (p != null) { old.Remove(p); raw.Add(p); continue; }
+                    var go = SpawnRaw(w.id);
+                    if (go == null) continue;
+                    raw.Add(new RawPiece
+                    {
+                        go = go, id = w.id, j = j, whole = w.whole, seed = j + 16 * ((w.id.GetHashCode() & 0x7fff) % 97),
+                        reach0 = Mathf.Max(FoodFit.Footprint(go).reach, 1e-3f), scale0 = go.transform.localScale,
+                    });
+                }
+            foreach (var o in old)
+                if (o.go) Destroy(o.go);
+
+            var wholes = raw.Where(p => p.whole).ToList();
+            var small = raw.Where(p => !p.whole).OrderBy(p => p.j).ThenBy(p => p.id).ToList();   // mixed round the ring
+            foreach (var p in wholes) p.reach = Mathf.Min(p.reach0 * 1.3f, (wholes.Count == 1 ? 0.17f : 0.11f) * wokK);
+            foreach (var p in small) p.reach = Mathf.Min(p.reach0 * 2.6f, 0.075f * wokK);
+            // the ring: clear of what lies in the middle, long enough for every piece and the gaps, within the floor
+            float gap = 0.012f * wokK, rMax = 0.25f * wokK, ring = 0f;
+            float inner = wholes.Count == 0 ? 0f : wholes.Count == 1 ? wholes[0].reach : 0.09f * wokK + wholes.Max(p => p.reach);
+            if (small.Count > 1 || small.Count == 1 && wholes.Count > 0)
+            {
+                float most = small.Max(p => p.reach), across = small.Sum(p => 2 * p.reach);
+                float k = Mathf.Clamp(Mathf.Min((rMax - inner - gap) / most, (2 * Mathf.PI * rMax - small.Count * gap) / across), 0.3f, 1f);
+                foreach (var p in small) p.reach *= k;
+                ring = Mathf.Max(inner + most * k + gap, (across * k + small.Count * gap) / (2 * Mathf.PI));
+            }
+
+            void Place(RawPiece p, float r, float ang)
+            {
+                var go = p.go;
+                bool fresh = p.half == 0f;   // just spawned: it drops in from above
+                go.transform.localScale = p.scale0 * (p.reach / p.reach0);
+                var dir = new Vector3(Mathf.Cos(ang), 0, Mathf.Sin(ang));
+                // the wok's inside here: its height, its slope and its normal; the piece leans with it
+                float h = WokHeight(r), slope = (WokHeight(r + 0.005f) - WokHeight(Mathf.Max(r - 0.005f, 0f))) / 0.01f;
+                var n = (Vector3.up - dir * slope).normalized;
+                p.pose = fresh ? Quaternion.FromToRotation(Vector3.up, n) * Quaternion.Euler(0, p.seed * 47f % 360f, 0) * go.transform.rotation
+                               : Quaternion.FromToRotation(p.pose * Vector3.up, n) * p.pose;
+                // lifted where the wok's curve rises above the slope under the piece's ends (its inside is convex)
+                float lift = 0f;
+                for (float s = -p.reach; s <= p.reach; s += p.reach / 6f)
+                    lift = Mathf.Max(lift, WokHeight(r + s) - (h + slope * s));
+                p.home = wokAxis + dir * r + Vector3.up * h + n * (lift + 0.004f);
+                // posed where it rests: how high it stands, and how it turns over in the air
+                var was = (go.transform.position, go.transform.rotation);
+                go.transform.SetPositionAndRotation(p.home, p.pose);
+                p.half = (FoodFit.Bounds(go).max.y - FoodFit.Footprint(go).bottom) / 2;
+                if (p.whole)
+                {   // a whole fish or crab rolls over about its length, as it is turned in a wok
+                    var hull = FoodFit.Hull(go);
+                    Vector2 q0 = Vector2.zero, q1 = Vector2.right;
+                    float best = -1f;
+                    for (int i = 0; i < hull.Count; i++)
+                        for (int k = i + 1; k < hull.Count; k++)
+                        {
+                            float d = (hull[i] - hull[k]).sqrMagnitude;
+                            if (d > best) { best = d; q0 = hull[i]; q1 = hull[k]; }
+                        }
+                    var along = (q1 - q0).normalized;
+                    var side = new Vector2(-along.y, along.x);
+                    float wide = 0f;
+                    foreach (var q in hull) wide = Mathf.Max(wide, Mathf.Abs(Vector2.Dot(q - (q0 + q1) / 2, side)));
+                    p.roll = new Vector3(along.x, 0f, along.y);
+                    p.swing = Mathf.Sqrt(wide * wide + p.half * p.half);
+                }
+                else
+                {   // a small piece turns about the way out from the wok's middle: its ends move along the ring, neither
+                    // into the wok's rising side nor out to a neighbour (in the middle: any level way)
+                    p.roll = r > 0.001f ? dir : Quaternion.Euler(0, p.seed * 31f, 0) * Vector3.right;
+                    p.swing = Mathf.Max(p.reach, p.half);
+                }
+                if (fresh) go.transform.position = p.home + Vector3.up * 0.35f;   // dropped in from above
+                else go.transform.SetPositionAndRotation(was.Item1, was.Item2);
+            }
+            for (int i = 0; i < wholes.Count; i++)
+                Place(wholes[i], wholes.Count == 1 ? 0f : 0.09f * wokK, i * Mathf.PI);
+            // round the ring, each piece an arc as wide as it is, what is left over shared out between them
+            float spare = ring > 0f ? 2 * Mathf.PI - small.Sum(p => (2 * p.reach + gap) / ring) : 0f;
+            float at = 0.6f;
+            foreach (var p in small)
+            {
+                float arc = ring > 0f ? (2 * p.reach + gap) / ring + Mathf.Max(spare, 0f) / small.Count : 0f;
+                Place(p, ring, at + arc / 2);
+                at += arc;
+            }
+        }
+
+        /// <summary>The raw ingredients in the wok: each piece drops in when its ingredient is added; while the dish
+        /// cooks they are stir-fried, hopping up in turn, turning over in the air (solid pieces, so every side is
+        /// real), each hop high enough for it to turn right over clear of the wok, and landing back where they lay.</summary>
+        void UpdateRaw(List<string> ids, bool tossing, bool burning, float t)
+        {
+            var key = string.Join(",", ids);
+            if (key != rawKey)
+            {
+                LayOutRaw(ids);
+                rawKey = key;
+                rawSince = t;
+            }
+            float T = burning ? 1.3f : 0.9f;   // one hop; slower once it burns
+            foreach (var p in raw)
+            {
+                if (!p.go) continue;
+                var tr = p.go.transform;
+                if (!tossing)
+                {   // dropping in, then lying still
+                    tr.rotation = p.pose;
+                    tr.position = Vector3.Lerp(tr.position, p.home, 1f - Mathf.Exp(-Time.unscaledDeltaTime * 12f));
+                    continue;
+                }
+                float ph = t / T + p.seed * 0.137f;
+                int hop = Mathf.FloorToInt(ph);
+                float tau = ph - hop, air = 0.6f;
+                bool over = (p.seed + hop) % 2 == 0;   // a whole turn every other hop, else it rocks
+                float h = 0f, e = 1f;
+                if (tau < air)
+                {
+                    float s = tau / air;
+                    float top = (0.07f + 0.025f * ((p.seed + hop) % 3)) * wokK;
+                    if (over) top = Mathf.Max(top, 1.3f * p.swing + 0.012f * wokK);   // its ends swing out as far as that
+                    h = top * 4f * s * (1 - s);
+                    e = s * s * (3 - 2 * s);
+                }
+                float spin = tau < air ? (over ? 360f * e : 30f * Mathf.Sin(tau / air * Mathf.PI)) : 0f;
+                var turn = Quaternion.AngleAxis(p.seed % 2 == 0 ? spin : -spin, p.roll);
+                var up = p.pose * Vector3.up * p.half;   // from its foot to its middle
+                tr.rotation = turn * p.pose;
+                tr.position = p.home + up + Vector3.up * h - turn * up;
+            }
+        }
+
+        /// <summary>From 出锅 until 装盘: the finished dish in the wok (SM_&lt;dish&gt;_wok), scaled to fit inside it and bent
+        /// to the curve of its inside so that nothing goes through it, popping in as the raw pieces go.</summary>
+        void UpdateDone((Recipe dish, Quality q, long atMs)? done, float t)
+        {
+            string id = done == null ? null : done.Value.dish.Id + "_wok";
+            if (id != doneModelId)
+            {
+                DestroyFood(doneModel);
+                doneModel = id == null ? null : SpawnFood(id, wokAxis, wokSpot.scale, 0)
+                                                ?? SpawnFood(done.Value.dish.Id, wokAxis, wokSpot.scale, 0);
+                if (doneModel)
+                {
+                    var f = FoodFit.Footprint(doneModel);
+                    float fit = 0.24f * wokK;   // its reach: well inside the wok's wall
+                    if (f.reach > fit) FoodFit.ScaleAbout(doneModel, f.middle, fit / f.reach);
+                    f = FoodFit.Footprint(doneModel);
+                    doneModel.transform.position += new Vector3(wokAxis.x - f.middle.x, wokAxis.y + 0.004f - f.bottom,
+                                                                wokAxis.z - f.middle.z);
+                    FoodFit.BendInto(doneModel, wokAxis, WokHeight);
+                    doneScale = doneModel.transform.localScale;
+                }
+                doneModelId = id;
+                doneSince = t;
+            }
+            if (!doneModel) return;
+            float u = t - doneSince;   // swells in, overshoots a little and settles
+            float k = u < 0.12f ? Mathf.Lerp(0.55f, 1.06f, u / 0.12f)
+                : u < 0.45f ? Mathf.Lerp(1.06f, 1f, (u - 0.12f) / 0.33f) : 1f;
+            doneModel.transform.localScale = doneScale * k;
+        }
+
+        /// <summary>Destroys a placed dish and the bent copies of its meshes.</summary>
+        static void DestroyFood(GameObject go)
+        {
+            if (!go) return;
+            foreach (var mf in go.GetComponentsInChildren<MeshFilter>())
+                if (mf.sharedMesh && mf.sharedMesh.name.EndsWith("(bent)")) Destroy(mf.sharedMesh);
+            Destroy(go);
+        }
+
+        /// <summary>A dish on tray i: as big as the tray's inside holds (made smaller if it is bigger, larger if it is
+        /// smaller, so that every dish reads alike), resting on its floor, clear of its rims.</summary>
+        GameObject SpawnOnTray(string id, int i)
+        {
+            var go = SpawnFood(id, trayRooms[i].center, traySpots[i].scale * 0.85f, 0);
+            if (go) FoodFit.FitIn(go, trayRooms[i], grow: 1.6f);
+            return go;
+        }
+
+        /// <summary>装盘: the dish flies from the wok to its tray in an arc, growing into its plate.</summary>
+        void OnPlated(int stove, int tray)
+        {
+            if (!IsOpen || stove != stoveIndex || session.Trays[tray] == null) return;
+            if (flying) Destroy(flying);
+            flying = SpawnOnTray(session.Trays[tray].Value.dish.Id, tray);   // where it lands, as big as it lands
+            if (!flying) return;
+            flyTo = flying.transform.position;
+            flyScale1 = flying.transform.localScale;
+            flyScale0 = flyScale1 * 0.75f;
+            flyFrom = wokAxis + Vector3.up * 0.06f;
+            flyStart = Time.unscaledTime;
+            trayLandAt[tray] = flyStart + FlySeconds;
+            UpdateFlight();
+        }
+
+        void UpdateFlight()
+        {
+            if (!flying) return;
+            float u = Mathf.Clamp01((Time.unscaledTime - flyStart) / FlySeconds);
+            float e = u * u * (3 - 2 * u);
+            flying.transform.position = Vector3.Lerp(flyFrom, flyTo, e) + Vector3.up * Mathf.Sin(u * Mathf.PI) * 0.45f;
+            flying.transform.localScale = Vector3.Lerp(flyScale0, flyScale1, e);
+            if (u >= 1f) { Destroy(flying); flying = null; }
         }
 
         void UpdateGauge(Stove s, StoveState st, long now)
         {
+            if (session.InWok[stoveIndex] is { } out_)
+            {   // 出锅了: the gauge rests; the hint says what next
+                needle.rectTransform.parent.localRotation = Quaternion.Euler(0, 0, 90);
+                timeBar.fillAmount = 0;
+                gaugeHint.text = session.AutoPlate ? $"{out_.dish.Name}出锅了·马上自动装盘" : $"{out_.dish.Name}出锅了·点「装盘」放到放置区";
+                return;
+            }
             Recipe dish = st == StoveState.Idle ? selected : s.Dish;
             if (dish == null)
             {

@@ -25,7 +25,7 @@ namespace BianHe
         public int Xp;
         public int Cash;                                                 // 1/100 文
         public double Reputation = 1.0;                                  // 口碑系数; day 1 counts as 1
-        public int TablesInShop = 1;                                     // the white model has one table
+        public int TablesInShop = 1;                                     // the shop's tables in use (GameFlow, by stage)
 
         /// <summary>放置区: finished dishes waiting to be carried out (null = empty tray).</summary>
         public readonly (Recipe dish, Quality q)?[] Trays = new (Recipe, Quality)?[TrayCount];
@@ -95,7 +95,20 @@ namespace BianHe
 
         public int FreeTray() => System.Array.FindIndex(Trays, t => t == null);
 
-        /// <summary>出锅 by hand: judge, count, and put the dish on a free tray (the caller checks there is one).</summary>
+        /// <summary>出锅 but not yet 装盘: the finished dish in each stove's wok (null = none), and when it came out.
+        /// The stove is free again, but nothing new goes into its wok until this is plated.</summary>
+        public readonly (Recipe dish, Quality q, long atMs)?[] InWok = new (Recipe, Quality, long)?[4];
+
+        /// <summary>自动装盘 (the player's switch): a finished dish goes onto a free tray by itself, AutoPlateMs after 出锅.</summary>
+        public bool AutoPlate;
+        public const int AutoPlateMs = 1200;
+
+        /// <summary>装盘 happened: (stove, tray), for the cooking screen to fly the dish across.</summary>
+        public event System.Action<int, int> Plated;
+
+        public bool AnyWokDone => InWok.Any(w => w != null);
+
+        /// <summary>出锅 by hand: judge and count; the finished dish stays in the wok until 装盘 (Plate).</summary>
         public (Recipe dish, Quality q, string achievement, bool autoUnlocked) TakeOut(Stove s)
         {
             var dish = s.Dish;
@@ -105,9 +118,31 @@ namespace BianHe
             if (q == Quality.Burnt && Achievements.Add("糊啦！")) ach = "糊啦！";
             bool auto = Book.RecordHandCooked(dish, q);
             if (Day.Phase == DayPhase.Service) Day.RecordServed(q);
-            int tray = FreeTray();
-            if (tray >= 0) Trays[tray] = (dish, q);
+            InWok[Stoves.IndexOf(s)] = (dish, q, NowMs);
             return (dish, q, ach, auto);
+        }
+
+        /// <summary>装盘: the finished dish in stove i's wok onto a free tray. False when there is nothing to plate or
+        /// no tray is free.</summary>
+        public bool Plate(int i)
+        {
+            if (InWok[i] == null) return false;
+            int tray = FreeTray();
+            if (tray < 0) return false;
+            var (dish, q, _) = InWok[i].Value;
+            Trays[tray] = (dish, q);
+            InWok[i] = null;
+            Plated?.Invoke(i, tray);
+            return true;
+        }
+
+        /// <summary>Per frame: with 自动装盘 on, every finished dish is plated a moment after 出锅 (once a tray is free).</summary>
+        public void TickKitchen()
+        {
+            if (!AutoPlate) return;
+            long now = NowMs;
+            for (int i = 0; i < InWok.Length; i++)
+                if (InWok[i] is { } w && now - w.atMs >= AutoPlateMs) Plate(i);
         }
 
         /// <summary>

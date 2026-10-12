@@ -3,462 +3,4306 @@
   "Celadon": {
    "lit": "#bcd5c1",
    "shade": "#93b39e",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.5
   },
   "Broth": {
    "lit": "#ecd997",
    "shade": "#cdb66c",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
   },
   "Noodle": {
    "lit": "#f7eed6",
    "shade": "#dfcfa3",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
   },
   "Greens": {
    "lit": "#a6cf73",
    "shade": "#77a24a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.75
   },
   "Scallion": {
    "lit": "#7fb54e",
    "shade": "#5a8a33",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "Bread": {
    "lit": "#f0d49a",
    "shade": "#d2a764",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "Char": {
    "lit": "#c07a3a",
    "shade": "#95562a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "WontonSkin": {
    "lit": "#f6ecd3",
    "shade": "#dccaa0",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "Meat": {
    "lit": "#e3aaa0",
    "shade": "#c3847a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_marble",
+    "scale": 13,
+    "color": "#f7e2d8",
+    "amount": 0.9,
+    "bump": 0.7
+   }
   },
   "Burlap": {
    "lit": "#e6d2a6",
    "shade": "#c5aa7b",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "Flour": {
    "lit": "#fbf7ee",
    "shade": "#e3dccd",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "LightWood": {
    "lit": "#e2b37c",
    "shade": "#bf8a52",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "Stem": {
    "lit": "#eef0d2",
    "shade": "#cdd3a4",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "Fat": {
    "lit": "#f7e2d8",
    "shade": "#dcbcae",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 9,
+    "color": "#efc3b3",
+    "amount": 0.3,
+    "bump": 0.25
+   }
   },
   "Salt": {
    "lit": "#fdfbf6",
    "shade": "#e4e0d6",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "Jar": {
    "lit": "#efe9d4",
    "shade": "#cfc6a8",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
   },
   "Clay": {
    "lit": "#e4ab5d",
    "shade": "#c0843b",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
   },
   "Oil": {
    "lit": "#f5c93f",
    "shade": "#d9a520",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
   },
   "ScallionWhite": {
    "lit": "#f6f4e6",
    "shade": "#d9d6bf",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "Twine": {
    "lit": "#dcc07a",
    "shade": "#b89a55",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "Ginger": {
    "lit": "#e6c48c",
    "shade": "#c49b5f",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "GingerFlesh": {
    "lit": "#f7e49c",
    "shade": "#dcc36c",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "ChickenMeat": {
    "lit": "#f8c0a6",
    "shade": "#e39a84",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 10,
+    "color": "#fde8dc",
+    "amount": 0.6,
+    "bump": 0.8
+   }
   },
   "WingSkin": {
    "lit": "#fbd8c2",
    "shade": "#eab196",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 13,
+    "color": "#e99a84",
+    "amount": 0.6,
+    "bump": 0.7
+   }
   },
   "WingCut": {
    "lit": "#e98a7e",
    "shade": "#c8665d",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 14,
+    "color": "#f5b8aa",
+    "amount": 0.4,
+    "bump": 0.3
+   }
   },
   "DuckSkin": {
    "lit": "#fce4c4",
    "shade": "#efbd97",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.15,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 11,
+    "color": "#eba37f",
+    "amount": 0.7,
+    "bump": 0.8
+   }
   },
   "DuckBill": {
    "lit": "#eeb25c",
    "shade": "#cc8a38",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "KidneyRed": {
    "lit": "#bb4a4d",
    "shade": "#923338",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 9,
+    "color": "#d9787a",
+    "amount": 0.35,
+    "bump": 0.8
+   }
   },
   "TofuWhite": {
    "lit": "#fcf0d6",
    "shade": "#e6cba4",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "PorkSkin": {
    "lit": "#fad5ba",
    "shade": "#efb999",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 13,
+    "color": "#ecaa92",
+    "amount": 0.55,
+    "bump": 0.6
+   }
   },
   "FishBack": {
    "lit": "#a39d94",
    "shade": "#7e7870",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.3
   },
   "FishBelly": {
-   "lit": "#f6ead2",
-   "shade": "#dccaa8",
-   "emission": 0.0
+   "lit": "#f2ebe2",
+   "shade": "#d6c9ba",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_scales",
+    "scale": 18,
+    "color": "#4a4f57",
+    "amount": 0.2,
+    "bump": 0.15
+   },
+   "vtint": 1.0
   },
   "FishFin": {
-   "lit": "#eeb28f",
-   "shade": "#cf8f6d",
-   "emission": 0.0
+   "lit": "#f0c1a6",
+   "shade": "#d69c80",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 45,
+    "color": "#cf8763",
+    "amount": 0.3,
+    "bump": 0.1
+   }
   },
   "FishIris": {
-   "lit": "#f3dc98",
-   "shade": "#d6b86c",
-   "emission": 0.0
+   "lit": "#dcb460",
+   "shade": "#b88c3e",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.25,
+   "vtint": 1.0
   },
   "FishEye": {
    "lit": "#3d322b",
    "shade": "#2b231e",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "vtint": 1.0
   },
   "FishGill": {
-   "lit": "#ec9a8c",
-   "shade": "#cc786d",
-   "emission": 0.0
+   "lit": "#efb6aa",
+   "shade": "#d39488",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5
   },
   "MandarinSkin": {
    "lit": "#cdb46f",
    "shade": "#a68d4c",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
   },
   "MandarinSpot": {
-   "lit": "#76683f",
-   "shade": "#594d2f",
-   "emission": 0.0
+   "lit": "#4f4429",
+   "shade": "#3b331f",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.4,
+   "vtint": 1.0
   },
   "MandarinFin": {
-   "lit": "#e9c47f",
-   "shade": "#cba05e",
-   "emission": 0.0
+   "lit": "#e2c27e",
+   "shade": "#c4a160",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 45,
+    "color": "#b08a48",
+    "amount": 0.35,
+    "bump": 0.1
+   }
   },
   "CrabShell": {
-   "lit": "#8fa0a8",
-   "shade": "#6b7c86",
-   "emission": 0.0
+   "lit": "#7f8f99",
+   "shade": "#5e6d77",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.55,
+   "detail": {
+    "tex": "food_shell",
+    "scale": 18,
+    "color": "#9a8d5a",
+    "amount": 0.7,
+    "bump": 0.3
+   },
+   "vtint": 1.0
   },
   "CrabBelly": {
    "lit": "#efc690",
    "shade": "#cfa067",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5
   },
   "RiceGrain": {
    "lit": "#fdf5e1",
    "shade": "#e9d3ab",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_grains",
+    "scale": 16,
+    "color": "#d8ccb0",
+    "amount": 0.3,
+    "bump": 0.4
+   },
+   "vtint": 1.0
   },
   "Wicker": {
    "lit": "#efc685",
    "shade": "#c8955a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "WickerBind": {
    "lit": "#f7e6bd",
    "shade": "#d8c191",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "WickerBindGreen": {
    "lit": "#c5c27c",
    "shade": "#9c9a52",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "BundleCloth": {
    "lit": "#ece8d0",
    "shade": "#c8c2a0",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "WrapPaper": {
    "lit": "#f0d3a3",
    "shade": "#cfa572",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "Pickle": {
    "lit": "#f5df8c",
    "shade": "#d5b552",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "PickleLeaf": {
    "lit": "#adab52",
    "shade": "#828034",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "Scallop": {
    "lit": "#f9bb5c",
    "shade": "#e3973a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "ScallopTop": {
    "lit": "#fde391",
    "shade": "#efc466",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "Shrimp": {
    "lit": "#fa9c66",
    "shade": "#e26e42",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
   },
   "StarchBag": {
    "lit": "#fae09b",
    "shade": "#e4b866",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "CornCob": {
    "lit": "#fcc54c",
    "shade": "#e9a02e",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "ClayPot": {
    "lit": "#dc9a68",
    "shade": "#b6704b",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
   },
   "Pancake": {
    "lit": "#fcefcf",
    "shade": "#ead09d",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "EggShell": {
    "lit": "#fde4cd",
    "shade": "#efbf9c",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "RadishWhite": {
    "lit": "#f7efdd",
    "shade": "#dcc9a6",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "RadishFlesh": {
    "lit": "#fcf8ee",
    "shade": "#e6dcc6",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "RadishTop": {
    "lit": "#e3df9c",
    "shade": "#bfbd68",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "RadishLeaf": {
    "lit": "#8db158",
    "shade": "#62863a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "CucumberGreen": {
    "lit": "#6f8f41",
    "shade": "#4f6a2d",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
   },
   "CucumberFlesh": {
    "lit": "#f4efc0",
    "shade": "#dcd38f",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "CucumberSeed": {
    "lit": "#e6dc8e",
    "shade": "#ccc06a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "CalyxGreen": {
    "lit": "#99a346",
    "shade": "#6f7a2d",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "BambooHusk": {
    "lit": "#d59b5f",
    "shade": "#a86b3a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "BambooFlesh": {
    "lit": "#f9e6ae",
    "shade": "#e3c47c",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "PerillaPurple": {
-   "lit": "#a85a7c",
-   "shade": "#7d3b58",
-   "emission": 0.0
+   "lit": "#984a7a",
+   "shade": "#6e3058",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.75,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 26,
+    "color": "#b07098",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
   },
   "PerillaDeep": {
-   "lit": "#8a4466",
-   "shade": "#632f4a",
-   "emission": 0.0
+   "lit": "#7a3a68",
+   "shade": "#562848",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.75,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 26,
+    "color": "#9a5a88",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
   },
   "PerillaGreen": {
    "lit": "#a3b065",
    "shade": "#7a8642",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "ShiitakeCap": {
    "lit": "#b06a3e",
    "shade": "#86492a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "ShiitakeFlesh": {
    "lit": "#f6dfba",
    "shade": "#dcb98a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "TomatoRed": {
    "lit": "#f1532f",
    "shade": "#c9301c",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
   },
   "TomatoFlesh": {
    "lit": "#f8925c",
    "shade": "#e06c3e",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "TomatoSeed": {
    "lit": "#f8c45e",
    "shade": "#e0a040",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "ChiliRed": {
    "lit": "#e5392a",
    "shade": "#b3221c",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
   },
   "PotatoSkin": {
    "lit": "#e8b563",
    "shade": "#c4893f",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "PotatoFlesh": {
    "lit": "#faeaa6",
    "shade": "#e6cd78",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
   },
   "PotatoEye": {
    "lit": "#9e6532",
    "shade": "#764720",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "GarlicSkin": {
    "lit": "#f8eedf",
    "shade": "#dcc3b6",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "GarlicClove": {
    "lit": "#f9ecc8",
    "shade": "#e3cc97",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "vtint": 1.0
   },
   "GarlicPeel": {
    "lit": "#ebc4ad",
    "shade": "#c99782",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "GarlicStreak": {
    "lit": "#c99aa6",
    "shade": "#a57a86",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "SugarWhite": {
    "lit": "#fbf1df",
    "shade": "#e6d2ae",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "RockSugar": {
    "lit": "#f6c979",
    "shade": "#dca452",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
   },
   "VinegarGlaze": {
    "lit": "#7d4129",
    "shade": "#552a19",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
   },
   "VinegarDark": {
    "lit": "#6f2b13",
    "shade": "#4c1a0a",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
   },
   "JugStopper": {
    "lit": "#b5714a",
    "shade": "#8a5233",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
   },
   "RiceWine": {
    "lit": "#efe2ab",
    "shade": "#d5c483",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
   },
   "ColaDark": {
    "lit": "#7a3018",
    "shade": "#541d0c",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
   },
   "LabelRed": {
    "lit": "#e0453a",
    "shade": "#b52e25",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
   },
   "BottleGlass": {
    "lit": "#e0e8d4",
    "shade": "#b5c5ae",
-   "emission": 0.0
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "ChiliOil": {
+   "lit": "#d8482c",
+   "shade": "#a83020",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "Sauce": {
+   "lit": "#b5652e",
+   "shade": "#8a4620",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "Jelly": {
+   "lit": "#f9d896",
+   "shade": "#efb565",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "BokChoy": {
+   "lit": "#5f8f3c",
+   "shade": "#406c27",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "PorkLean": {
+   "lit": "#efc3a6",
+   "shade": "#d39a7c",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 13,
+    "color": "#f9dfcf",
+    "amount": 0.4,
+    "bump": 0.3
+   }
+  },
+  "ColdNoodle": {
+   "lit": "#f7dcaa",
+   "shade": "#e5b676",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "ClearBroth": {
+   "lit": "#f2e5b8",
+   "shade": "#d6c08a",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "MapoTofu": {
+   "lit": "#fbdc9e",
+   "shade": "#eeb062",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "MincedPork": {
+   "lit": "#a06038",
+   "shade": "#734025",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 18,
+    "color": "#bd7f53",
+    "amount": 0.4,
+    "bump": 0.35
+   }
+  },
+  "SourBroth": {
+   "lit": "#f2cc5e",
+   "shade": "#d8a838",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.4
+  },
+  "SpicyBroth": {
+   "lit": "#eca42c",
+   "shade": "#cc8418",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.8
+  },
+  "SauerLeaf": {
+   "lit": "#78883a",
+   "shade": "#56652a",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#a8b46a",
+    "amount": 0.45,
+    "bump": 0.25
+   }
+  },
+  "FriedSkin": {
+   "lit": "#de7c2c",
+   "shade": "#b85e1a",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_crisp",
+    "scale": 22,
+    "color": "#8a4a1a",
+    "amount": 0.45,
+    "bump": 0.4
+   },
+   "vtint": 1.0
+  },
+  "FriedBelly": {
+   "lit": "#f0c98a",
+   "shade": "#d29f5e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "FriedFin": {
+   "lit": "#f4b45a",
+   "shade": "#d08c3a",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 22,
+    "color": "#8a4214",
+    "amount": 0.45,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "FriedCut": {
+   "lit": "#f8e2b0",
+   "shade": "#e2c07e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.4,
+   "vtint": 1.0
+  },
+  "BraisedSkin": {
+   "lit": "#c98445",
+   "shade": "#9c5c2b",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_scales",
+    "scale": 16,
+    "color": "#4a2810",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "SpinachGreen": {
+   "lit": "#5c9443",
+   "shade": "#3f6e2f",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#9fc878",
+    "amount": 0.45,
+    "bump": 0.25
+   }
+  },
+  "RawFish": {
+   "lit": "#fbe5d8",
+   "shade": "#e9c5b2",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "SilverSkin": {
+   "lit": "#aeb4bc",
+   "shade": "#848b95",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "ZhaRice": {
+   "lit": "#f4dcc2",
+   "shade": "#dcb893",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "CrispPiece": {
+   "lit": "#fea232",
+   "shade": "#f07a14",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_crisp",
+    "scale": 18,
+    "color": "#b04a10",
+    "amount": 0.4,
+    "bump": 0.6
+   },
+   "vtint": 1.0
+  },
+  "CrispHead": {
+   "lit": "#f2a04a",
+   "shade": "#dc7e30",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_crisp",
+    "scale": 18,
+    "color": "#a8521a",
+    "amount": 0.4,
+    "bump": 0.5
+   },
+   "vtint": 1.0
+  },
+  "SweetSour": {
+   "lit": "#e8542e",
+   "shade": "#c03a1d",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "WineBroth": {
+   "lit": "#cdb36a",
+   "shade": "#a88d48",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "CrabMeat": {
+   "lit": "#f8e4bf",
+   "shade": "#e2ba86",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#e8b878",
+    "amount": 0.4,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "CrabRoe": {
+   "lit": "#f7941e",
+   "shade": "#d8711a",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_chopped",
+    "scale": 45,
+    "color": "#ffb84a",
+    "amount": 0.5,
+    "bump": 0.4
+   },
+   "vtint": 1.0
+  },
+  "DrunkShell": {
+   "lit": "#a08a4e",
+   "shade": "#796838",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_shell",
+    "scale": 22,
+    "color": "#748790",
+    "amount": 0.55,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "CrabClaw": {
+   "lit": "#f09a62",
+   "shade": "#d27a44",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.55,
+   "vtint": 1.0
+  },
+  "ChiliOrange": {
+   "lit": "#f2773a",
+   "shade": "#cf5322",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "TomatoJuice": {
+   "lit": "#ee7a3c",
+   "shade": "#cc5a26",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "EggYolk": {
+   "lit": "#ffe47c",
+   "shade": "#f9c458",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_curd",
+    "scale": 14,
+    "color": "#f0a03a",
+    "amount": 0.5,
+    "bump": 0.35
+   }
+  },
+  "GlazedChicken": {
+   "lit": "#eaa462",
+   "shade": "#c4793c",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 12,
+    "color": "#f8cf9a",
+    "amount": 0.6,
+    "bump": 1.0
+   }
+  },
+  "KungPaoSauce": {
+   "lit": "#b8432a",
+   "shade": "#8c2e1b",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "ColaWing": {
+   "lit": "#cd6934",
+   "shade": "#9a421f",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 8,
+    "color": "#7e2d0c",
+    "amount": 0.25,
+    "bump": 1.0
+   }
+  },
+  "WingKnob": {
+   "lit": "#efd2a8",
+   "shade": "#cfa97c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 14,
+    "color": "#f7e4c4",
+    "amount": 0.25,
+    "bump": 0.2
+   }
+  },
+  "ColaSauce": {
+   "lit": "#93401d",
+   "shade": "#6c2b13",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "StewGravy": {
+   "lit": "#e9a64a",
+   "shade": "#c98330",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "StewPotato": {
+   "lit": "#f7cb5c",
+   "shade": "#dea53c",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "BraisedPork": {
+   "lit": "#a94a2b",
+   "shade": "#7e331c",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 13,
+    "color": "#c86c42",
+    "amount": 0.5,
+    "bump": 1.0
+   }
+  },
+  "BraisedFat": {
+   "lit": "#f3d3a6",
+   "shade": "#d8ad7a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 10,
+    "color": "#f9e4c4",
+    "amount": 0.25,
+    "bump": 0.2
+   }
+  },
+  "LizhiKidney": {
+   "lit": "#dc7a4b",
+   "shade": "#b05534",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 10,
+    "color": "#eea06c",
+    "amount": 0.3,
+    "bump": 0.3
+   }
+  },
+  "LizhiScore": {
+   "lit": "#b9542f",
+   "shade": "#8a3b20",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 10,
+    "color": "#d36e42",
+    "amount": 0.3,
+    "bump": 0.3
+   }
+  },
+  "DarkGreens": {
+   "lit": "#3f7a34",
+   "shade": "#2c5a25",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#a8cf7a",
+    "amount": 0.5,
+    "bump": 0.25
+   }
+  },
+  "LightSauce": {
+   "lit": "#e3a465",
+   "shade": "#c37f40",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "RoastDuck": {
+   "lit": "#c9512a",
+   "shade": "#99381c",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 7,
+    "color": "#8a2f15",
+    "amount": 0.25,
+    "bump": 0.9
+   }
+  },
+  "DuckMeat": {
+   "lit": "#f5ddcb",
+   "shade": "#dfbca4",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 12,
+    "color": "#fcefe6",
+    "amount": 0.4,
+    "bump": 0.3
+   }
+  },
+  "Earthenware": {
+   "lit": "#c4743f",
+   "shade": "#97522a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "GoldenBroth": {
+   "lit": "#f0c35a",
+   "shade": "#d49c34",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "StewChicken": {
+   "lit": "#f6e3c6",
+   "shade": "#ddc29c",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 12,
+    "color": "#fdf0dc",
+    "amount": 0.4,
+    "bump": 0.3
+   }
+  },
+  "RawPork": {
+   "lit": "#e28474",
+   "shade": "#cb6457",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_marble",
+    "scale": 13,
+    "color": "#f9ddcb",
+    "amount": 0.9,
+    "bump": 0.7
+   }
+  },
+  "PorkFat": {
+   "lit": "#f9ddcb",
+   "shade": "#edb9a1",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 9,
+    "color": "#f2c2ad",
+    "amount": 0.3,
+    "bump": 0.25
+   }
+  },
+  "RawChicken": {
+   "lit": "#f8c6aa",
+   "shade": "#e1856a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 10,
+    "color": "#fde8dc",
+    "amount": 0.6,
+    "bump": 0.8
+   }
+  },
+  "KidneyFat": {
+   "lit": "#f8c9a6",
+   "shade": "#e3a582",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 12,
+    "color": "#fbe2c8",
+    "amount": 0.3,
+    "bump": 0.2
+   }
+  },
+  "DuckCut": {
+   "lit": "#f6b896",
+   "shade": "#e09474",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 14,
+    "color": "#fbd6c4",
+    "amount": 0.4,
+    "bump": 0.3
+   }
+  },
+  "CarpFin": {
+   "lit": "#988b80",
+   "shade": "#766a60",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 45,
+    "color": "#6a6058",
+    "amount": 0.35,
+    "bump": 0.1
+   }
+  },
+  "CarpSkin": {
+   "lit": "#f2ebe2",
+   "shade": "#d6c9ba",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_scales",
+    "scale": 9,
+    "color": "#454a52",
+    "amount": 0.42,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "CarpHead": {
+   "lit": "#f2ebe2",
+   "shade": "#d6c9ba",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.35,
+   "vtint": 1.0
+  },
+  "FishCrown": {
+   "lit": "#686e76",
+   "shade": "#4c5158",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.3
+  },
+  "GillRed": {
+   "lit": "#c4574c",
+   "shade": "#9c3d34",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#8a3028",
+    "amount": 0.5,
+    "bump": 0.2
+   }
+  },
+  "MouthPink": {
+   "lit": "#d98a7c",
+   "shade": "#b46a5d",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.6
+  },
+  "GuiyuSkin": {
+   "lit": "#f1e6c4",
+   "shade": "#d6c69e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_shell",
+    "scale": 24,
+    "color": "#7a6a40",
+    "amount": 0.25,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "DuckRawSkin": {
+   "lit": "#fff0d8",
+   "shade": "#f6caa6",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.1,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 18,
+    "color": "#eba37f",
+    "amount": 0.7,
+    "bump": 0.6
+   },
+   "vtint": 1.0
+  },
+  "DuckRawLimb": {
+   "lit": "#fedcc0",
+   "shade": "#f2b494",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.15,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 18,
+    "color": "#e8957a",
+    "amount": 0.65,
+    "bump": 0.6
+   },
+   "vtint": 1.0
+  },
+  "DuckRawCut": {
+   "lit": "#f2a088",
+   "shade": "#d47e66",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#c8604c",
+    "amount": 0.35,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "DuckRawBone": {
+   "lit": "#dc7466",
+   "shade": "#b85a4c",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "DuckRawInk": {
+   "lit": "#7a3a20",
+   "shade": "#5a2814",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.3,
+   "vtint": 1.0
+  },
+  "DuckRawGlint": {
+   "lit": "#fffaf2",
+   "shade": "#f8e8d8",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.1,
+   "vtint": 1.0
+  },
+  "WingRawSkin": {
+   "lit": "#fde2cc",
+   "shade": "#f2b89c",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.15,
+   "detail": {
+    "tex": "food_wingskin",
+    "scale": 18,
+    "color": "#fff6ee",
+    "amount": 0.85,
+    "bump": 0.35
+   },
+   "vtint": 1.0
+  },
+  "WingRawMeat": {
+   "lit": "#ec7a6d",
+   "shade": "#c85a50",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#b84c44",
+    "amount": 0.35,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "WingRawDeep": {
+   "lit": "#d0584e",
+   "shade": "#a8443c",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "WingRawGlint": {
+   "lit": "#fffaf4",
+   "shade": "#f6e4dc",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.1,
+   "vtint": 1.0
+  },
+  "WingRawInk": {
+   "lit": "#7a3a20",
+   "shade": "#5a2814",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.3,
+   "vtint": 1.0
+  },
+  "WontonFill": {
+   "lit": "#e2b2a4",
+   "shade": "#c48d80",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 14,
+    "color": "#ecc6ba",
+    "amount": 0.3,
+    "bump": 0.2
+   }
+  },
+  "CucumberStrip": {
+   "lit": "#c9dc8e",
+   "shade": "#a3bb68",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "RadishStrip": {
+   "lit": "#f8f3e2",
+   "shade": "#e0d6bb",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "PorkRind": {
+   "lit": "#a8532f",
+   "shade": "#7e3a1f",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 12,
+    "color": "#73321a",
+    "amount": 0.3,
+    "bump": 0.5
+   }
+  },
+  "BokStalk": {
+   "lit": "#dfeab8",
+   "shade": "#b9cc8a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ColdDressing": {
+   "lit": "#f1c27e",
+   "shade": "#d49a55",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "FishSlice": {
+   "lit": "#fdf1d8",
+   "shade": "#efd6b0",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#e8cbb8",
+    "amount": 0.4,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "SauerStalk": {
+   "lit": "#f6e88e",
+   "shade": "#d8c45e",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#c8a842",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "SuanSkin": {
+   "lit": "#86786a",
+   "shade": "#5c5046",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_scales",
+    "scale": 40,
+    "color": "#a89a88",
+    "amount": 0.35,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "SuanLeaf": {
+   "lit": "#7a6410",
+   "shade": "#584608",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#a89040",
+    "amount": 0.4,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "ChiliDrop": {
+   "lit": "#d8301a",
+   "shade": "#a82012",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "SpicyStalk": {
+   "lit": "#d8b43a",
+   "shade": "#ae8a1c",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "DrunkCream": {
+   "lit": "#f2d9ad",
+   "shade": "#d9b986",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.45,
+   "vtint": 1.0
+  },
+  "CaimianBroth": {
+   "lit": "#e6c460",
+   "shade": "#c9a440",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.5
+  },
+  "CaimianNoodle": {
+   "lit": "#fcefcc",
+   "shade": "#ead6a4",
+   "emission": 0.0,
+   "gloss": 0.35,
+   "vivid": 0.3,
+   "vtint": 1.0
+  },
+  "CaimianLeaf": {
+   "lit": "#cad35a",
+   "shade": "#a6b03c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#f2f6cc",
+    "amount": 0.45,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "CaimianLeafDark": {
+   "lit": "#5c8c1e",
+   "shade": "#406c12",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#8ab846",
+    "amount": 0.4,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "CaimianScallion": {
+   "lit": "#5f9620",
+   "shade": "#437414",
+   "emission": 0.0,
+   "gloss": 0.45,
+   "vivid": 0.7,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#94c856",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "CaimianScallionCut": {
+   "lit": "#e2e48c",
+   "shade": "#c2c866",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "HuntunSkin": {
+   "lit": "#fff6e2",
+   "shade": "#e2c290",
+   "emission": 0.0,
+   "gloss": 0.35,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 18,
+    "color": "#fff4dc",
+    "amount": 0.15,
+    "bump": 0.12
+   },
+   "vtint": 1.0
+  },
+  "HuntunFill": {
+   "lit": "#ebbaa0",
+   "shade": "#cc967c",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_chopped",
+    "scale": 50,
+    "color": "#f6d8c6",
+    "amount": 0.5,
+    "bump": 0.35
+   },
+   "vtint": 1.0
+  },
+  "HuntunInk": {
+   "lit": "#8a5a34",
+   "shade": "#6a4024",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
+  },
+  "HuntunBroth": {
+   "lit": "#e8d8a0",
+   "shade": "#c4ae70",
+   "emission": 0.0,
+   "gloss": 0.7,
+   "vivid": 0.35
+  },
+  "HuntunBit": {
+   "lit": "#f3d98c",
+   "shade": "#d6b864",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.5
+  },
+  "GuajiRadish": {
+   "lit": "#faeccb",
+   "shade": "#dcc290",
+   "emission": 0.0,
+   "gloss": 0.45,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_frost",
+    "scale": 28,
+    "color": "#ffffff",
+    "amount": 0.75,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "GuajiCucumber": {
+   "lit": "#e0db8a",
+   "shade": "#b8b24b",
+   "emission": 0.0,
+   "gloss": 0.45,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_frost",
+    "scale": 28,
+    "color": "#f6fadf",
+    "amount": 0.55,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "GuajiCucumberSkin": {
+   "lit": "#4f6416",
+   "shade": "#38490c",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.7,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 30,
+    "color": "#2f4a14",
+    "amount": 0.35,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "GuajiDressing": {
+   "lit": "#e8cf8e",
+   "shade": "#c9aa62",
+   "emission": 0.0,
+   "gloss": 0.75,
+   "vivid": 0.5
+  },
+  "GuajiHeap": {
+   "lit": "#c9a85e",
+   "shade": "#a8873e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.4
+  },
+  "CharouBroth": {
+   "lit": "#e2b84e",
+   "shade": "#c69a34",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.55
+  },
+  "CharouNoodle": {
+   "lit": "#f9e4b2",
+   "shade": "#e6c88a",
+   "emission": 0.0,
+   "gloss": 0.35,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_noodles",
+    "scale": 20,
+    "color": "#dcae62",
+    "amount": 0.45,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "CharouPork": {
+   "lit": "#f2b890",
+   "shade": "#d69670",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 22,
+    "color": "#f6d8c6",
+    "amount": 0.45,
+    "bump": 0.35
+   },
+   "vtint": 1.0
+  },
+  "CharouRind": {
+   "lit": "#b45c30",
+   "shade": "#8a421e",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 18,
+    "color": "#7a3418",
+    "amount": 0.3,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "CharouBokLeaf": {
+   "lit": "#4e7e26",
+   "shade": "#365e16",
+   "emission": 0.0,
+   "gloss": 0.45,
+   "vivid": 0.7,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 28,
+    "color": "#8cbc50",
+    "amount": 0.45,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "CharouBokDark": {
+   "lit": "#2e5212",
+   "shade": "#1e3a0a",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.6,
+   "vtint": 1.0
+  },
+  "CharouBokStalk": {
+   "lit": "#e0e6a6",
+   "shade": "#bcc87c",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 26,
+    "color": "#c8d890",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "CharouScallion": {
+   "lit": "#6a9c22",
+   "shade": "#4a7814",
+   "emission": 0.0,
+   "gloss": 0.45,
+   "vivid": 0.75,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#9ccc5a",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "CharouScallionCut": {
+   "lit": "#d8e28c",
+   "shade": "#b6c464",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "CharouNoodleV": {
+   "lit": "#f9e4b2",
+   "shade": "#e6c88a",
+   "emission": 0.0,
+   "gloss": 0.35,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_noodles_v",
+    "scale": 20,
+    "color": "#dcae62",
+    "amount": 0.45,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "LengtaoDressing": {
+   "lit": "#eeaa52",
+   "shade": "#d08834",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.7
+  },
+  "LengtaoNoodle": {
+   "lit": "#fdeccb",
+   "shade": "#eccb98",
+   "emission": 0.0,
+   "gloss": 0.45,
+   "vivid": 0.2,
+   "detail": {
+    "tex": "food_noodles",
+    "scale": 24,
+    "color": "#e89c50",
+    "amount": 0.55,
+    "bump": 0.35
+   },
+   "vtint": 1.0
+  },
+  "LengtaoNest": {
+   "lit": "#efc184",
+   "shade": "#d49c5c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_noodles",
+    "scale": 24,
+    "color": "#d88438",
+    "amount": 0.5,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "LengtaoCucumber": {
+   "lit": "#e2dc84",
+   "shade": "#c0bc5c",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.55,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#f4f0b4",
+    "amount": 0.35,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "LengtaoCucumberSkin": {
+   "lit": "#5a7a14",
+   "shade": "#3e5a0a",
+   "emission": 0.0,
+   "gloss": 0.45,
+   "vivid": 0.7,
+   "vtint": 1.0
+  },
+  "LengtaoHerb": {
+   "lit": "#4a7012",
+   "shade": "#325208",
+   "emission": 0.0,
+   "gloss": 0.35,
+   "vivid": 0.7,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#7aa83a",
+    "amount": 0.45,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "LengtaoHerbDark": {
+   "lit": "#2a4a06",
+   "shade": "#1a3404",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#5a8a24",
+    "amount": 0.4,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "LengtaoNoodleV": {
+   "lit": "#fdeccb",
+   "shade": "#eccb98",
+   "emission": 0.0,
+   "gloss": 0.45,
+   "vivid": 0.2,
+   "detail": {
+    "tex": "food_noodles_v",
+    "scale": 24,
+    "color": "#e89c50",
+    "amount": 0.55,
+    "bump": 0.35
+   },
+   "vtint": 1.0
+  },
+  "WensiBroth": {
+   "lit": "#e8d49a",
+   "shade": "#c4ae6e",
+   "emission": 0.0,
+   "gloss": 0.7,
+   "vivid": 0.45
+  },
+  "WensiBase": {
+   "lit": "#f0d38e",
+   "shade": "#d4b068",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "WensiSilk": {
+   "lit": "#fcf1d8",
+   "shade": "#e8d4a8",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 40,
+    "color": "#fffaf0",
+    "amount": 0.25,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "WensiShiitake": {
+   "lit": "#9a5e36",
+   "shade": "#744222",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 35,
+    "color": "#a87048",
+    "amount": 0.35,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "WensiShiitakeFlesh": {
+   "lit": "#c08a5a",
+   "shade": "#9a6a40",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.4,
+   "vtint": 1.0
+  },
+  "WensiBamboo": {
+   "lit": "#fad57e",
+   "shade": "#dcb056",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 35,
+    "color": "#fff0c0",
+    "amount": 0.35,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "WensiScallion": {
+   "lit": "#a8c42e",
+   "shade": "#7e9a14",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.8,
+   "vtint": 1.0
+  },
+  "JugMouth": {
+   "lit": "#4a2416",
+   "shade": "#331810",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "CeladonLip": {
+   "lit": "#f1e8cc",
+   "shade": "#d8cba4",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.5
+  },
+  "CeladonDeep": {
+   "lit": "#8fae99",
+   "shade": "#70907b",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5
+  },
+  "ColaGlass": {
+   "lit": "#eef0dc",
+   "shade": "#bcc4a6",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "glass": {
+    "alpha": 0.07,
+    "edge": 0.55,
+    "gloss": 1.0,
+    "rim": 1.0,
+    "order": 0
+   }
+  },
+  "ColaFoam": {
+   "lit": "#e2b484",
+   "shade": "#bc8c5c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "ColaGlassDeep": {
+   "lit": "#d6d4bc",
+   "shade": "#a6a688",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "glass": {
+    "alpha": 0.2,
+    "edge": 0.45,
+    "gloss": 0.5,
+    "rim": 0.5,
+    "order": -1
+   }
+  },
+  "ColaLiquid": {
+   "lit": "#741a06",
+   "shade": "#4a0e03",
+   "emission": 0.0,
+   "gloss": 0.7,
+   "vivid": 0.7,
+   "detail": {
+    "tex": "food_bubbles",
+    "scale": 30,
+    "color": "#f4b088",
+    "amount": 0.35,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "CapRim": {
+   "lit": "#f4a28c",
+   "shade": "#d9776a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "CapSkirt": {
+   "lit": "#d2352c",
+   "shade": "#a51f19",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "SauerCrock": {
+   "lit": "#c27852",
+   "shade": "#94523a",
+   "emission": 0.0,
+   "gloss": 0.08,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_clay",
+    "scale": 10,
+    "color": "#7a3a24",
+    "amount": 0.45,
+    "bump": 0.35
+   },
+   "vtint": 1.0
+  },
+  "SauerLip": {
+   "lit": "#dc9c74",
+   "shade": "#b07454",
+   "emission": 0.0,
+   "gloss": 0.12,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_clay",
+    "scale": 10,
+    "color": "#9a5a3a",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "SauerCrockIn": {
+   "lit": "#a55c3c",
+   "shade": "#733d27",
+   "emission": 0.0,
+   "gloss": 0.05,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_clay",
+    "scale": 10,
+    "color": "#6a3220",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "SauerFill": {
+   "lit": "#6a5a1c",
+   "shade": "#4a3e12",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
+  },
+  "SauerPale": {
+   "lit": "#efca5c",
+   "shade": "#cba13a",
+   "emission": 0.0,
+   "gloss": 0.35,
+   "vivid": 0.75,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 16,
+    "color": "#c49a32",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "SauerDark": {
+   "lit": "#7a641c",
+   "shade": "#55450e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 16,
+    "color": "#4a3a08",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "DuojiaoOil": {
+   "lit": "#efa040",
+   "shade": "#d07a26",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "BraisedFin": {
+   "lit": "#bd7a40",
+   "shade": "#94572a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 22,
+    "color": "#5a3014",
+    "amount": 0.6,
+    "bump": 0.15
+   }
+  },
+  "BreadCrumb": {
+   "lit": "#fbf1db",
+   "shade": "#e6d4ae",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "SkinCurl": {
+   "lit": "#f8e4d2",
+   "shade": "#e3c3ac",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 15,
+    "color": "#eab9a0",
+    "amount": 0.4,
+    "bump": 0.4
+   }
+  },
+  "GreenStem": {
+   "lit": "#c3da8c",
+   "shade": "#9cba62",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "ZhaFlesh": {
+   "lit": "#fbdcb4",
+   "shade": "#eebd8c",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "ZhaCut": {
+   "lit": "#f2b07e",
+   "shade": "#d98a5a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "ZhaGinger": {
+   "lit": "#fbd574",
+   "shade": "#e5ae48",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "ZhaBrine": {
+   "lit": "#ddd193",
+   "shade": "#c0b16c",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "DuojiaoDark": {
+   "lit": "#c9261b",
+   "shade": "#9c1712",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_chopped",
+    "scale": 14,
+    "color": "#f28a3a",
+    "amount": 0.7,
+    "bump": 0.5
+   }
+  },
+  "DuojiaoBase": {
+   "lit": "#b8261a",
+   "shade": "#8c1810",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "HubingCrust": {
+   "lit": "#fbe3b2",
+   "shade": "#e9c287",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_crust",
+    "scale": 10,
+    "color": "#e09a4c",
+    "amount": 0.3,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "HubingCrumb": {
+   "lit": "#fcf1d8",
+   "shade": "#e9d3a6",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.2,
+   "detail": {
+    "tex": "food_crumb",
+    "scale": 16,
+    "color": "#d8b47a",
+    "amount": 0.45,
+    "bump": 0.4
+   },
+   "vtint": 1.0
+  },
+  "HubingChar": {
+   "lit": "#b65c24",
+   "shade": "#8e451a",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 30,
+    "color": "#d8843c",
+    "amount": 0.5,
+    "bump": 0.2
+   }
+  },
+  "SjkJelly": {
+   "lit": "#f8d898",
+   "shade": "#e8b468",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 14,
+    "color": "#e8a650",
+    "amount": 0.3,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "SjkSkin": {
+   "lit": "#fcf0dc",
+   "shade": "#ecd4b6",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 26,
+    "color": "#e8c7a8",
+    "amount": 0.3,
+    "bump": 0.2
+   }
+  },
+  "SjkGinger": {
+   "lit": "#fbe27e",
+   "shade": "#e8c35a",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.5
+  },
+  "SjkScallion": {
+   "lit": "#6fa62c",
+   "shade": "#4f8420",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.7
+  },
+  "SjkScallionCut": {
+   "lit": "#c8df8a",
+   "shade": "#a3c264",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5
+  },
+  "GreensMid": {
+   "lit": "#6a9634",
+   "shade": "#4c7224",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#b8d088",
+    "amount": 0.4,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "GreensDeep": {
+   "lit": "#24461a",
+   "shade": "#173212",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "EyeOlive": {
+   "lit": "#8c8458",
+   "shade": "#6a6440",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "FishInk": {
+   "lit": "#5a3018",
+   "shade": "#40200e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "FinRay": {
+   "lit": "#a0501c",
+   "shade": "#7c3c12",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "FriedFinOrange": {
+   "lit": "#f0a035",
+   "shade": "#d6721e",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "PanFriedSkin": {
+   "lit": "#e8963a",
+   "shade": "#c47426",
+   "emission": 0.0,
+   "gloss": 0.55,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fishskin",
+    "scale": 20,
+    "color": "#7a3410",
+    "amount": 0.7,
+    "bump": 1.0
+   },
+   "vtint": 1.0
+  },
+  "FriedGold": {
+   "lit": "#f6bc5c",
+   "shade": "#dc9a3c",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "FriedBack": {
+   "lit": "#a8885a",
+   "shade": "#806640",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.3,
+   "vtint": 1.0
+  },
+  "ZisuSkin": {
+   "lit": "#c8843f",
+   "shade": "#9a5e2c",
+   "emission": 0.0,
+   "gloss": 0.65,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_scales",
+    "scale": 30,
+    "color": "#5a2a10",
+    "amount": 0.6,
+    "bump": 0.8
+   },
+   "vtint": 1.0
+  },
+  "ZisuInk": {
+   "lit": "#4a2610",
+   "shade": "#341a08",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "ZisuBrown": {
+   "lit": "#8f430d",
+   "shade": "#6e3008",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ZisuGold": {
+   "lit": "#f4b058",
+   "shade": "#d8903c",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ZisuPale": {
+   "lit": "#fad8a8",
+   "shade": "#e6b884",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ZisuIris": {
+   "lit": "#a87a3e",
+   "shade": "#80582a",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ZisuOrbit": {
+   "lit": "#e8c890",
+   "shade": "#c8a066",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ZisuPupil": {
+   "lit": "#3a2010",
+   "shade": "#28160a",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ZisuFin": {
+   "lit": "#bc7a40",
+   "shade": "#8e5a2c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.55,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 22,
+    "color": "#6a3414",
+    "amount": 0.45,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "ZisuFinRay": {
+   "lit": "#7a3c16",
+   "shade": "#5a2a0e",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "ZisuLeaf": {
+   "lit": "#7b3e50",
+   "shade": "#5a2a38",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.75,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 26,
+    "color": "#b07098",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "ZisuLeafDeep": {
+   "lit": "#4a2030",
+   "shade": "#341420",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.75,
+   "vtint": 1.0
+  },
+  "ZisuLeafGreen": {
+   "lit": "#5f7028",
+   "shade": "#46541c",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.75,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#9fc878",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "ZisuLeafLight": {
+   "lit": "#9a5a6e",
+   "shade": "#7a4458",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.75,
+   "vtint": 1.0
+  },
+  "ZisuBamboo": {
+   "lit": "#f6d89a",
+   "shade": "#e8b868",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.6,
+   "vtint": 1.0
+  },
+  "ZisuGroove": {
+   "lit": "#d9a050",
+   "shade": "#b88038",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.6,
+   "vtint": 1.0
+  },
+  "YbzRice": {
+   "lit": "#fdf0dc",
+   "shade": "#f2d8b4",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_grains",
+    "scale": 17,
+    "color": "#e4bf8e",
+    "amount": 0.4,
+    "bump": 0.5
+   }
+  },
+  "YbzGrain": {
+   "lit": "#fff3e2",
+   "shade": "#f8dcc0",
+   "emission": 0.0,
+   "gloss": 0.25,
+   "vivid": 0.2,
+   "outline": 0.4
+  },
+  "YbzFlesh": {
+   "lit": "#fde4d0",
+   "shade": "#f3c6a6",
+   "emission": 0.0,
+   "gloss": 0.55,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 18,
+    "color": "#efc9b6",
+    "amount": 0.18,
+    "bump": 0.12
+   },
+   "vtint": 1.0
+  },
+  "YbzSkin": {
+   "lit": "#bcbab8",
+   "shade": "#8e8d90",
+   "emission": 0.0,
+   "gloss": 0.65,
+   "vivid": 0.12,
+   "detail": {
+    "tex": "food_scales",
+    "scale": 34,
+    "color": "#5c606e",
+    "amount": 0.5,
+    "bump": 0.15
+   }
+  },
+  "YbzSkinEdge": {
+   "lit": "#4c4e5a",
+   "shade": "#3a3c48",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.25
+  },
+  "YbzGinger": {
+   "lit": "#f9d66c",
+   "shade": "#e6b544",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.6
+  },
+  "EyeBrown": {
+   "lit": "#8a5a34",
+   "shade": "#6a4224",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "GuiyuDark": {
+   "lit": "#a0602f",
+   "shade": "#7a4220",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "GuiyuMouth": {
+   "lit": "#c4582a",
+   "shade": "#983c18",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0
+  },
+  "GuiyuGlaze": {
+   "lit": "#f7862c",
+   "shade": "#d6611a",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_crisp",
+    "scale": 18,
+    "color": "#a8340e",
+    "amount": 0.45,
+    "bump": 0.4
+   },
+   "vtint": 1.0
+  },
+  "GuiyuThroat": {
+   "lit": "#94351a",
+   "shade": "#6e2410",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "SauceShadow": {
+   "lit": "#a82e0e",
+   "shade": "#7a1e08",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 1.0
+  },
+  "GuiyuTail": {
+   "lit": "#f39a3c",
+   "shade": "#d27a30",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 22,
+    "color": "#8a4214",
+    "amount": 0.45,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "GuiyuRay": {
+   "lit": "#a85a28",
+   "shade": "#844420",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "HeadPale": {
+   "lit": "#fadc9e",
+   "shade": "#e6b47a",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_crisp",
+    "scale": 18,
+    "color": "#c88a4a",
+    "amount": 0.4,
+    "bump": 0.5
+   },
+   "vtint": 1.0
+  },
+  "HeadRed": {
+   "lit": "#e2581a",
+   "shade": "#b8400e",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "HeadBrown": {
+   "lit": "#b04a18",
+   "shade": "#86340e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_crisp",
+    "scale": 18,
+    "color": "#7a3010",
+    "amount": 0.3,
+    "bump": 0.4
+   },
+   "vtint": 1.0
+  },
+  "DuckKnob": {
+   "lit": "#8e3c1e",
+   "shade": "#66280f",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 9,
+    "color": "#5e2410",
+    "amount": 0.25,
+    "bump": 0.6
+   }
+  },
+  "KaoyaMeat": {
+   "lit": "#f4cdb6",
+   "shade": "#dda48a",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 12,
+    "color": "#fbe6da",
+    "amount": 0.5,
+    "bump": 0.5
+   }
+  },
+  "KaoyaSkin": {
+   "lit": "#ec6a1e",
+   "shade": "#bc3c0e",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.85,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 18,
+    "color": "#8a2a0c",
+    "amount": 0.45,
+    "bump": 0.5
+   },
+   "vtint": 1.0
+  },
+  "KaoyaCut": {
+   "lit": "#f4d6cc",
+   "shade": "#e2b0a2",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 16,
+    "color": "#e8b2a2",
+    "amount": 0.4,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "KaoyaPancake": {
+   "lit": "#f9e8c4",
+   "shade": "#ead0a0",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 16,
+    "color": "#dcb070",
+    "amount": 0.4,
+    "bump": 0.15
+   }
+  },
+  "KaoyaPancakeRim": {
+   "lit": "#9a7048",
+   "shade": "#7a5232",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.3
+  },
+  "KaoyaScallion": {
+   "lit": "#e2e09a",
+   "shade": "#c4c474",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#a8c878",
+    "amount": 0.4,
+    "bump": 0.2
+   }
+  },
+  "KaoyaScallionWhite": {
+   "lit": "#f7f4dc",
+   "shade": "#e2dcc0",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.2
+  },
+  "KaoyaGreen": {
+   "lit": "#a8bc52",
+   "shade": "#86983a",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.6
+  },
+  "KaoyaCucumber": {
+   "lit": "#5a7424",
+   "shade": "#435a18",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.7
+  },
+  "KaoyaLeaf": {
+   "lit": "#6aa63c",
+   "shade": "#4a8228",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.7,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 30,
+    "color": "#a8d080",
+    "amount": 0.4,
+    "bump": 0.25
+   }
+  },
+  "BambooHuskDark": {
+   "lit": "#a5673a",
+   "shade": "#7b4526",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "BambooHuskTan": {
+   "lit": "#c98d4c",
+   "shade": "#9e6535",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "BambooSheathYellow": {
+   "lit": "#e8c95f",
+   "shade": "#c3a03e",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "BambooBud": {
+   "lit": "#b3a144",
+   "shade": "#867630",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "BambooTipGreen": {
+   "lit": "#937c2e",
+   "shade": "#6c5a20",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "BambooCut": {
+   "lit": "#fcf0c6",
+   "shade": "#ecd59c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "BambooChamber": {
+   "lit": "#f1c573",
+   "shade": "#d8a44e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "BambooRing": {
+   "lit": "#efc47c",
+   "shade": "#d6a157",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "ShiitakeGill": {
+   "lit": "#d8b688",
+   "shade": "#b89266",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "ShiitakeCut": {
+   "lit": "#fbf0d8",
+   "shade": "#e9d5ae",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "ScallionLeaf": {
+   "lit": "#7c985d",
+   "shade": "#5d7a45",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "ScallionStalk": {
+   "lit": "#b9c96c",
+   "shade": "#8fa046",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "ScallionRoot": {
+   "lit": "#efd6a4",
+   "shade": "#c9a06a",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "GarlicRoot": {
+   "lit": "#e4b477",
+   "shade": "#b17b48",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "GarlicCrease": {
+   "lit": "#c9a27e",
+   "shade": "#a47e5c",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "GingerSkin": {
+   "lit": "#f9d394",
+   "shade": "#dea25e",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "GingerRing": {
+   "lit": "#d9a463",
+   "shade": "#b78046",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "PerillaOlive": {
+   "lit": "#b3a46e",
+   "shade": "#8a7a4a",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "PerillaCut": {
+   "lit": "#e6c48e",
+   "shade": "#c9a16a",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "GreensArtLeaf": {
+   "lit": "#b4c870",
+   "shade": "#88a04a",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_leafvein",
+    "scale": 20,
+    "color": "#eef4c8",
+    "amount": 0.35,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "ScallionArtLeaf": {
+   "lit": "#6f9050",
+   "shade": "#4f7038",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 20,
+    "color": "#a8c880",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "ScallionArtBulb": {
+   "lit": "#f4f1df",
+   "shade": "#d6d2b6",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_garlic",
+    "scale": 20,
+    "color": "#e8e2c0",
+    "amount": 0.25,
+    "bump": 0.1
+   },
+   "vtint": 1.0
+  },
+  "ScallionArtString": {
+   "lit": "#dcc07a",
+   "shade": "#b89a55",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.4,
+   "vtint": 1.0
+  },
+  "ScallionArtRoot": {
+   "lit": "#eed8a8",
+   "shade": "#c4a474",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.4
+  },
+  "GingerArtSkin": {
+   "lit": "#e2b06a",
+   "shade": "#b98346",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_ginger",
+    "scale": 16,
+    "color": "#9a6a34",
+    "amount": 0.35,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "GingerArtFlesh": {
+   "lit": "#f7dc8a",
+   "shade": "#e0bc5e",
+   "emission": 0.0,
+   "gloss": 0.35,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 22,
+    "color": "#f0c860",
+    "amount": 0.25,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "RadishArtSkin": {
+   "lit": "#f6eedc",
+   "shade": "#dccaa8",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 12,
+    "color": "#efe2c4",
+    "amount": 0.2,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "RadishArtFlesh": {
+   "lit": "#fbf6ea",
+   "shade": "#e6dac2",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 26,
+    "color": "#ffffff",
+    "amount": 0.3,
+    "bump": 0.1
+   },
+   "vtint": 1.0
+  },
+  "RadishArtLeaf": {
+   "lit": "#8db45a",
+   "shade": "#62863a",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_leafvein",
+    "scale": 22,
+    "color": "#d4e6a0",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "RadishArtStalk": {
+   "lit": "#d6dc94",
+   "shade": "#b0b86a",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "RadishArtHair": {
+   "lit": "#d8b98e",
+   "shade": "#ae8a5e",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.4
+  },
+  "PerillaArtLeaf": {
+   "lit": "#a05a88",
+   "shade": "#78406a",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_leafvein",
+    "scale": 22,
+    "color": "#d89ac0",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "PerillaArtStalk": {
+   "lit": "#8a8a4a",
+   "shade": "#666632",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 24,
+    "color": "#b0b070",
+    "amount": 0.3,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "PerillaArtTwine": {
+   "lit": "#e6c890",
+   "shade": "#c0a068",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.4,
+   "vtint": 1.0
+  },
+  "PotatoArtSkin": {
+   "lit": "#d9a45e",
+   "shade": "#b07c3c",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_potato",
+    "scale": 14,
+    "color": "#8a5428",
+    "amount": 0.35,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "PotatoArtFlesh": {
+   "lit": "#f6e29a",
+   "shade": "#e0c56c",
+   "emission": 0.0,
+   "gloss": 0.25,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 10,
+    "color": "#f2cf72",
+    "amount": 0.25,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "GarlicArtSkin": {
+   "lit": "#f3e6e2",
+   "shade": "#cdb7b8",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_garlic",
+    "scale": 18,
+    "color": "#b48ea0",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "GarlicArtRoot": {
+   "lit": "#b98a5a",
+   "shade": "#8a6038",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "GarlicArtPeel": {
+   "lit": "#dcb0a0",
+   "shade": "#b08070",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_garlic",
+    "scale": 22,
+    "color": "#9a6656",
+    "amount": 0.3,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "GarlicArtClove": {
+   "lit": "#f7e8bc",
+   "shade": "#e2c98e",
+   "emission": 0.0,
+   "gloss": 0.35,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 14,
+    "color": "#f0d48e",
+    "amount": 0.2,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "ToastSpot": {
+   "lit": "#e8b469",
+   "shade": "#cc934a",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "ClothLeaf": {
+   "lit": "#a9b993",
+   "shade": "#87986f",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "TwinePale": {
+   "lit": "#ece2bb",
+   "shade": "#cbbd8e",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
+  },
+  "CornHusk": {
+   "lit": "#b0b65d",
+   "shade": "#7e8746",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.75
+  },
+  "CornGroove": {
+   "lit": "#f4a430",
+   "shade": "#d6861d",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 1.0
+  },
+  "MiTub": {
+   "lit": "#e4c07c",
+   "shade": "#bf9552",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_plait",
+    "scale": 9,
+    "color": "#8a6428",
+    "amount": 0.6,
+    "bump": 0.5
+   },
+   "vtint": 1.0
+  },
+  "MiTubRim": {
+   "lit": "#e8c27a",
+   "shade": "#c29650",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_wood",
+    "scale": 22,
+    "color": "#9a7030",
+    "amount": 0.4,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "MiTubIn": {
+   "lit": "#c9a060",
+   "shade": "#a07a40",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_plait",
+    "scale": 9,
+    "color": "#7a5420",
+    "amount": 0.5,
+    "bump": 0.4
+   },
+   "vtint": 1.0
+  },
+  "MiWrap": {
+   "lit": "#b4b46a",
+   "shade": "#8a8a46",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#7a7a3a",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "MiRice": {
+   "lit": "#fbf4e2",
+   "shade": "#e6d6b2",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_grains",
+    "scale": 15,
+    "color": "#c4ad84",
+    "amount": 0.6,
+    "bump": 0.9
+   },
+   "vtint": 1.0
+  },
+  "MiRiceFill": {
+   "lit": "#d8c8a0",
+   "shade": "#b8a47a",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.3
+  },
+  "MiSpoon": {
+   "lit": "#d58a44",
+   "shade": "#a8622c",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_wood",
+    "scale": 20,
+    "color": "#8a4a20",
+    "amount": 0.45,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "MiCloth": {
+   "lit": "#f1e9d6",
+   "shade": "#cfc3a6",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_cloth",
+    "scale": 30,
+    "color": "#a09878",
+    "amount": 0.45,
+    "bump": 0.3
+   },
+   "vtint": 1.0
+  },
+  "MiLeafPrint": {
+   "lit": "#a9b493",
+   "shade": "#86916f",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.45
+  },
+  "MiRope": {
+   "lit": "#c88a48",
+   "shade": "#9e6630",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 40,
+    "color": "#7a4a20",
+    "amount": 0.35,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "YanPaper": {
+   "lit": "#f2d6a8",
+   "shade": "#cfa676",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_crumple",
+    "scale": 5,
+    "color": "#a07c50",
+    "amount": 0.3,
+    "bump": 0.8
+   },
+   "vtint": 1.0
+  },
+  "YanHeap": {
+   "lit": "#6e6420",
+   "shade": "#4c4412",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
+  },
+  "YanTwine": {
+   "lit": "#dcae6c",
+   "shade": "#b48448",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 40,
+    "color": "#a87838",
+    "amount": 0.35,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "YanLeaf": {
+   "lit": "#9a9238",
+   "shade": "#6e6824",
+   "emission": 0.0,
+   "gloss": 0.2,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_veins",
+    "scale": 18,
+    "color": "#4e4a14",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "YanShred": {
+   "lit": "#f4dc8e",
+   "shade": "#d8b85c",
+   "emission": 0.0,
+   "gloss": 0.25,
+   "vivid": 0.55,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 16,
+    "color": "#e2c060",
+    "amount": 0.3,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "YanSalt": {
+   "lit": "#fbfaf6",
+   "shade": "#d8dce0",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.2
+  },
+  "HaiPaper": {
+   "lit": "#ecc890",
+   "shade": "#c9a06a",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.3,
+   "detail": {
+    "tex": "food_crumple",
+    "scale": 5,
+    "color": "#a07c50",
+    "amount": 0.3,
+    "bump": 0.8
+   },
+   "vtint": 1.0
+  },
+  "HaiHeap": {
+   "lit": "#7e4c22",
+   "shade": "#5a3416",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5
+  },
+  "HaiTwine": {
+   "lit": "#e6dcb0",
+   "shade": "#c4b888",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 40,
+    "color": "#b8a878",
+    "amount": 0.35,
+    "bump": 0.2
+   },
+   "vtint": 1.0
+  },
+  "HaiScallop": {
+   "lit": "#f6b84e",
+   "shade": "#de9330",
+   "emission": 0.0,
+   "gloss": 0.15,
+   "vivid": 0.75,
+   "detail": {
+    "tex": "food_fibrous",
+    "scale": 12,
+    "color": "#c86e1e",
+    "amount": 0.55,
+    "bump": 0.5
+   },
+   "vtint": 1.0
+  },
+  "HaiScallopTop": {
+   "lit": "#fcdc8c",
+   "shade": "#efc062",
+   "emission": 0.0,
+   "gloss": 0.1,
+   "vivid": 0.6,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 18,
+    "color": "#f2b85c",
+    "amount": 0.25,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "HaiShrimp": {
+   "lit": "#f59a6a",
+   "shade": "#e0704a",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.7,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 18,
+    "color": "#fde8d8",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "BingCake": {
+   "lit": "#fae4b5",
+   "shade": "#e9c78c",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 10,
+    "color": "#efca86",
+    "amount": 0.2,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "BingSide": {
+   "lit": "#f0cd8e",
+   "shade": "#d8ad68",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.4,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 12,
+    "color": "#e9be78",
+    "amount": 0.2,
+    "bump": 0.15
+   },
+   "vtint": 1.0
+  },
+  "BingSpot": {
+   "lit": "#f2bd62",
+   "shade": "#d99c42",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "BingTrayRim": {
+   "lit": "#c98848",
+   "shade": "#9c6130",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_wood",
+    "scale": 24,
+    "color": "#7a4420",
+    "amount": 0.45,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "BingTrayWeave": {
+   "lit": "#d6a060",
+   "shade": "#a8743c",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.45,
+   "detail": {
+    "tex": "food_weave",
+    "scale": 16,
+    "color": "#5a3010",
+    "amount": 0.8,
+    "bump": 0.6
+   },
+   "vtint": 1.0
+  },
+  "BingTrayWrap": {
+   "lit": "#f6e4b8",
+   "shade": "#dbc28e",
+   "emission": 0.0,
+   "gloss": 0.0,
+   "vivid": 0.35,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 30,
+    "color": "#c9a46a",
+    "amount": 0.35,
+    "bump": 0.25
+   },
+   "vtint": 1.0
+  },
+  "LizhiGroove": {
+   "lit": "#a63e1d",
+   "shade": "#7a2a12",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_mottle",
+    "scale": 10,
+    "color": "#c25a33",
+    "amount": 0.2,
+    "bump": 0.2
+   }
+  },
+  "LizhiSlit": {
+   "lit": "#e2ae62",
+   "shade": "#bf8a45",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "LizhiGreens": {
+   "lit": "#4a8c3c",
+   "shade": "#31692b",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0
+  },
+  "BraisedShiitake": {
+   "lit": "#6b3526",
+   "shade": "#46211a",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0
+  },
+  "BellyLean": {
+   "lit": "#e3955a",
+   "shade": "#c06f38",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 13,
+    "color": "#f0b582",
+    "amount": 0.35,
+    "bump": 0.3
+   }
+  },
+  "StewSkin": {
+   "lit": "#fbd287",
+   "shade": "#e3ac58",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 12,
+    "color": "#e3a24e",
+    "amount": 0.3,
+    "bump": 0.25
+   }
+  },
+  "ChickenFiber": {
+   "lit": "#eca36b",
+   "shade": "#c97d46",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 14,
+    "color": "#dc8d52",
+    "amount": 0.3,
+    "bump": 0.3
+   }
+  },
+  "StewBreast": {
+   "lit": "#fbd8ab",
+   "shade": "#e6b282",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_fiber",
+    "scale": 12,
+    "color": "#fdeacb",
+    "amount": 0.4,
+    "bump": 0.3
+   }
+  },
+  "TomatoCut": {
+   "lit": "#ea4824",
+   "shade": "#bf2c16",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "detail": {
+    "tex": "food_seeds",
+    "scale": 18,
+    "color": "#fcc050",
+    "amount": 0.8,
+    "bump": 0.2
+   }
+  },
+  "EggCrease": {
+   "lit": "#f4ad3e",
+   "shade": "#dc8a2c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.6
+  },
+  "ScallionPale": {
+   "lit": "#e6edb4",
+   "shade": "#c6d08c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0
+  },
+  "GongbaoChicken": {
+   "lit": "#fe8a29",
+   "shade": "#d4721e",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "GongbaoGlaze": {
+   "lit": "#c4300e",
+   "shade": "#921f09",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "GongbaoGlint": {
+   "lit": "#fff4dc",
+   "shade": "#f0dcb4",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.2,
+   "vtint": 1.0
+  },
+  "GongbaoChili": {
+   "lit": "#c80a02",
+   "shade": "#98190c",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "GongbaoChiliGlint": {
+   "lit": "#f6cfc4",
+   "shade": "#e4a89c",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.2,
+   "vtint": 1.0
+  },
+  "GongbaoSeed": {
+   "lit": "#f4c45a",
+   "shade": "#d69a38",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "GongbaoCavity": {
+   "lit": "#701606",
+   "shade": "#4c0e04",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "GongbaoScallion": {
+   "lit": "#747f10",
+   "shade": "#4e5a08",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "GongbaoScallionCut": {
+   "lit": "#e2e8a6",
+   "shade": "#c2ca7e",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.4,
+   "vtint": 1.0
+  },
+  "GongbaoWhite": {
+   "lit": "#f5d37c",
+   "shade": "#dcb45a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "GongbaoRing": {
+   "lit": "#d6c04a",
+   "shade": "#b49c2c",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "GongbaoSauce": {
+   "lit": "#7f0c00",
+   "shade": "#560800",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "ColaGlaze": {
+   "lit": "#dc5d15",
+   "shade": "#a8400c",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.0,
+   "detail": {
+    "tex": "food_pores",
+    "scale": 16,
+    "color": "#8a3410",
+    "amount": 0.3,
+    "bump": 0.5
+   },
+   "vtint": 1.0
+  },
+  "ColaWingEnd": {
+   "lit": "#5c2410",
+   "shade": "#3e160a",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ColaFold": {
+   "lit": "#6e2008",
+   "shade": "#4c1404",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 1.0,
+   "vtint": 1.0
+  },
+  "ColaGlint": {
+   "lit": "#fbe6c8",
+   "shade": "#ecc8a0",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.2,
+   "vtint": 1.0
+  },
+  "ColaPool": {
+   "lit": "#712200",
+   "shade": "#4c1600",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "ColaScallion": {
+   "lit": "#8b9439",
+   "shade": "#68702a",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "ColaGinger": {
+   "lit": "#ffd064",
+   "shade": "#dcaa40",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "StewSpud": {
+   "lit": "#fbb427",
+   "shade": "#dc8e18",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "StewRadish": {
+   "lit": "#f1b96c",
+   "shade": "#d4974c",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "StewRadishLine": {
+   "lit": "#e6a24e",
+   "shade": "#c8843a",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "StewPork": {
+   "lit": "#be4f1c",
+   "shade": "#8e3410",
+   "emission": 0.0,
+   "gloss": 0.6,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "StewFat": {
+   "lit": "#f4c28a",
+   "shade": "#d8a066",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.4,
+   "vtint": 1.0
+  },
+  "StewGlint": {
+   "lit": "#fff2d6",
+   "shade": "#f0d8b0",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.2,
+   "vtint": 1.0
+  },
+  "StewScallion": {
+   "lit": "#727a17",
+   "shade": "#525a0c",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "StewGravyArt": {
+   "lit": "#f2a84d",
+   "shade": "#d48a30",
+   "emission": 0.0,
+   "gloss": 0.7,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "LizhiSquare": {
+   "lit": "#d66a2f",
+   "shade": "#a84a1e",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "LizhiGlint": {
+   "lit": "#fde4c8",
+   "shade": "#f0c8a0",
+   "emission": 0.0,
+   "gloss": 0.8,
+   "vivid": 0.2,
+   "vtint": 1.0
+  },
+  "LizhiBamboo": {
+   "lit": "#fcd689",
+   "shade": "#e0b460",
+   "emission": 0.0,
+   "gloss": 0.4,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "LizhiBambooSlit": {
+   "lit": "#c88c40",
+   "shade": "#a06a28",
+   "emission": 0.0,
+   "gloss": 0.3,
+   "vivid": 0.5,
+   "vtint": 1.0
+  },
+  "LizhiLeaf": {
+   "lit": "#58671c",
+   "shade": "#3c4a10",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "LizhiStalk": {
+   "lit": "#c6c947",
+   "shade": "#a4a830",
+   "emission": 0.0,
+   "gloss": 0.5,
+   "vivid": 0.0,
+   "vtint": 1.0
+  },
+  "LizhiSauce": {
+   "lit": "#b45b20",
+   "shade": "#86400f",
+   "emission": 0.0,
+   "gloss": 0.7,
+   "vivid": 0.0,
+   "vtint": 1.0
   }
  }
 }
